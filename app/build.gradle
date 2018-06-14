@@ -62,57 +62,58 @@ android {
 }
 
 ext {
-    jacocoVersion = "0.7.4.201502262128"
+//    jacocoVersion = "0.7.4.201502262128"
+//    supportVersion = "27.1.1"
 }
 
 dependencies {
-    implementation 'com.google.firebase:firebase-perf:11.8.0'
+    implementation "com.google.firebase:firebase-perf:${rootProject.firebasePref}"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    implementation 'com.android.support:design:27.1.1'
-    implementation 'com.github.pchmn:MaterialChipsInput:1.0.8'
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.google.code.gson:gson:2.8.3'
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.android.support:cardview-v7:27.1.1'
-    implementation 'com.android.support:support-vector-drawable:27.1.1'
-    implementation 'com.apollographql.apollo:apollo-runtime:0.5.0'
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.github.pchmn:MaterialChipsInput:1.0.8'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test:rules:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.2'
-    implementation 'com.android.support.test.espresso:espresso-idling-resource:3.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.2'
-    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
-    implementation 'com.android.support:support-vector-drawable:27.1.1'
-    implementation 'com.apollographql.apollo:apollo-runtime:0.5.0'
-    jacocoAnt "org.jacoco:org.jacoco.ant:${project.jacocoVersion}"
-    jacocoAgent "org.jacoco:org.jacoco.agent:${project.jacocoVersion}"
-    androidJacocoAgent "org.jacoco:org.jacoco.agent:${project.jacocoVersion}"
-    androidJacocoAnt "org.jacoco:org.jacoco.ant:${project.jacocoVersion}"
-    androidJacocoAnt "org.jacoco:org.jacoco.core:${project.jacocoVersion}"
-    androidJacocoAnt "org.jacoco:org.jacoco.report:${project.jacocoVersion}"
-    androidJacocoAnt "org.jacoco:org.jacoco.agent:${project.jacocoVersion}"
-    implementation 'com.google.android.gms:play-services-auth:11.8.0'
-    implementation 'pub.devrel:easypermissions:0.3.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
-    implementation 'com.github.bumptech.glide:glide:4.6.1'
-    implementation('com.google.api-client:google-api-client-android:1.23.0') {
+    implementation "com.android.support:appcompat-v7:${rootProject.supportVersion}"
+    implementation "com.android.support.constraint:constraint-layout:${rootProject.constraintLayout}"
+    implementation "com.android.support:design:${rootProject.supportVersion}"
+    implementation "com.github.pchmn:MaterialChipsInput:${rootProject.materialChipsInput}"
+    implementation "com.android.support:support-v4:${rootProject.supportVersion}"
+    implementation "com.google.code.gson:gson:${rootProject.gsonVersion}"
+    implementation "com.android.support:recyclerview-v7:${rootProject.supportVersion}"
+    implementation "com.android.support:cardview-v7:${rootProject.supportVersion}"
+    implementation "com.android.support:support-vector-drawable:${rootProject.supportVersion}"
+    implementation "com.apollographql.apollo:apollo-runtime:${rootProject.apolloRuntime}"
+    implementation "com.android.support:support-v4:${rootProject.supportVersion}"
+    testImplementation "junit:junit:${rootProject.jUnit}"
+    androidTestImplementation "com.android.support.test:runner:${rootProject.testRunner}"
+    androidTestImplementation "com.android.support.test:rules:${rootProject.testRunner}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:${rootProject.espressoVersion}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-intents:${rootProject.espressoVersion}"
+    implementation "com.android.support.test.espresso:espresso-idling-resource:${rootProject.espressoVersion}"
+    androidTestImplementation "com.android.support.test.espresso:espresso-contrib:${rootProject.espressoVersion}"
+    androidTestImplementation "com.android.support.test.uiautomator:uiautomator-v18:${rootProject.uiAutomator}"
+    implementation "com.android.support:support-vector-drawable:{$rootProject.supportVersion}"
+    implementation "com.apollographql.apollo:apollo-runtime:${rootProject.apolloRuntime}"
+    jacocoAnt "org.jacoco:org.jacoco.ant:${rootProject.jacocoVersion}"
+    jacocoAgent "org.jacoco:org.jacoco.agent:${rootProject.jacocoVersion}"
+    androidJacocoAgent "org.jacoco:org.jacoco.agent:${rootProject.jacocoVersion}"
+    androidJacocoAnt "org.jacoco:org.jacoco.ant:${rootProject.jacocoVersion}"
+    androidJacocoAnt "org.jacoco:org.jacoco.core:${rootProject.jacocoVersion}"
+    androidJacocoAnt "org.jacoco:org.jacoco.report:${rootProject.jacocoVersion}"
+    androidJacocoAnt "org.jacoco:org.jacoco.agent:${rootProject.jacocoVersion}"
+    implementation  "com.google.android.gms:play-services-auth:${rootProject.playServicesAuth}"
+    implementation "pub.devrel:easypermissions:${rootProject.easyPermissions}"
+    implementation "com.squareup.okhttp3:logging-interceptor:${rootProject.loggingInterceptor}"
+    implementation "com.github.bumptech.glide:glide:${rootProject.glideVersion}"
+    implementation("com.google.api-client:google-api-client-android:${rootProject.googleApiClientAndroid}") {
         exclude group: 'org.apache.httpcomponents'
     }
-    implementation('com.google.apis:google-api-services-calendar:v3-rev310-1.23.0') {
+    implementation("com.google.apis:google-api-services-calendar:${rootProject.googleApiServicesCalendar}") {
         exclude group: 'org.apache.httpcomponents'
     }
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
-    implementation 'com.apollographql.apollo:apollo-http-cache:0.5.0'
-    implementation 'com.apollographql.apollo:apollo-android-support:0.5.0'
-    implementation 'com.google.firebase:firebase-core:11.8.0'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.2'
-    implementation 'com.android.support.test.espresso.idling:idling-concurrent:3.0.2'
+
+    annotationProcessor "com.github.bumptech.glide:compiler:${rootProject.glideVersion}"
+    implementation "com.apollographql.apollo:apollo-http-cache:${rootProject.apolloRuntime}"
+    implementation "com.apollographql.apollo:apollo-android-support:${rootProject.apolloRuntime}"
+    implementation "com.google.firebase:firebase-core:${rootProject.firebasePref}"
+    implementation "com.crashlytics.sdk.android:crashlytics:${rootProject.crashlyticsVersion}"
+    implementation "com.android.support.test.espresso.idling:idling-concurrent:${rootProject.espressoVersion}"
 }
 
 apply plugin: 'com.google.gms.google-services'
