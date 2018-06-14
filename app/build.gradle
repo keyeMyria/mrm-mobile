@@ -61,11 +61,6 @@ android {
     }
 }
 
-ext {
-//    jacocoVersion = "0.7.4.201502262128"
-//    supportVersion = "27.1.1"
-}
-
 dependencies {
     implementation "com.google.firebase:firebase-perf:${rootProject.firebasePref}"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
