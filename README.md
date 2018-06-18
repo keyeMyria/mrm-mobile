@@ -67,8 +67,11 @@ There can be many ways of running your application in Android Studio.
 
 ## Running the tests to show coverage
 
-To ensure that a user is looking at the most recent build, the
-When running tests on the local machine to avoid checking code climate regualarly, a user has one of two options;
+To ensure that a user is looking at the most recent build, the can;
+1. Run the command `./gradlew clean` to make sure that they have no pre-existing reports or
+2. Navigating to the `Gradle` button in the right side of Android Studio, select the `build` directory followed by the `clean` task to ensure they are lookiung at a clean build.
+
+To run the tests locally the Dev/user has two options which are;
 
 1. Within Android studio, click on the `Gradle` tab to the right end of android studio, select `app`, `Tasks`, `Verification` then `createMockDebugCoverageReport` to run the tests and generate the coverage report.
 2. Within Android studio, in the terminal window enter the command `./gradlew createMockDebugCoverageReport` to generate the coverage report for the project.

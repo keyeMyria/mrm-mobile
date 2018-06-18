@@ -7,7 +7,7 @@ tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
 }
 
-task jacocoTestReport(type: JacocoReport, dependsOn : ['test', 'androidTest']) {
+task jacocoTestReport(type: JacocoReport, dependsOn : 'test') {
     description = 'Generate JaCoCo coverage reports'
     group       = 'Reporting'
 
