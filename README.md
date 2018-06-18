@@ -64,3 +64,13 @@ There can be many ways of running your application in Android Studio.
      * While updating the google play services one can follow this link
      https://developers.google.com/android/guides/setup
      http://www.androiddocs.com/google/play-services/setup.html#
+
+## Running the tests to show coverage
+
+To ensure that a user is looking at the most recent build, the
+When running tests on the local machine to avoid checking code climate regualarly, a user has one of two options;
+
+1. Within Android studio, click on the `Gradle` tab to the right end of android studio, select `app`, `Tasks`, `Verification` then `createMockDebugCoverageReport` to run the tests and generate the coverage report.
+2. Within Android studio, in the terminal window enter the command `./gradlew createMockDebugCoverageReport` to generate the coverage report for the project.
+
+At this point, the user can check inside the directory `app/build/reports/coverage/mock/debug/index.html` to view the current coverage rport

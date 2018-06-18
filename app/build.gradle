@@ -7,6 +7,14 @@ apply from: rootProject.file('app/code_quality_tools/quality.gradle')
 apply from: rootProject.file('app/coverage.gradle')
 apply plugin: 'io.fabric'
 
+jacoco {
+    toolVersion = '0.8.0'
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+}
+
 android {
     compileSdkVersion 27
     flavorDimensions "default"
@@ -59,6 +67,15 @@ android {
             java.srcDirs('src/prod/java')
         }
     }
+
+    testOptions {
+        execution 'ANDROID_TEST_ORCHESTRATOR'
+        animationsDisabled true
+
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 
@@ -86,14 +103,7 @@ dependencies {
     androidTestImplementation "com.android.support.test.uiautomator:uiautomator-v18:${rootProject.uiAutomator}"
     implementation "com.android.support:support-vector-drawable:{$rootProject.supportVersion}"
     implementation "com.apollographql.apollo:apollo-runtime:${rootProject.apolloRuntime}"
-    jacocoAnt "org.jacoco:org.jacoco.ant:${rootProject.jacocoVersion}"
-    jacocoAgent "org.jacoco:org.jacoco.agent:${rootProject.jacocoVersion}"
-    androidJacocoAgent "org.jacoco:org.jacoco.agent:${rootProject.jacocoVersion}"
-    androidJacocoAnt "org.jacoco:org.jacoco.ant:${rootProject.jacocoVersion}"
-    androidJacocoAnt "org.jacoco:org.jacoco.core:${rootProject.jacocoVersion}"
-    androidJacocoAnt "org.jacoco:org.jacoco.report:${rootProject.jacocoVersion}"
-    androidJacocoAnt "org.jacoco:org.jacoco.agent:${rootProject.jacocoVersion}"
-    implementation  "com.google.android.gms:play-services-auth:${rootProject.playServicesAuth}"
+    implementation "com.google.android.gms:play-services-auth:${rootProject.playServicesAuth}"
     implementation "pub.devrel:easypermissions:${rootProject.easyPermissions}"
     implementation "com.squareup.okhttp3:logging-interceptor:${rootProject.loggingInterceptor}"
     implementation "com.github.bumptech.glide:glide:${rootProject.glideVersion}"
