@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 
 import com.andela.mrm.R;
 import com.andela.mrm.contract.IGoogleCalenderCallListener;
+import com.andela.mrm.presenter.GsuitePresenter;
 import com.andela.mrm.presenter.MakeGoogleCalendarCallPresenter;
 import com.andela.mrm.room_booking.room_information.RoomInformationActivity;
 import com.andela.mrm.util.GooglePlayService;
@@ -197,6 +198,7 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
                     .show();
         } else {
             new MakeGoogleCalendarCallPresenter(mCredential, this).execute();
+            new GsuitePresenter(mCredential).execute();
         }
     }
 

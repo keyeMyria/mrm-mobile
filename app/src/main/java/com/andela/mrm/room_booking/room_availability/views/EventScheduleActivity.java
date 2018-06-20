@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.andela.mrm.R;
 import com.andela.mrm.adapter.EventScheduleAdapter;
@@ -15,7 +16,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,6 +33,14 @@ public class EventScheduleActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_schedule);
+
+        String currentDate = SimpleDateFormat.getDateInstance().format(new Date());
+
+        TextView upcomingEventsView = findViewById(R.id.text_upcoming_events);
+        TextView dataView = findViewById(R.id.text_current_date);
+
+        // display current system date
+        dataView.setText(currentDate);
 
         String eventsInStringFromIntent = getIntent()
                 .getStringExtra(RoomAvailabilityActivity.EVENTS_IN_STRING);
@@ -47,6 +58,8 @@ public class EventScheduleActivity extends Activity {
         if (eventsInStringFromIntent != null) {
             Type listType = new TypeToken<List<CalendarEvent>>() { }.getType();
             List<CalendarEvent> events = new Gson().fromJson(eventsInStringFromIntent, listType);
+
+            displayUpcomingEventsView(events, upcomingEventsView);
 
             EventScheduleAdapter eventScheduleAdapter =
                     new EventScheduleAdapter(addAvailableTimeSlots(events),
@@ -111,6 +124,19 @@ public class EventScheduleActivity extends Activity {
             return eventListWithAvailableTimeSlots;
         }
 
+    }
+
+    /**
+     * Displays a view detailing the number of upcoming events.
+     *
+     * @param calendarEvents - list of calender events for a day
+     * @param view - text view containing upcoming events count
+     */
+    private void displayUpcomingEventsView(List<CalendarEvent> calendarEvents, TextView view) {
+        int numberOfUpComingEvents = calendarEvents.size();
+        String upcomingEventsDisplayText = "Upcoming Events: " + numberOfUpComingEvents;
+
+        view.setText(upcomingEventsDisplayText);
     }
 
 }

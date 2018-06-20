@@ -63,4 +63,5 @@
     <string name="room_amenities_text">Room Amenities</string>
     <string name="room_name_text">Ol Karia</string>
     <string name="attend_icon">attend_icon</string>
+    <string name="cancel_icon">cancel icon</string>
 </resources>

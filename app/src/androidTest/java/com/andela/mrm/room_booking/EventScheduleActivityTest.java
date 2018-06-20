@@ -45,7 +45,7 @@ public class EventScheduleActivityTest {
     @Test
     public void closeButtonDisplayed() {
         onView(withId(R.id.layout_close_event_schedule))
-                .check(matches(allOf(isDisplayed(), isClickable(), hasChildCount(2))));
+                .check(matches(allOf(isDisplayed(), isClickable(), hasChildCount(1))));
     }
 
     /**
@@ -53,7 +53,7 @@ public class EventScheduleActivityTest {
      */
     @Test
     public void todayTextDisplayed() {
-        onView(withId(R.id.today_text))
+        onView(withId(R.id.text_current_date))
                 .check(matches(isDisplayed()));
     }
 
