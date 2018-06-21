@@ -13,6 +13,7 @@ jacoco {
 
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
+    jacoco.excludes = ['jdk.internal.*']
 }
 
 android {
@@ -25,6 +26,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true'
         multiDexEnabled true
 
         lintOptions {
@@ -121,6 +123,7 @@ dependencies {
     implementation "com.crashlytics.sdk.android:crashlytics:${rootProject.crashlyticsVersion}"
     implementation "com.android.support.test.espresso.idling:idling-concurrent:${rootProject.espressoVersion}"
     testImplementation "org.mockito:mockito-core:${rootProject.mockitoVersion}"
+    androidTestUtil "com.android.support.test:orchestrator:${rootProject.testRunner}"
 }
 
 apply plugin: 'com.google.gms.google-services'
