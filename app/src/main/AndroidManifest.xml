@@ -46,7 +46,7 @@
             android:screenOrientation="landscape"
             android:theme="@style/Theme.Transparent" />
         <activity
-            android:name=".room_booking.room_information.RoomInformationActivity"
+            android:name=".room_information.RoomInformationActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.Transparent"
             />

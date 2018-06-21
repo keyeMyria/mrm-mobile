@@ -51,10 +51,10 @@
 
     <style name="TabLayoutStyleTenInches" parent="Widget.Design.TabLayout">
         <item name="tabIndicatorColor">@color/colorWhite</item>
-        <item name="tabIndicatorHeight">2dp</item>
-        <item name="tabPaddingStart">8dp</item>
-        <item name="tabPaddingEnd">8dp</item>
+        <item name="tabIndicatorHeight">4dp</item>
         <item name="tabBackground">?attr/selectableItemBackground</item>
+        <item name="tabPaddingStart">30dp</item>
+        <item name="tabPaddingEnd">30dp</item>
         <item name="tabTextAppearance">@style/TabTextAppearanceTenIches</item>
         <item name="tabSelectedTextColor">@android:color/white</item>
     </style>

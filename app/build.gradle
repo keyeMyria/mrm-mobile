@@ -120,6 +120,7 @@ dependencies {
     implementation "com.google.firebase:firebase-core:${rootProject.firebasePref}"
     implementation "com.crashlytics.sdk.android:crashlytics:${rootProject.crashlyticsVersion}"
     implementation "com.android.support.test.espresso.idling:idling-concurrent:${rootProject.espressoVersion}"
+    testImplementation "org.mockito:mockito-core:${rootProject.mockitoVersion}"
 }
 
 apply plugin: 'com.google.gms.google-services'

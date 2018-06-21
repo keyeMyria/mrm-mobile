@@ -83,7 +83,8 @@ public class RoomBookingPresenter {
 
         EspressoIdlingResource.increment();
 
-        MyApolloClient.getMyApolloClient(currentFragment.getContext())
+        MyApolloClient.getMyApolloClient(currentFragment.getContext(),
+                "https://api.graph.cool/simple/v1/cjgdrz83r1t4k0173p13insaj")
                 .query(AllLocationsQuery.builder().build())
                 .enqueue(new ApolloCall.Callback<AllLocationsQuery.Data>() {
                     @Override

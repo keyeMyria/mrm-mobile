@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="44dp"
         android:layout_marginTop="24dp"
+        android:background="@drawable/icon_capacity"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@drawable/icon_capacity">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/attend_image"
+            android:id="@+id/image_capacity_icon_activity_room_info"
             android:layout_width="13dp"
             android:layout_height="14dp"
             android:layout_marginBottom="4dp"
@@ -23,75 +22,74 @@
             android:layout_marginStart="8dp"
             android:src="@drawable/icon_attend"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/capacity_text"
+            app:layout_constraintEnd_toStartOf="@+id/capacity_text_activity_room_info"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/capacity_number"
+            android:id="@+id/text_capacity_number_activity_room_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:paddingBottom="1dp"
-            android:text="5"
             android:textColor="@color/colorWhite"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/capacity_text" />
+            app:layout_constraintStart_toEndOf="@+id/capacity_text_activity_room_info" />
 
         <TextView
-            android:id="@+id/capacity_text"
+            android:id="@+id/capacity_text_activity_room_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:paddingBottom="2dp"
             android:text="@string/capacity"
             android:textColor="@color/colorWhite"
-            app:layout_constraintStart_toEndOf="@+id/attend_image"
+            app:layout_constraintStart_toEndOf="@+id/image_capacity_icon_activity_room_info"
             app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
     <TextView
-        android:id="@+id/room_name_text"
+        android:id="@+id/text_room_name_activity_room_info"
         style="@style/seven_inch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="708dp"
         android:layout_marginTop="60dp"
-        android:text="@string/room_name"
         android:textAllCaps="true"
-        android:textStyle="bold"
         android:textColor="#fff"
         android:textSize="45sp"
+        android:textStyle="bold"
+        android:textAlignment="viewStart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/image_location_icon_room_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
         android:layout_marginTop="16dp"
         android:src="@drawable/ic_location"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/room_name_text" />
+        app:layout_constraintTop_toBottomOf="@+id/text_room_name_activity_room_info" />
 
     <TextView
-        android:id="@+id/floor_location_text"
+        android:id="@+id/text_room_location_activity_room_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="708dp"
         android:layout_marginTop="16dp"
-        android:text="@string/floor_location"
         android:textColor="#fff"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+        android:textAlignment="viewStart"
+        app:layout_constraintBottom_toBottomOf="@+id/image_location_icon_room_info"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/room_name_text" />
+        app:layout_constraintTop_toBottomOf="@+id/text_room_name_activity_room_info" />
 
-    <ImageView
-        android:id="@+id/layout_close_event_schedule"
+    <ImageButton
+        android:id="@+id/button_close_room_info"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginEnd="60dp"
@@ -115,7 +113,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <android.support.design.widget.TabLayout
-            android:id="@+id/tabs"
+            android:id="@+id/tablayout_room_info"
             style="@style/TabLayoutStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -124,7 +122,7 @@
             app:tabMode="fixed" />
 
         <android.support.v4.view.ViewPager
-            android:id="@+id/container"
+            android:id="@+id/view_pager_fragment_container_activity_room_info"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/appbar"

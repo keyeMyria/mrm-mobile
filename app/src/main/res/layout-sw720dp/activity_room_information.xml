@@ -1,134 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="119dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="64dp"
-        android:background="@drawable/icon_capacity"
+    <LinearLayout
+        android:id="@+id/linear_layout_capacity_group_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="70dp"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/attend_image"
-            android:layout_width="13dp"
-            android:layout_height="14dp"
-            android:layout_marginBottom="6dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginStart="8dp"
-            android:src="@drawable/icon_attend"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/capacity_text"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/capacity_number"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="1dp"
-            android:paddingBottom="1dp"
-            android:text="5"
-            android:textColor="@color/colorWhite"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/capacity_text"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:background="@drawable/icon_capacity"
+            >
+
+            <ImageView
+                android:id="@+id/image_capacity_icon_activity_room_info"
+                android:layout_width="25dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="4dp"
+                android:src="@drawable/icon_attend" />
+
+            <TextView
+                android:id="@+id/capacity_text_activity_room_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="7dp"
+                android:layout_marginStart="5dp"
+                android:text="@string/capacity"
+                android:textColor="#FFF"
+                android:textSize="18dp" />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/capacity_text"
+            android:id="@+id/text_capacity_number_activity_room_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="1dp"
-            android:paddingBottom="2dp"
-            android:text="@string/capacity"
-            android:textColor="@color/colorWhite"
-            app:layout_constraintStart_toEndOf="@+id/attend_image"
-            app:layout_constraintTop_toTopOf="parent" />
-    </android.support.constraint.ConstraintLayout>
+            android:background="@drawable/ic_capacity_count_background"
+            android:textAlignment="center"
+            android:textColor="#444"
+            android:textSize="18dp" />
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/room_name_text"
+        android:id="@+id/text_room_name_activity_room_info"
         style="@style/ten_inch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="956dp"
-        android:layout_marginTop="128dp"
-        android:text="@string/room_name"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="15dp"
         android:textAllCaps="true"
-        android:textColor="#fff"
+        android:textColor="#FFF"
         android:textSize="60sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="12dp"
-        android:src="@drawable/ic_location"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/room_name_text" />
+        app:layout_constraintTop_toBottomOf="@+id/linear_layout_capacity_group_view" />
 
-    <TextView
-        android:id="@+id/floor_location_text"
+    <LinearLayout
+        android:id="@+id/linear_layout_location_view_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="960dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/floor_location"
-        android:textColor="#ffffff"
-        android:textSize="25sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/room_name_text"
-        app:layout_constraintVertical_bias="1.0" />
+        android:layout_marginStart="50dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_room_name_activity_room_info">
 
-    <ImageView
-        android:id="@+id/layout_close_event_schedule"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginEnd="60dp"
-        android:layout_marginTop="16dp"
+        <ImageView
+            android:id="@+id/image_location_icon_room_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="7dp"
+            android:baselineAlignBottom="true"
+            android:src="@drawable/ic_location" />
+
+        <TextView
+            android:id="@+id/text_room_location_activity_room_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFF"
+            android:textSize="25sp" />
+    </LinearLayout>
+
+
+    <ImageButton
+        android:id="@+id/button_close_room_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/transparent"
         android:src="@drawable/close_shape"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
-        android:layout_width="1259dp"
-        android:layout_height="584dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="268dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
         android:background="@null"
-        android:paddingTop="@dimen/appbar_padding_top"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/linear_layout_location_view_group"
+        >
 
         <android.support.design.widget.TabLayout
-            android:id="@+id/tabs"
+            android:id="@+id/tablayout_room_info"
             style="@style/TabLayoutStyleTenInches"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            app:tabGravity="fill"
-            app:tabMode="fixed" />
+            android:layout_marginStart="50dp" />
 
         <android.support.v4.view.ViewPager
-            android:id="@+id/container"
+            android:id="@+id/view_pager_fragment_container_activity_room_info"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/appbar"

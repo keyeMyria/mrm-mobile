@@ -59,4 +59,5 @@ ext {
     googleApiClientAndroid = "1.23.0"
     googleApiServicesCalendar = "v3-rev310-1.23.0"
     crashlyticsVersion = "2.9.2"
+    mockitoVersion = "2.19.0"
 }

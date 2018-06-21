@@ -20,11 +20,11 @@
         >
 
         <TextView
-            android:id="@+id/item_name"
+            android:id="@+id/text_resource_name_room_info"
             style="@style/seven_inch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Apple Color" />
+            android:text="1" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
                 style="@style/seven_inch"/>
 
             <TextView
-                android:id="@+id/item_quantity_number"
+                android:id="@+id/text_resource_quantity_room_info"
                 style="@style/seven_inch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
