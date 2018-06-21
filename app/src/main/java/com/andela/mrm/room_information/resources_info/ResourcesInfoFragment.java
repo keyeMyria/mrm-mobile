@@ -23,11 +23,11 @@ import java.util.List;
  */
 public class ResourcesInfoFragment extends Fragment {
 
+    private Callbacks mCallbacks;
+
     private final GridLayoutManager mLayoutManager = new GridLayoutManager(getContext(), 4);
-    private boolean mViewInitialized = false;
     private final RoomResourcesAdapter mResourcesAdapter = new
             RoomResourcesAdapter(new ArrayList<Room.Resource>(0));
-    private Callbacks mCallbacks;
 
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
@@ -63,7 +63,6 @@ public class ResourcesInfoFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mResourcesAdapter);
 
-        mViewInitialized = true;
         mCallbacks.onViewLoaded();
 
         return view;
@@ -91,22 +90,15 @@ public class ResourcesInfoFragment extends Fragment {
      * @param isLoading the is loading
      */
     public void showLoadingIndicator(boolean isLoading) {
-        if (isLoading) {
-            mProgressBar.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.GONE);
-        } else {
-            mProgressBar.setVisibility(View.GONE);
-            mRecyclerView.setVisibility(View.VISIBLE);
+        if (mProgressBar != null && mRecyclerView != null) {
+            if (isLoading) {
+                mProgressBar.setVisibility(View.VISIBLE);
+                mRecyclerView.setVisibility(View.GONE);
+            } else {
+                mProgressBar.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
+            }
         }
-    }
-
-    /**
-     * Is view initialized boolean.
-     *
-     * @return the boolean
-     */
-    public boolean isViewInitialized() {
-        return mViewInitialized;
     }
 
     /**

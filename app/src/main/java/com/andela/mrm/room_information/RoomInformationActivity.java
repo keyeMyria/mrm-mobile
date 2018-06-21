@@ -114,7 +114,7 @@ public class RoomInformationActivity extends AppCompatActivity implements
             public void run() {
                 // TODO: use a loader in this activity and display or dismiss here, possibly shimmer
                 ResourcesInfoFragment resourcesInfoFragment = getResourcesInfoFragment();
-                if (resourcesInfoFragment != null && resourcesInfoFragment.isViewInitialized()) {
+                if (resourcesInfoFragment != null) {
                     resourcesInfoFragment.showLoadingIndicator(isLoading);
                 }
             }
