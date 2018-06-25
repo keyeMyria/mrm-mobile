@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.andela.mrm.R;
-import com.andela.mrm.room_booking.room_information.RoomInformation;
+import com.andela.mrm.room_information.RoomInformation;
 
 import java.util.List;
 
@@ -70,8 +70,8 @@ public class SimilarRoomAdapter extends RecyclerView.Adapter<SimilarRoomAdapter.
          */
         ViewHolder(View itemView) {
             super(itemView);
-            roomName = itemView.findViewById(R.id.room_name);
-            floor = itemView.findViewById(R.id.floor_location);
+            roomName = itemView.findViewById(R.id.text_room_name_activity_room_info);
+            floor = itemView.findViewById(R.id.text_room_location_activity_room_info);
             mRecyclerView = itemView.findViewById(R.id.amenites_recycler_view);
         }
 

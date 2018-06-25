@@ -64,4 +64,5 @@
     <string name="room_name_text">Ol Karia</string>
     <string name="attend_icon">attend_icon</string>
     <string name="cancel_icon">cancel icon</string>
+    <string name="snackbar_retry_text">RETRY</string>
 </resources>

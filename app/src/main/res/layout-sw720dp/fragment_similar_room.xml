@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="#fff"
-    tools:context="com.andela.mrm.room_booking.room_information.RoomAmenitiesFragment">
+    tools:context=".room_information.resources_info.ResourcesInfoFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/similar_room_recycler_view"

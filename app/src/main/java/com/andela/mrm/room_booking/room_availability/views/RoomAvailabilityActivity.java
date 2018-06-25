@@ -21,7 +21,7 @@ import com.andela.mrm.R;
 import com.andela.mrm.contract.IGoogleCalenderCallListener;
 import com.andela.mrm.presenter.GsuitePresenter;
 import com.andela.mrm.presenter.MakeGoogleCalendarCallPresenter;
-import com.andela.mrm.room_booking.room_information.RoomInformationActivity;
+import com.andela.mrm.room_information.RoomInformationActivity;
 import com.andela.mrm.util.GooglePlayService;
 import com.andela.mrm.util.NetworkConnectivityChecker;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -102,8 +102,9 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
         roomInformation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(RoomAvailabilityActivity.this,
-                        RoomInformationActivity.class);
+                // TODO: replace roomId with Id of current room
+                Intent intent = RoomInformationActivity.newIntent(
+                        RoomAvailabilityActivity.this, 3);
                 startActivity(intent);
             }
         });

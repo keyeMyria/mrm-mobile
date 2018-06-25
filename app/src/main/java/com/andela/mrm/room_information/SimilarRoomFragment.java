@@ -1,4 +1,4 @@
-package com.andela.mrm.room_booking.room_information;
+package com.andela.mrm.room_information;
 
 
 import android.os.Bundle;
