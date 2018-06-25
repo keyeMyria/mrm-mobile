@@ -1,6 +1,8 @@
 def coverageSourceDirs = [
         'src/main/java',
-        'src/debug/java'
+        'src/debug/java',
+        'src/mock/java',
+        'src/prod/java'
 ]
 
 tasks.withType(Test) {

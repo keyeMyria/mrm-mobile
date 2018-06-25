@@ -38,8 +38,6 @@ decode_gservices_key: &decode_gservices_key
   run:
     name: Decode Google Services JSON key
     command: |
-      mkdir app/src/prod
-      mkdir app/src/mock
       mkdir app/src/prod/release
       mkdir app/src/prod/debug
       mkdir app/src/mock/debug
@@ -545,8 +543,11 @@ jobs:
           name: Upload coverage to code climate
           command: |
             export JACOCO_SOURCE_PATH=app/src/main/java
+            cp -R app/build/generated/source/apollo/com/andela/mrm/fragment app/src/main/java/com/andela/mrm/
             cp -R app/build/generated/source/apollo/com/andela/mrm/type app/src/main/java/com/andela/mrm/
             cp app/build/generated/source/apollo/com/andela/mrm/AllLocationsQuery.java app/src/main/java/com/andela/mrm/
+            cp app/build/generated/source/apollo/com/andela/mrm/RoomQuery.java app/src/main/java/com/andela/mrm/
+            cp app/src/prod/java/com/andela/mrm/Injection.java app/src/main/java/com/andela/mrm/Injection.java
             ./cc-test-reporter format-coverage app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml -t jacoco
             ./cc-test-reporter upload-coverage
       - store_artifacts:

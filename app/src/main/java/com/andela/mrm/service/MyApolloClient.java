@@ -19,13 +19,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
- * Created by baron on 18/04/2018.
+ *  Apollo client provider class.
  */
-
 public final class MyApolloClient {
 
-    private static final String BASE_URL =
-            "https://api.graph.cool/simple/v1/cjgdrz83r1t4k0173p13insaj";
+    // TODO: Modify this when base url is finalized
+//    private static final String BASE_URL =
+//            "https://api.graph.cool/simple/v1/cjgdrz83r1t4k0173p13insaj";
     private static ApolloClient myApolloClient;
 
     /**
@@ -37,12 +37,13 @@ public final class MyApolloClient {
     }
 
     /**
-     * Apollo client implementation method.
+     * Gets my apollo client.
      *
-     * @param context - current application view context
-     * @return expected myApolloClient object.
+     * @param context the context
+     * @param baseUrl the base url
+     * @return a configured instance of apollo client
      */
-    public static ApolloClient getMyApolloClient(Context context) {
+    public static ApolloClient getMyApolloClient(Context context, String baseUrl) {
 
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -82,7 +83,7 @@ public final class MyApolloClient {
         };
 
         myApolloClient = ApolloClient.builder()
-                .serverUrl(BASE_URL)
+                .serverUrl(baseUrl)
                 .normalizedCache(sqlCacheFactory, resolver)
                 .okHttpClient(okHttpClient)
                 .build();

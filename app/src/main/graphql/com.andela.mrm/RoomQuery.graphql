@@ -1,0 +1,25 @@
+query Room($roomId: Int!) {
+  getRoomById(roomId: $roomId) {
+    ...Room
+  }
+}
+
+fragment Room on Room {
+  id
+  name
+  roomType
+  capacity
+  imageUrl
+  floor {
+    id
+    name
+    block {
+      id
+      name
+    }
+  }
+  resources {
+    id
+    name
+  }
+}

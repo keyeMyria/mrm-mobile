@@ -89,13 +89,42 @@
                 }
               ],
               "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Room",
-                  "ofType": null
+                "kind": "OBJECT",
+                "name": "Room",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "roomSchedule",
+              "description": null,
+              "args": [
+                {
+                  "name": "calendarId",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "days",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
                 }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Calendar",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -283,6 +312,18 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
+            },
+            {
+              "name": "room",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Room",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ],
           "inputFields": null,
@@ -402,12 +443,36 @@
               "deprecationReason": null
             },
             {
+              "name": "calendarId",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "floorId",
               "description": null,
               "args": [],
               "type": {
                 "kind": "SCALAR",
                 "name": "Int",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "floor",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Floor",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -485,6 +550,18 @@
               "deprecationReason": null
             },
             {
+              "name": "block",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Block",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "rooms",
               "description": null,
               "args": [],
@@ -550,6 +627,18 @@
               "type": {
                 "kind": "SCALAR",
                 "name": "Int",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "location",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Location",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -666,6 +755,29 @@
         },
         {
           "kind": "OBJECT",
+          "name": "Calendar",
+          "description": null,
+          "fields": [
+            {
+              "name": "events",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
           "name": "Mutation",
           "description": null,
           "fields": [
@@ -673,20 +785,6 @@
               "name": "createResource",
               "description": null,
               "args": [
-                {
-                  "name": "roomId",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Int",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                },
                 {
                   "name": "name",
                   "description": null,
@@ -696,6 +794,20 @@
                     "ofType": {
                       "kind": "SCALAR",
                       "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "roomId",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Int",
                       "ofType": null
                     }
                   },
@@ -715,16 +827,6 @@
               "description": null,
               "args": [
                 {
-                  "name": "roomId",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
                   "name": "resourceId",
                   "description": null,
                   "type": {
@@ -740,6 +842,16 @@
                   "type": {
                     "kind": "SCALAR",
                     "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "roomId",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
                     "ofType": null
                   },
                   "defaultValue": null
@@ -785,16 +897,6 @@
               "description": null,
               "args": [
                 {
-                  "name": "imageUrl",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
                   "name": "capacity",
                   "description": null,
                   "type": {
@@ -809,7 +911,21 @@
                   "defaultValue": null
                 },
                 {
-                  "name": "roomType",
+                  "name": "calendarId",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "name",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -837,7 +953,7 @@
                   "defaultValue": null
                 },
                 {
-                  "name": "name",
+                  "name": "roomType",
                   "description": null,
                   "type": {
                     "kind": "NON_NULL",
@@ -847,6 +963,16 @@
                       "name": "String",
                       "ofType": null
                     }
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "imageUrl",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
                   },
                   "defaultValue": null
                 }
@@ -864,31 +990,21 @@
               "description": null,
               "args": [
                 {
-                  "name": "roomId",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "imageUrl",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
                   "name": "capacity",
                   "description": null,
                   "type": {
                     "kind": "SCALAR",
                     "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "name",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
                     "ofType": null
                   },
                   "defaultValue": null
@@ -904,11 +1020,21 @@
                   "defaultValue": null
                 },
                 {
-                  "name": "name",
+                  "name": "imageUrl",
                   "description": null,
                   "type": {
                     "kind": "SCALAR",
                     "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "roomId",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
                     "ofType": null
                   },
                   "defaultValue": null

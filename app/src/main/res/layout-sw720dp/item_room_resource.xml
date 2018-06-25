@@ -1,50 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/room_amenities_card"
-    android:layout_width="300dp"
-    android:layout_height="180dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:elevation="5dp"
-    app:cardCornerRadius="4dp"
-    android:background="@android:color/white"
-    android:layout_marginBottom="8dp"
+    android:layout_width="250dp"
+    android:layout_height="120dp"
+    android:layout_marginStart="8dp"
     android:layout_marginTop="8dp"
-    android:layout_marginLeft="8dp">
+    android:background="@android:color/white"
+    android:elevation="5dp"
+    app:cardCornerRadius="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
-        android:orientation="vertical"
         android:background="@android:color/white"
-        >
+        android:orientation="vertical"
+        android:padding="20dp">
 
         <TextView
-            android:id="@+id/item_name"
+            android:id="@+id/text_resource_name_room_info"
             style="@style/ten_inch"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Apple Color" />
+            android:layout_height="wrap_content" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/item_quantity"
+                style="@style/ten_inch"
+                android:textColor="#7e7e7e"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Items: "
-                style="@style/ten_inch"/>
+                android:text="Items: " />
 
             <TextView
-                android:id="@+id/item_quantity_number"
+                android:id="@+id/text_resource_quantity_room_info"
                 style="@style/ten_inch"
+                android:textColor="#7e7e7e"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Apple Color" />
+                android:text="1" />
 
 
         </LinearLayout>
