@@ -10,6 +10,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
+import com.google.api.services.calendar.model.FreeBusyCalendar;
 import com.google.api.services.calendar.model.FreeBusyRequest;
 import com.google.api.services.calendar.model.FreeBusyRequestItem;
 import com.google.api.services.calendar.model.FreeBusyResponse;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.TimeZone;
+import java.util.Map;
 
 /**
  * The type Gsuite presenter.
@@ -38,6 +39,7 @@ public class GsuitePresenter extends AsyncTask<Void, Void, FreeBusyResponse> {
      * The Eko meeting room id.
      */
     ekoMeetingRoomId = "andela.com_2d3630303638323533363632@resource.calendar.google.com";
+    String[] roomIds = {cognitioMeetingRoomId, ekoMeetingRoomId};
 
     private final Calendar mservice;
     private Exception mLastError;
@@ -91,13 +93,25 @@ public class GsuitePresenter extends AsyncTask<Void, Void, FreeBusyResponse> {
 
         request.setTimeMin(now)
                 .setTimeMax(new DateTime(midnight.getTime()))
-                .setTimeZone(TimeZone.getDefault().getID())
+                .setTimeZone("Africa/Lagos")
                 .setItems(requestItems);
 
         Calendar.Freebusy.Query query = mservice.freebusy().query(request);
         query.setFields("calendars");
         FreeBusyResponse freeBusyResponse = query.execute();
-        Log.e("FreeBusyyy", freeBusyResponse + "");
+        Map<String, FreeBusyCalendar> freeBusyCalendarMap = freeBusyResponse.getCalendars();
+//
+//        for(String timezones: TimeZone.getAvailableIDs()) {
+//            Log.e("timezones", timezones);
+//        }
+//        Log.e("default timezone", TimeZone.getDefault().getID());
+        Log.e("looping", "looppinggggg");
+        for (String ids : roomIds) {
+            Log.e("room", freeBusyCalendarMap.get(ids).getBusy().toString());
+        }
+
+//        Log.e("FreeBusyyy", freeBusyResponse + "");
+//        Log.e("FreeBusyyy calendar", freeBusyCalendarMap + "");
         return freeBusyResponse;
     }
 }
