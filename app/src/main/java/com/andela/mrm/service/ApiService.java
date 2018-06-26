@@ -22,7 +22,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
  * Apollo client provider class.
  */
 public final class ApiService {
-
     private static final String BASE_URL = "http://converge-api.andela.com/mrm";
 
     /**
@@ -31,7 +30,6 @@ public final class ApiService {
     private ApiService() {
         // Prevents instantiation since this is an utility class
     }
-
     /**
      * Gets apollo client.
      *
@@ -39,19 +37,14 @@ public final class ApiService {
      * @return a configured instance of apollo client
      */
     public static ApolloClient getApolloClient(Context context) {
-
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
                 .build();
-
         ApolloSqlHelper apolloSqlHelper = ApolloSqlHelper.create(context, "mCache_db");
-
         //Create NormalizedCacheFactory for disk caching
         NormalizedCacheFactory sqlCacheFactory = new SqlNormalizedCacheFactory(apolloSqlHelper);
-
         //Create the cache key resolver
         CacheKeyResolver resolver = new CacheKeyResolver() {
             @Nonnull
@@ -65,14 +58,12 @@ public final class ApiService {
                 }
                 return formatCacheKey((String) recordSet.get("id"));
             }
-
             @Nonnull
             @Override
             public CacheKey fromFieldArguments(@Nonnull ResponseField field,
                                                @Nonnull Operation.Variables variables) {
                 return formatCacheKey((String) field.resolveArgument("id", variables));
             }
-
             private CacheKey formatCacheKey(String id) {
                 if (id == null || id.isEmpty()) {
                     return CacheKey.NO_KEY;
@@ -81,7 +72,6 @@ public final class ApiService {
                 }
             }
         };
-
         return ApolloClient.builder()
                 .serverUrl(BASE_URL)
                 .normalizedCache(sqlCacheFactory, resolver)

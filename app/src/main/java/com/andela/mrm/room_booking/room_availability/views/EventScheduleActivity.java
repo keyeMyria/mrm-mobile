@@ -2,9 +2,9 @@ package com.andela.mrm.room_booking.room_availability.views;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -33,34 +33,29 @@ public class EventScheduleActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_schedule);
-
         String currentDate = SimpleDateFormat.getDateInstance().format(new Date());
-
         TextView upcomingEventsView = findViewById(R.id.text_upcoming_events);
         TextView dataView = findViewById(R.id.text_current_date);
-
-        // display current system date
-        dataView.setText(currentDate);
-
+        dataView.setText(currentDate); // display current system date
         String eventsInStringFromIntent = getIntent()
                 .getStringExtra(RoomAvailabilityActivity.EVENTS_IN_STRING);
-
         LinearLayout closeSchedule = findViewById(R.id.layout_close_event_schedule);
-        if (closeSchedule != null) {
-            closeSchedule.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
-        }
+        closeScheduleNotNull(closeSchedule);
 
+        eventsFromIntentNotNull(upcomingEventsView, eventsInStringFromIntent);
+    }
+
+    /**
+     * Method to handle the occurance of the intent value not being null.
+     * @param upcomingEventsView Textview detailing the upcoming events
+     * @param eventsInStringFromIntent String containing events from Intent
+     */
+    public void eventsFromIntentNotNull(TextView upcomingEventsView,
+                                        String eventsInStringFromIntent) {
         if (eventsInStringFromIntent != null) {
             Type listType = new TypeToken<List<CalendarEvent>>() { }.getType();
             List<CalendarEvent> events = new Gson().fromJson(eventsInStringFromIntent, listType);
-
             displayUpcomingEventsView(events, upcomingEventsView);
-
             EventScheduleAdapter eventScheduleAdapter =
                     new EventScheduleAdapter(addAvailableTimeSlots(events),
                             EventScheduleActivity.this);
@@ -71,9 +66,17 @@ public class EventScheduleActivity extends Activity {
                             LinearLayoutManager.HORIZONTAL, false);
             eventScheduleRecyclerView.setLayoutManager(eventScheduleLayoutManager);
             eventScheduleRecyclerView.setAdapter(eventScheduleAdapter);
-
         }
+    }
 
+    /**
+     * Method that deals with the closeschdule not being an empty value.
+     * @param closeSchedule slose schdule button returned
+     */
+    public void closeScheduleNotNull(LinearLayout closeSchedule) {
+        if (closeSchedule != null) {
+            closeSchedule.setOnClickListener(v -> finish());
+        }
     }
 
     /**
@@ -85,11 +88,7 @@ public class EventScheduleActivity extends Activity {
     public List<CalendarEvent> addAvailableTimeSlots(List<CalendarEvent> calendarEvents) {
         List<CalendarEvent> eventListWithAvailableTimeSlots = new ArrayList<>();
         if (calendarEvents.isEmpty()) {
-            eventListWithAvailableTimeSlots.add(new CalendarEvent("Available",
-                        new DateTime(System.currentTimeMillis()).getValue(),
-                    null, null,
-                    null));
-            return eventListWithAvailableTimeSlots;
+            return getCalendarEvents(eventListWithAvailableTimeSlots);
         } else {
             int size = calendarEvents.size();
             int i;
@@ -103,9 +102,7 @@ public class EventScheduleActivity extends Activity {
                             null));
                 }
             }
-
-            // add the last event for the day
-            int lastEventPosition = calendarEvents.size() - 1;
+            int lastEventPosition = calendarEvents.size() - 1; // add the last event for the day
             eventListWithAvailableTimeSlots.add(
                     new CalendarEvent(calendarEvents.get(lastEventPosition).getSummary(),
                             calendarEvents.get(lastEventPosition).getStartTime(),
@@ -113,17 +110,37 @@ public class EventScheduleActivity extends Activity {
                             calendarEvents.get(lastEventPosition).getAttendees(),
                             calendarEvents.get(lastEventPosition).getCreator())
             );
-
-//             Add an extra free event
-
-            eventListWithAvailableTimeSlots.add(
-                    new CalendarEvent("Available",
-                            eventListWithAvailableTimeSlots.
-                                    get(eventListWithAvailableTimeSlots.size() - 1).getEndTime(),
-                            null, null, null));
+            addAnExtraFreeEvent(eventListWithAvailableTimeSlots); //Add an extra free event
             return eventListWithAvailableTimeSlots;
         }
 
+    }
+
+    /**
+     * Add an extra free event for the end of the calendar events.
+     * @param eventListWithAvailableTimeSlots List containing all the day's events
+     */
+    public void addAnExtraFreeEvent(List<CalendarEvent> eventListWithAvailableTimeSlots) {
+        eventListWithAvailableTimeSlots.add(
+                new CalendarEvent("Available",
+                        eventListWithAvailableTimeSlots.
+                                get(eventListWithAvailableTimeSlots.size() - 1).getEndTime(),
+                        null, null, null));
+    }
+
+    /**
+     * Method to Populate an empty Calendar.
+     * @param eventListWithAvailableTimeSlots list containing all created events
+     * @return populated list with the
+     */
+    @NonNull
+    public List<CalendarEvent> getCalendarEvents(
+            List<CalendarEvent> eventListWithAvailableTimeSlots) {
+        eventListWithAvailableTimeSlots.add(new CalendarEvent("Available",
+                    new DateTime(System.currentTimeMillis()).getValue(),
+                null, null,
+                null));
+        return eventListWithAvailableTimeSlots;
     }
 
     /**
