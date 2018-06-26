@@ -106,7 +106,7 @@ public class BuildingActivityInstrumentationTest {
                 .check(matches(withText("What building is this meeting room in?")));
 
         onView(withId(R.id.building_grid_view))
-                .check(matches(hasDescendant(withText("Epic Tower"))));
+                .check(matches(hasDescendant(withText("EPIC TOWER"))));
 
         onView(withId(R.id.building_grid_view)).check(matches(hasChildCount(itemCount)));
         Intents.init();

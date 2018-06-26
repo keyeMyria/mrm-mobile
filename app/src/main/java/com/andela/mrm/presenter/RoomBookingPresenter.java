@@ -7,7 +7,7 @@ import com.andela.mrm.room_booking.building.BuildingFragment;
 import com.andela.mrm.room_booking.country.CountryFragment;
 import com.andela.mrm.room_booking.floor.FloorSelectionFragment;
 import com.andela.mrm.room_booking.meeting_room.MeetingRoomFragment;
-import com.andela.mrm.service.MyApolloClient;
+import com.andela.mrm.service.ApiService;
 import com.andela.mrm.util.EspressoIdlingResource;
 import com.andela.mrm.util.NetworkConnectivityChecker;
 import com.apollographql.apollo.ApolloCall;
@@ -83,8 +83,7 @@ public class RoomBookingPresenter {
 
         EspressoIdlingResource.increment();
 
-        MyApolloClient.getMyApolloClient(currentFragment.getContext(),
-                "https://api.graph.cool/simple/v1/cjgdrz83r1t4k0173p13insaj")
+        ApiService.getApolloClient(currentFragment.getContext())
                 .query(AllLocationsQuery.builder().build())
                 .enqueue(new ApolloCall.Callback<AllLocationsQuery.Data>() {
                     @Override
