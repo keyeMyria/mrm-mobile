@@ -86,6 +86,7 @@ public final class ApiService {
                 .okHttpClient(okHttpClient)
                 .build();
     }
+
     /**
      * Method to get the Cache Key.
      * @param id String with an Identifier
