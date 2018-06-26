@@ -1,6 +1,7 @@
 package com.andela.mrm.service;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.apollographql.apollo.ApolloClient;
 import com.apollographql.apollo.api.Operation;
@@ -44,19 +45,12 @@ public final class MyApolloClient {
      * @return a configured instance of apollo client
      */
     public static ApolloClient getMyApolloClient(Context context, String baseUrl) {
-
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(loggingInterceptor)
-                .build();
-
+        OkHttpClient okHttpClient = getOkHttpClient(loggingInterceptor);
         ApolloSqlHelper apolloSqlHelper = ApolloSqlHelper.create(context, "mCache_db");
-
         //Create NormalizedCacheFactory for disk caching
         NormalizedCacheFactory sqlCacheFactory = new SqlNormalizedCacheFactory(apolloSqlHelper);
-
         //Create the cache key resolver
         CacheKeyResolver resolver = new CacheKeyResolver() {
             @Nonnull
@@ -65,30 +59,60 @@ public final class MyApolloClient {
                                                @Nonnull Map<String, Object> recordSet) {
                 return formatCacheKey((String) recordSet.get("id"));
             }
-
             @Nonnull
             @Override
             public CacheKey fromFieldArguments(@Nonnull ResponseField field,
                                                @Nonnull Operation.Variables variables) {
                 return formatCacheKey((String) field.resolveArgument("id", variables));
             }
-
             private CacheKey formatCacheKey(String id) {
-                if (id == null || id.isEmpty()) {
-                    return CacheKey.NO_KEY;
-                } else {
-                    return CacheKey.from(id);
-                }
+                return getCacheKey(id);
             }
         };
+        apolloClientGenerator(baseUrl, okHttpClient, sqlCacheFactory, resolver);
+        return myApolloClient;
+    }
 
+    /**
+     * Method to get the Cache Key.
+     * @param id String with an Identifier
+     * @return Crerated CacheKey is returned
+     */
+    public static CacheKey getCacheKey(String id) {
+        if (id == null || id.isEmpty()) {
+            return CacheKey.NO_KEY;
+        } else {
+            return CacheKey.from(id);
+        }
+    }
+
+    /**
+     * Method that generates the Apollo Client.
+     * @param baseUrl string with baseurl for the client
+     * @param okHttpClient instance of okHttpClient
+     * @param sqlCacheFactory Factory instance for the cached data
+     * @param resolver Cache key resolver instance
+     */
+    public static void apolloClientGenerator(String baseUrl,
+                                             OkHttpClient okHttpClient,
+                                             NormalizedCacheFactory sqlCacheFactory,
+                                             CacheKeyResolver resolver) {
         myApolloClient = ApolloClient.builder()
                 .serverUrl(baseUrl)
                 .normalizedCache(sqlCacheFactory, resolver)
                 .okHttpClient(okHttpClient)
                 .build();
+    }
 
-        return myApolloClient;
-
+    /**
+     * Methid to create OkHttpClient.
+     * @param loggingInterceptor logginf interceptor Instance
+     * @return new OkHttpClient instance
+     */
+    @NonNull
+    public static OkHttpClient getOkHttpClient(HttpLoggingInterceptor loggingInterceptor) {
+        return new OkHttpClient.Builder()
+                    .addInterceptor(loggingInterceptor)
+                    .build();
     }
 }

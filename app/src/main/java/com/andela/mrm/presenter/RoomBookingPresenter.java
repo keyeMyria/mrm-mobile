@@ -80,42 +80,19 @@ public class RoomBookingPresenter {
                                 @Nullable final String countryID,
                                 @Nullable final String buildingID,
                                 @Nullable final String floorID) {
-
         EspressoIdlingResource.increment();
-
         MyApolloClient.getMyApolloClient(currentFragment.getContext(),
                 "https://api.graph.cool/simple/v1/cjgdrz83r1t4k0173p13insaj")
                 .query(AllLocationsQuery.builder().build())
                 .enqueue(new ApolloCall.Callback<AllLocationsQuery.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<AllLocationsQuery.Data> response) {
-
-                        if (view != null) {
-                            view.displayCountries(response.data().allLocations());
-                            dataLoadedCallback.onDataLoaded(true);
-                        }
-
-                        if (mView != null) {
-                            mView.displayBuildings(response.data().allLocations()
-                                    .get(Integer.parseInt(countryID)).blocks());
-                        }
-
-                        if (floorView != null) {
-                            floorView.displayFloors(response.data().allLocations()
-                                    .get(Integer.parseInt(countryID)).blocks()
-                                    .get(Integer.parseInt(buildingID)).floors());
-                        }
-
-                        if (mrfView != null) {
-                            mrfView.displayMeetingRooms(response.data().allLocations()
-                                    .get(Integer.parseInt(countryID)).blocks()
-                                    .get(Integer.parseInt(buildingID)).floors()
-                                    .get(Integer.parseInt(floorID)).rooms());
-                        }
-
+                        viewNotNull(response, dataLoadedCallback);
+                        mViewNotNull(response, countryID);
+                        floorViewNotNull(response, countryID, buildingID);
+                        mrfViewNotNull(response, countryID, buildingID, floorID);
                         EspressoIdlingResource.decrement();
                     }
-
                     @Override
                     public void onFailure(@Nonnull ApolloException e) {
                         view.dismissDialog();
@@ -124,11 +101,71 @@ public class RoomBookingPresenter {
                                         .isDeviceOnline(view.getContext())
                         );
                         dataLoadedCallback.onDataLoaded(false);
-
                         EspressoIdlingResource.decrement();
                     }
                 });
 
+    }
+
+    /**
+     * Method for mrfView Not being null.
+     * @param response Response from AllLocationsQuery
+     * @param countryID Unique Identifier for the country selected
+     * @param buildingID Unique Identifier for the building selected
+     * @param floorID Unique Identifier for the floor
+     */
+    public void mrfViewNotNull(@Nonnull Response<AllLocationsQuery.Data> response,
+                               @Nullable String countryID,
+                               @Nullable String buildingID,
+                               @Nullable String floorID) {
+        if (mrfView != null) {
+            mrfView.displayMeetingRooms(response.data().allLocations()
+                    .get(Integer.parseInt(countryID)).blocks()
+                    .get(Integer.parseInt(buildingID)).floors()
+                    .get(Integer.parseInt(floorID)).rooms());
+        }
+    }
+
+    /**
+     * Method to handle instance of floorView not being null.
+     * @param response Response data from AllLocationsQuery
+     * @param countryID Unique Identifier for the country selected
+     * @param buildingID Unique Identifier for the building chosen
+     */
+    public void floorViewNotNull(@Nonnull Response<AllLocationsQuery.Data> response,
+                                 @Nullable String countryID,
+                                 @Nullable String buildingID) {
+        if (floorView != null) {
+            floorView.displayFloors(response.data().allLocations()
+                    .get(Integer.parseInt(countryID)).blocks()
+                    .get(Integer.parseInt(buildingID)).floors());
+        }
+    }
+
+    /**
+     * Method to handle Instance of mView not being null.
+     * @param response Response from AllLocationsQuery
+     * @param countryID Integer that acts as identifier for which country to query.
+     */
+    public void mViewNotNull(@Nonnull Response<AllLocationsQuery.Data> response,
+                             @Nullable String countryID) {
+        if (mView != null) {
+            mView.displayBuildings(response.data().allLocations()
+                    .get(Integer.parseInt(countryID)).blocks());
+        }
+    }
+
+    /**
+     * Method to handle instance when view is not null.
+     * @param response Response from allLocations query
+     * @param dataLoadedCallback return value from DataoadedCallback
+     */
+    public void viewNotNull(@Nonnull Response<AllLocationsQuery.Data> response,
+                            @Nullable DataLoadedCallback dataLoadedCallback) {
+        if (view != null) {
+            view.displayCountries(response.data().allLocations());
+            dataLoadedCallback.onDataLoaded(true);
+        }
     }
 
     /**
