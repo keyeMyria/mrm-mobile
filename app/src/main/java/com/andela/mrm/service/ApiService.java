@@ -39,6 +39,7 @@ public final class ApiService {
      * @return a configured instance of apollo client
      */
     public static ApolloClient getApolloClient(Context context) {
+
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -64,6 +65,7 @@ public final class ApiService {
                 }
                 return formatCacheKey((String) recordSet.get("id"));
             }
+
             @Nonnull
             @Override
             public CacheKey fromFieldArguments(@Nonnull ResponseField field,
