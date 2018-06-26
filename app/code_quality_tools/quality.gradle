@@ -1,7 +1,6 @@
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
-apply plugin: 'cpd'
 
 task checkstyle(type: Checkstyle) {
     description 'Check code standard'
@@ -50,29 +49,6 @@ task pmd(type: Pmd) {
         html.destination = file("$project.buildDir/outputs/pmd/pmd.html")
     }
 }
-
-//cpdCheck{
-//    description 'Copy Paste Detector'
-//    group 'verification'
-//    source 'src'
-//    exclude '**/*.png/',
-//            '**/*.jpeg/',
-//            '**/*.xml/',
-//            '**/*.otf/',
-//            '**/google-services.json/',
-//            '**/schema.json/',
-//            '**/androidTest/**',
-//            '**/test/**'
-//
-//    minimumTokenCount = 30
-//    skipLexicalErrors = true
-//
-//    reports {
-//        text.enabled = false
-//        xml.enabled = true
-//        xml.destination = file("$project.buildDir/outputs/cpd/cpd.xml")
-//    }
-//}
 
 android {
     lintOptions {
