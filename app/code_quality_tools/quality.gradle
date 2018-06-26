@@ -58,12 +58,13 @@ task pmd(type: Pmd) {
 //    exclude '**/*.png/',
 //            '**/*.jpeg/',
 //            '**/*.xml/',
-//            '**/*.otf/',./gra
+//            '**/*.otf/',
 //            '**/google-services.json/',
 //            '**/schema.json/',
 //            '**/androidTest/**',
 //            '**/test/**'
 //
+//    minimumTokenCount = 30
 //    skipLexicalErrors = true
 //
 //    reports {
