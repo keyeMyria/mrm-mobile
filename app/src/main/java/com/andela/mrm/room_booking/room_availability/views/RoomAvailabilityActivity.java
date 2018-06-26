@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.LinearLayout;
 
 import com.andela.mrm.R;
@@ -367,7 +366,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
             startActivity(intent);
         });
     }
-
     /**
      * Activates onClickListener on both room schedule button and timeline strip.
      *
@@ -396,7 +394,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
 
         timeLineStrip.setOnClickListener(v -> activateRoomScheduleOnClickListener(eventsInString));
     }
-
     /**
      * sets findRoomLayout Listener.
      */

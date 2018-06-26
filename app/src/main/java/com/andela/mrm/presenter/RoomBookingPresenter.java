@@ -82,6 +82,7 @@ public class RoomBookingPresenter {
                                 @Nullable final String floorID) {
         EspressoIdlingResource.increment();
         ApiService.getApolloClient(currentFragment.getContext())
+
                 .query(AllLocationsQuery.builder().build())
                 .enqueue(new ApolloCall.Callback<AllLocationsQuery.Data>() {
                     @Override
