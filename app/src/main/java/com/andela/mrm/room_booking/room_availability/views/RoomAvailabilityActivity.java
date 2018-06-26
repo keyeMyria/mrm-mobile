@@ -424,6 +424,7 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
         });
     }
 
+
     /**
      * sets findRoomLayout Listener.
      */
