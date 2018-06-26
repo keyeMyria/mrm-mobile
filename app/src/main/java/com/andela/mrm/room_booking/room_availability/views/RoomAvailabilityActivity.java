@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.LinearLayout;
 
 import com.andela.mrm.R;
@@ -94,25 +93,19 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_availability);
-
         roomSchedule = findViewById(R.id.layout_schedule);
         roomInformation = findViewById(R.id.layout_room_info);
-
         setRoomScheduleOnClickListener(null);
-        roomInformation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: replace roomId with Id of current room
-                Intent intent = RoomInformationActivity.newIntent(
-                        RoomAvailabilityActivity.this, 3);
-                startActivity(intent);
-            }
+        roomInformation.setOnClickListener(v -> {
+            // TODO: replace roomId with Id of current room
+            Intent intent = RoomInformationActivity.newIntent(
+                    RoomAvailabilityActivity.this, 3);
+            startActivity(intent);
         });
         findRoomLayout = findViewById(R.id.layout_find_room);
 
         setRoomScheduleOnClickListener(null);
         setFindRoomLayoutListener();
-
 
         playService = new GooglePlayService();
         fragmentManager = getSupportFragmentManager();
@@ -121,7 +114,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
                 .add(R.id.frame_room_availability_time_line, new TimeLineFragment())
                 .add(R.id.frame_room_availability_countdown_timer, new CountDownTimerFragment())
                 .commit();
-
         // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
@@ -190,12 +182,7 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
         } else if (!isDeviceOnline()) {
             constraintLayout = findViewById(R.id.layout_room_availability_parent);
             Snackbar.make(constraintLayout, "No Network Found", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("RETRY", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            getResultsFromApi();
-                        }
-                    })
+                    .setAction("RETRY", v -> getResultsFromApi())
                     .show();
         } else {
             new MakeGoogleCalendarCallPresenter(mCredential, this).execute();
@@ -265,20 +252,7 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
                 }
                 break;
             case REQUEST_ACCOUNT_PICKER:
-                if (resultCode == RESULT_OK && data != null
-                        && data.getExtras() != null) {
-                    String accountName =
-                            data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-                    if (accountName != null) {
-                        SharedPreferences settings =
-                                getPreferences(Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString(PREF_ACCOUNT_NAME, accountName);
-                        editor.apply();
-                        mCredential.setSelectedAccountName(accountName);
-                        getResultsFromApi();
-                    }
-                }
+                resultCodeEqualsResultOkAndDataIsNotNull(resultCode, data);
                 break;
             case REQUEST_AUTHORIZATION:
                 if (resultCode == RESULT_OK) {
@@ -291,8 +265,29 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
     }
 
     /**
+     * Instance where ResultCode equals result Ok and Data is not null.
+     * @param resultCode integer value of result code
+     * @param data data contained in intent
+     */
+    private void resultCodeEqualsResultOkAndDataIsNotNull(int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && data != null
+                && data.getExtras() != null) {
+            String accountName =
+                    data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+            if (accountName != null) {
+                SharedPreferences settings =
+                        getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString(PREF_ACCOUNT_NAME, accountName);
+                editor.apply();
+                mCredential.setSelectedAccountName(accountName);
+                getResultsFromApi();
+            }
+        }
+    }
+
+    /**
      * Respond to requests for permissions at runtime for API 23 and above.
-     *
      * @param requestCode  The request code passed in
      *                     requestPermissions(android.app.Activity, String, int, String[])
      * @param permissions  The requested permissions. Never null.
@@ -311,7 +306,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
     /**
      * Callback for when a permission is granted using the EasyPermissions
      * library.
-     *
      * @param requestCode The request code associated with the requested
      *                    permission
      * @param list        The requested permission list. Never null.
@@ -343,45 +337,37 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
         return NetworkConnectivityChecker.isDeviceOnline(getApplicationContext());
     }
 
-
     /**
      * Sets the onClick Listener.
      *
      * @param eventsInString String.
      */
     public void setRoomScheduleOnClickListener(@Nullable final String eventsInString) {
-        roomSchedule.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (eventsInString == null) {
-                    ConstraintLayout roomAVailabilityParentLayout =
-                            findViewById(R.id.layout_room_availability_parent);
-                    Snackbar.make(roomAVailabilityParentLayout,
-                            "Initializing, please wait...", Snackbar.LENGTH_SHORT)
-                            .show();
-                } else {
-                    Intent intent = new Intent(RoomAvailabilityActivity.this,
-                            EventScheduleActivity.class);
-                    intent.putExtra(EVENTS_IN_STRING, eventsInString);
-                    Log.e("Data in sender", eventsInString);
-                    startActivity(intent);
-                }
+        roomSchedule.setOnClickListener(v -> {
+            if (eventsInString == null) {
+                ConstraintLayout roomAVailabilityParentLayout =
+                        findViewById(R.id.layout_room_availability_parent);
+                Snackbar.make(roomAVailabilityParentLayout,
+                        "Initializing, please wait...", Snackbar.LENGTH_SHORT)
+                        .show();
+            } else {
+                Intent intent = new Intent(RoomAvailabilityActivity.this,
+                        EventScheduleActivity.class);
+                intent.putExtra(EVENTS_IN_STRING, eventsInString);
+                Log.e("Data in sender", eventsInString);
+                startActivity(intent);
             }
         });
     }
-
 
     /**
      * sets findRoomLayout Listener.
      */
     public void setFindRoomLayoutListener() {
-        findRoomLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RoomAvailabilityActivity.this,
-                        FindRoomActivity.class);
-                startActivity(intent);
-            }
+        findRoomLayout.setOnClickListener(v -> {
+            Intent intent = new Intent(RoomAvailabilityActivity.this,
+                    FindRoomActivity.class);
+            startActivity(intent);
         });
     }
 

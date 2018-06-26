@@ -16,6 +16,7 @@ buildscript {
         classpath 'io.fabric.tools:gradle:1.25.3'
         classpath 'com.google.gms:google-services:3.3.0'
         classpath 'com.google.firebase:firebase-plugins:1.1.5'
+        classpath 'de.aaschmid:gradle-cpd-plugin:1.0'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -33,6 +34,7 @@ allprojects {
     }
 }
 
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
@@ -42,7 +44,7 @@ ext {
     keystoreProperties = new Properties()
     keystoreProperties.load(new FileInputStream(ext.keystorePropertiesFile))
     supportVersion = "27.1.1"
-    jacocoVersion = "0.7.4.201502262128"
+    jacocoVersion = "0.7.5.201505241946"
     constraintLayout = "1.1.0"
     materialChipsInput = "1.0.8"
     gsonVersion = "2.8.3"
