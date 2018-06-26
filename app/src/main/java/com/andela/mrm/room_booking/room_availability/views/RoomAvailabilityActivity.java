@@ -108,7 +108,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_availability);
         ButterKnife.bind(this);
-        setRoomScheduleOnClickListener(null);
         roomSchedule = findViewById(R.id.layout_schedule);
         roomInformation = findViewById(R.id.layout_room_info);
         setRoomScheduleOnClickListener(null);
