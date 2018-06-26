@@ -14,6 +14,7 @@ import com.andela.mrm.adapter.SelectedFilterAdapter;
 import com.andela.mrm.room_booking.room_availability.models.Rooms;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -55,54 +56,41 @@ public class FindRoomActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_room);
-
-        availabiltyOptions.add("Available");
-        availabiltyOptions.add("Unavailable");
-
-        locationOptions.add("Block A, First Floor");
-        locationOptions.add("Gold Coast, First Floor");
-        locationOptions.add("Big Apple, Fourth Floor");
-        locationOptions.add("Naija, Third Floor");
-
-        capacityOptions.add("5 participants");
-        capacityOptions.add("10 participants");
-        capacityOptions.add("15 participants");
-        capacityOptions.add("20 participants");
-
-        amenitiesOption.add("Apple TV");
-        amenitiesOption.add("Jabra speaker");
-        amenitiesOption.add("Headphones");
-        amenitiesOption.add("Projector");
-
-        filters.add("Available");
-        filters.add("Block A, First Floor");
-        filters.add("10 participants");
-        filters.add("Headphones");
-
+        String[] available = {"Available", "Unavailable"};
+        availabiltyOptions.addAll(Arrays.asList(available));
+        String[] locations = {"Block A, First Floor", "Gold Coast, First Floor",
+                "Big Apple, Fourth Floor", "Naija, Third Floor"};
+        locationOptions.addAll(Arrays.asList(locations));
+        String[] capacities = {"5 participants", "10 participants", "15 participants",
+                "20 participants"};
+        capacityOptions.addAll(Arrays.asList(capacities));
+        String[] amenities = {"Apple TV", "Jabra speaker", "Headphones", "Projector"};
+        amenitiesOption.addAll(Arrays.asList(amenities));
+        String[] filter = {"Available", "Block A, First Floor", "10 participants", "Headphones"};
+        filters.addAll(Arrays.asList(filter));
         closeActivity = findViewById(R.id.close_find_room);
         findRoomRecyclerView = findViewById(R.id.recycler_view_filter_result);
         availabilityFilterDropdown = findViewById(R.id.filter_dropdown_availability);
         locationFilterDropdown = findViewById(R.id.filter_dropdown_location);
         capacityFilterDropdown = findViewById(R.id.filter_dropdown_capacity);
         amenitiesFilterDropdown = findViewById(R.id.filter_dropdown_amenities);
-
-        setOnClickListenerForAvailabilityFilter();
-        setOnClickListenerForLocationFilter();
-        setOnClickListenerForCapacityFilter();
-        setOnClickListenerForAmenititesFilter();
+        onClickListenerGenerator();
         updateFilters(filters);
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.HORIZONTAL, false);
         findRoomRecyclerView.setAdapter(new FindRoomAdapter(room.initializeRooms(), this));
         findRoomRecyclerView.setLayoutManager(layoutManager);
+        closeActivity.setOnClickListener(v -> finish());
+    }
 
-        closeActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+    /**
+     * Method to create all onclick listeners.
+     */
+    public void onClickListenerGenerator() {
+        setOnClickListenerForAvailabilityFilter();
+        setOnClickListenerForLocationFilter();
+        setOnClickListenerForCapacityFilter();
+        setOnClickListenerForAmenititesFilter();
     }
 
     /**
@@ -111,18 +99,16 @@ public class FindRoomActivity extends AppCompatActivity {
     public void setOnClickListenerForAvailabilityFilter() {
         filterAvailability = findViewById(R.id.dropdown_availability_filter);
         RecyclerView.LayoutManager availabilityFilterLayoutManager =
-                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,
+                        false);
         availabilityFilterDropdown.setLayoutManager(availabilityFilterLayoutManager);
         availabilityFilterDropdown.setAdapter(new DropdownFilterAdapter(availabiltyOptions));
 
-        filterAvailability.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (availabilityFilterDropdown.getVisibility() == View.GONE) {
-                    availabilityFilterDropdown.setVisibility(View.VISIBLE);
-                } else {
-                    availabilityFilterDropdown.setVisibility(View.GONE);
-                }
+        filterAvailability.setOnClickListener(v -> {
+            if (availabilityFilterDropdown.getVisibility() == View.GONE) {
+                availabilityFilterDropdown.setVisibility(View.VISIBLE);
+            } else {
+                availabilityFilterDropdown.setVisibility(View.GONE);
             }
         });
     }
@@ -132,7 +118,8 @@ public class FindRoomActivity extends AppCompatActivity {
      */
     public void setOnClickListenerForLocationFilter() {
         RecyclerView.LayoutManager locationFilterLayoutManager =
-                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,
+                        false);
         locationFilterDropdown.setLayoutManager(locationFilterLayoutManager);
         locationFilterDropdown.setAdapter(new DropdownFilterAdapter(locationOptions));
 

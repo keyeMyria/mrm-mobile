@@ -43,7 +43,6 @@ public class MeetingRoomDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_meeting_room_detail,
                 container, false);
-
         minuteDisplayTextView = view.findViewById(R.id.btn_room_availability_time_text);
         checkInEarlyButton = view.findViewById(R.id.btn_check_in_early);
         endMeetingButton = view.findViewById(R.id.btn_end_meeting);
@@ -54,27 +53,9 @@ public class MeetingRoomDetailFragment extends Fragment {
         meetingRoomAvailabilityDisplay = view.findViewById(R.id.btn_room_availability_time_text);
         meetingRoomAvailabilityInUse =
                 view.findViewById(R.id.btn_room_availability_in_use_display);
-
-        checkInEarlyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startMeeting();
-            }
-        });
-
-        endMeetingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                endMeeting();
-            }
-        });
-
-        checkInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startMeeting();
-            }
-        });
+        checkInEarlyButton.setOnClickListener(v -> startMeeting());
+        endMeetingButton.setOnClickListener(v -> endMeeting());
+        checkInButton.setOnClickListener(v -> startMeeting());
         return view;
     }
 
