@@ -10,7 +10,6 @@ apply plugin: 'io.fabric'
 jacoco {
     toolVersion = "${rootProject.jacocoVersion}"
 }
-
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
     jacoco.excludes = ['jdk.internal.*']
@@ -28,6 +27,11 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
         multiDexEnabled true
+
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
 
         lintOptions {
             abortOnError false
@@ -78,6 +82,7 @@ android {
             includeAndroidResources = true
         }
     }
+
 }
 
 
@@ -105,7 +110,8 @@ dependencies {
     androidTestImplementation "com.android.support.test.uiautomator:uiautomator-v18:${rootProject.uiAutomator}"
     implementation "com.android.support:support-vector-drawable:${rootProject.supportVersion}"
     implementation "com.apollographql.apollo:apollo-runtime:${rootProject.apolloRuntime}"
-    implementation "com.google.android.gms:play-services-auth:${rootProject.playServicesAuth}"
+    androidTestUtil 'com.android.support.test:orchestrator:1.0.1'
+    implementation  "com.google.android.gms:play-services-auth:${rootProject.playServicesAuth}"
     implementation "pub.devrel:easypermissions:${rootProject.easyPermissions}"
     implementation "com.squareup.okhttp3:logging-interceptor:${rootProject.loggingInterceptor}"
     implementation "com.github.bumptech.glide:glide:${rootProject.glideVersion}"

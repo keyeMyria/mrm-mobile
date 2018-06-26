@@ -108,15 +108,20 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_availability);
-
         ButterKnife.bind(this);
-
+        roomSchedule = findViewById(R.id.layout_schedule);
+        roomInformation = findViewById(R.id.layout_room_info);
         setRoomScheduleOnClickListener(null);
-
+        roomInformation.setOnClickListener(v -> {
+            // TODO: replace roomId with Id of current room
+            Intent intent = RoomInformationActivity.newIntent(
+                    RoomAvailabilityActivity.this, 3);
+            startActivity(intent);
+        });
+        findRoomLayout = findViewById(R.id.layout_find_room);
         setRoomInformationListener();
 
         setFindRoomLayoutListener();
-
 
         playService = new GooglePlayService(GoogleApiAvailability.getInstance());
 
@@ -268,20 +273,7 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
                 }
                 break;
             case REQUEST_ACCOUNT_PICKER:
-                if (resultCode == RESULT_OK && data != null
-                        && data.getExtras() != null) {
-                    String accountName =
-                            data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-                    if (accountName != null) {
-                        SharedPreferences settings =
-                                getPreferences(Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString(PREF_ACCOUNT_NAME, accountName);
-                        editor.apply();
-                        mCredential.setSelectedAccountName(accountName);
-                        getResultsFromApi();
-                    }
-                }
+                resultCodeEqualsResultOkAndDataIsNotNull(resultCode, data);
                 break;
             case REQUEST_AUTHORIZATION:
                 if (resultCode == RESULT_OK) {
@@ -294,8 +286,29 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
     }
 
     /**
+     * Instance where ResultCode equals result Ok and Data is not null.
+     * @param resultCode integer value of result code
+     * @param data data contained in intent
+     */
+    private void resultCodeEqualsResultOkAndDataIsNotNull(int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && data != null
+                && data.getExtras() != null) {
+            String accountName =
+                    data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+            if (accountName != null) {
+                SharedPreferences settings =
+                        getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString(PREF_ACCOUNT_NAME, accountName);
+                editor.apply();
+                mCredential.setSelectedAccountName(accountName);
+                getResultsFromApi();
+            }
+        }
+    }
+
+    /**
      * Respond to requests for permissions at runtime for API 23 and above.
-     *
      * @param requestCode  The request code passed in
      *                     requestPermissions(android.app.Activity, String, int, String[])
      * @param permissions  The requested permissions. Never null.
@@ -314,7 +327,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
     /**
      * Callback for when a permission is granted using the EasyPermissions
      * library.
-     *
      * @param requestCode The request code associated with the requested
      *                    permission
      * @param list        The requested permission list. Never null.
@@ -391,7 +403,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
         }
     }
 
-
     /**
      * Sets the onClick Listener.
      *
@@ -413,18 +424,14 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
         });
     }
 
-
     /**
      * sets findRoomLayout Listener.
      */
     public void setFindRoomLayoutListener() {
-        findRoomLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RoomAvailabilityActivity.this,
-                        FindRoomActivity.class);
-                startActivity(intent);
-            }
+        findRoomLayout.setOnClickListener(v -> {
+            Intent intent = new Intent(RoomAvailabilityActivity.this,
+                    FindRoomActivity.class);
+            startActivity(intent);
         });
     }
 

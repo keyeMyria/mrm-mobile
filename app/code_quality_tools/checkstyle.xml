@@ -5,8 +5,14 @@
 
 <module name="Checker">
     <module name="NewlineAtEndOfFile"/>
-    <module name="FileLength"/>
+
+    <!--Number of lines in a file-->
+    <module name="FileLength">
+        <property name="max" value="400"/>
+    </module>
     <module name="FileTabCharacter"/>
+
+
 
     <!-- Trailing spaces -->
     <module name="RegexpSingleline">
@@ -62,7 +68,7 @@
             <property name="max" value="100"/>
         </module>
         <module name="MethodLength">
-            <property name="max" value="200"/>
+            <property name="max" value="30"/>
         </module>
 
 
@@ -103,6 +109,11 @@
         <module name="MissingSwitchDefault"/>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
+
+        <!--cyclomatic complexity-->
+        <module name="CyclomaticComplexity">
+            <property name="max" value="10"/>
+        </module>
 
         <!-- Miscellaneous other checks.                   -->
         <module name="UpperEll"/>
