@@ -50,6 +50,7 @@ task pmd(type: Pmd) {
     }
 }
 
+
 android {
     lintOptions {
         abortOnError false
