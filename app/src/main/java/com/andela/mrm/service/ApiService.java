@@ -23,7 +23,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
  * Apollo client provider class.
  */
 public final class ApiService {
-
     private static final String BASE_URL = "http://converge-api.andela.com/mrm";
 
     /**
@@ -32,7 +31,6 @@ public final class ApiService {
     private ApiService() {
         // Prevents instantiation since this is an utility class
     }
-
     /**
      * Gets apollo client.
      *

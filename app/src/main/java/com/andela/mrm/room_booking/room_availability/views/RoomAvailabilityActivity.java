@@ -394,6 +394,7 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
 
         timeLineStrip.setOnClickListener(v -> activateRoomScheduleOnClickListener(eventsInString));
     }
+
     /**
      * sets findRoomLayout Listener.
      */
