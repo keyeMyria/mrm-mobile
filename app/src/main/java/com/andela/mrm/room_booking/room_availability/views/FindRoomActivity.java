@@ -237,14 +237,11 @@ public class FindRoomActivity extends AppCompatActivity implements
         locationFilterDropdown.setAdapter(new DropdownFilterAdapter(locationOptions));
 
         filterLocation = findViewById(R.id.dropdown_location_filter);
-        filterLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (locationFilterDropdown.getVisibility() == View.GONE) {
-                    locationFilterDropdown.setVisibility(View.VISIBLE);
-                } else {
-                    locationFilterDropdown.setVisibility(View.GONE);
-                }
+        filterLocation.setOnClickListener(v -> {
+            if (locationFilterDropdown.getVisibility() == View.GONE) {
+                locationFilterDropdown.setVisibility(View.VISIBLE);
+            } else {
+                locationFilterDropdown.setVisibility(View.GONE);
             }
         });
     }
@@ -259,14 +256,11 @@ public class FindRoomActivity extends AppCompatActivity implements
         capacityFilterDropdown.setAdapter(new DropdownFilterAdapter(capacityOptions));
 
         filterCapacity = findViewById(R.id.dropdown_capacity_filter);
-        filterCapacity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (capacityFilterDropdown.getVisibility() == View.GONE) {
-                    capacityFilterDropdown.setVisibility(View.VISIBLE);
-                } else {
-                    capacityFilterDropdown.setVisibility(View.GONE);
-                }
+        filterCapacity.setOnClickListener(v -> {
+            if (capacityFilterDropdown.getVisibility() == View.GONE) {
+                capacityFilterDropdown.setVisibility(View.VISIBLE);
+            } else {
+                capacityFilterDropdown.setVisibility(View.GONE);
             }
         });
     }
@@ -281,14 +275,11 @@ public class FindRoomActivity extends AppCompatActivity implements
         amenitiesFilterDropdown.setAdapter(new DropdownFilterAdapter(amenitiesOption));
 
         filterAmenities = findViewById(R.id.dropdown_amenities_filter);
-        filterAmenities.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (amenitiesFilterDropdown.getVisibility() == View.GONE) {
-                    amenitiesFilterDropdown.setVisibility(View.VISIBLE);
-                } else {
-                    amenitiesFilterDropdown.setVisibility(View.GONE);
-                }
+        filterAmenities.setOnClickListener(v -> {
+            if (amenitiesFilterDropdown.getVisibility() == View.GONE) {
+                amenitiesFilterDropdown.setVisibility(View.VISIBLE);
+            } else {
+                amenitiesFilterDropdown.setVisibility(View.GONE);
             }
         });
     }
