@@ -23,7 +23,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
  */
 public final class ApiService {
 
-    private static final String BASE_URL = "https://converge-api.andela.com/mrm";
+    private static final String BASE_URL = "http://converge-api.andela.com/mrm";
 
     /**
      * Private class constructor.

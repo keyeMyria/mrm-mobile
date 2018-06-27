@@ -27,7 +27,6 @@ import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasChildCount;
-import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -46,96 +45,6 @@ public class RoomSelectionActivityInstrumentationTest {
     @Rule
     public IntentsTestRule<RoomSelectionActivity> mActivityTestRule =
             new IntentsTestRule<>(RoomSelectionActivity.class, true, false);
-
-
-    /**
-     * Runs before each test case, to register the espresso idling resource.
-     *
-     * @throws Exception - throws an exception error when method fails
-     */
-    @Before
-    public void setUp() throws Exception {
-        // TODO: uncomment statements once firebase test-lab issues are fixed.
-       /* mDevice = UiDevice.getInstance(getInstrumentation());
-
-        assertThat(mDevice, notNullValue());*/
-
-        Intent intent = new Intent();
-        intent.putExtra("countryID", "1");
-        intent.putExtra("buildingID", "0");
-        intent.putExtra("floorID", "3");
-
-        mActivityTestRule.launchActivity(intent);
-
-        IdlingRegistry.getInstance().register(EspressoIdlingResource.getIdlingResource());
-    }
-
-    /**
-     * Test case that describes/tests for the visibility(properly loaded) of the layout header text.
-     *
-     * @throws Exception - throws an exception error when test case fails
-     */
-    @Test
-    public void testForCorrectLayoutHeaderText() throws Exception {
-        String headerText =
-                getTargetContext().getString(R.string.meeting_rooms_text);
-
-        onView(withId(R.id.text_select_meeting_room))
-                .check(matches(allOf(withText(headerText), isDisplayed())));
-    }
-
-    /**
-     * Test case that checks the visibility of the recycler view.
-     *
-     * @throws Exception - throws an exception error when test case fails
-     */
-    @Test
-    public void recyclerViewDisplayed() throws Exception {
-
-        onView(withId(R.id.meeting_rooms_grid_view))
-                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-    }
-
-    /**
-     * Test case that describes/tests for the visibility(properly loaded) of the recyclerview items.
-     * And tests that at most one(1) button is clicked or clickable
-     *
-     * @throws Exception - throws an exception error when test case fails
-     */
-    @Test
-    public void testForCorrectDisplayedRecyclerViewItemsAndOnClickOfAny() throws Exception {
-        int itemCount = getCount(R.id.meeting_rooms_grid_view);
-
-        String[] rooms = {"Empire State", "Cognitio", "Ubuntu", "Naivasha"};
-
-        onView(withId(R.id.meeting_rooms_grid_view))
-                .check(matches(hasDescendant(withText("Ubuntu"))));
-
-        onView(withId(R.id.meeting_rooms_grid_view)).check(matches(hasChildCount(itemCount)));
-
-        for (int i = 0; i < itemCount; i++) {
-            onView(withId(R.id.meeting_rooms_grid_view))
-                    .check(matches(
-                            allOf(
-                                    atPositionOnView(
-                                            i, withText(rooms[i]), R.id.meeting_room_button),
-                                    isDisplayed())));
-        }
-
-        // TODO: uncomment method call once firebase test-lab issues are fixed.
-//        clickButton(R.id.meeting_rooms_grid_view, 0);
-
-    }
-
-    /**
-     * Runs after each test case, to unregister the espresso idling resource.
-     *
-     * @throws Exception - throws an exception error when method fails
-     */
-    @After
-    public void tearDown() throws Exception {
-        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.getIdlingResource());
-    }
 
     /**
      * Returns a view matcher that matches the targeted view hierarchy(position).
@@ -189,6 +98,92 @@ public class RoomSelectionActivityInstrumentationTest {
 
         onView(allOf(withId(recyclerViewId), isDisplayed())).check(matches(matcher));
         return itemCount[0];
+    }
+
+    /**
+     * Runs before each test case, to register the espresso idling resource.
+     *
+     * @throws Exception - throws an exception error when method fails
+     */
+    @Before
+    public void setUp() throws Exception {
+        // TODO: uncomment statements once firebase test-lab issues are fixed.
+       /* mDevice = UiDevice.getInstance(getInstrumentation());
+
+        assertThat(mDevice, notNullValue());*/
+
+        Intent intent = new Intent();
+        intent.putExtra("countryID", "1");
+        intent.putExtra("buildingID", "0");
+        intent.putExtra("floorID", "2");
+
+        mActivityTestRule.launchActivity(intent);
+
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.getIdlingResource());
+    }
+
+    /**
+     * Test case that describes/tests for the visibility(properly loaded) of the layout header text.
+     *
+     * @throws Exception - throws an exception error when test case fails
+     */
+    @Test
+    public void testForCorrectLayoutHeaderText() throws Exception {
+        String headerText =
+                getTargetContext().getString(R.string.meeting_rooms_text);
+
+        onView(withId(R.id.text_select_meeting_room))
+                .check(matches(allOf(withText(headerText), isDisplayed())));
+    }
+
+    /**
+     * Test case that checks the visibility of the recycler view.
+     *
+     * @throws Exception - throws an exception error when test case fails
+     */
+    @Test
+    public void recyclerViewDisplayed() throws Exception {
+
+        onView(withId(R.id.meeting_rooms_grid_view))
+                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+    }
+
+    /**
+     * Test case that describes/tests for the visibility(properly loaded) of the recyclerview items.
+     * And tests that at most one(1) button is clicked or clickable
+     *
+     * @throws Exception - throws an exception error when test case fails
+     */
+    @Test
+    public void testForCorrectDisplayedRecyclerViewItemsAndOnClickOfAny() throws Exception {
+        int itemCount = getCount(R.id.meeting_rooms_grid_view);
+
+        String[] rooms = {"Ojuelegba", "Empire State"};
+
+        onView(withId(R.id.meeting_rooms_grid_view)).check(matches(hasChildCount(itemCount)));
+
+        for (int i = 0; i < itemCount; i++) {
+            onView(withId(R.id.meeting_rooms_grid_view))
+                    .check(matches(
+                            allOf(
+                                    atPositionOnView(
+                                            i, withText(rooms[i]), R.id.meeting_room_button),
+                                    isDisplayed())));
+        }
+
+        // TODO: uncomment method call once firebase test-lab issues are fixed.
+//        clickButton(R.id.meeting_rooms_grid_view, 0);
+
+    }
+
+    /**
+     * Runs after each test case, to unregister the espresso idling resource.
+     *
+     * @throws Exception - throws an exception error when method fails
+     */
+    @After
+    public void tearDown() throws Exception {
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.getIdlingResource());
     }
 
     // TODO: uncomment method once firebase test-lab issues are fixed.
