@@ -122,6 +122,7 @@ dependencies {
     implementation "com.google.firebase:firebase-core:${rootProject.firebasePref}"
     implementation "com.crashlytics.sdk.android:crashlytics:${rootProject.crashlyticsVersion}"
     implementation "com.android.support.test.espresso.idling:idling-concurrent:${rootProject.espressoVersion}"
+    implementation "com.facebook.shimmer:shimmer:0.1.0@aar"
     testImplementation "org.mockito:mockito-core:${rootProject.mockitoVersion}"
 //  TODO: test:orchestrator should have the same version as the other support:test libs.i.e. `testRunner`
 //  see https://github.com/andela/mrm-mobile/pull/59#pullrequestreview-131503339

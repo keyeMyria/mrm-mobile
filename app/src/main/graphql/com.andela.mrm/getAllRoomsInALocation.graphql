@@ -1,0 +1,24 @@
+query getAllRoomsInALocation($locationId: Int) {
+  getRoomsInALocation(locationId: $locationId) {
+    blocks {
+      floors {
+        rooms {
+          floor{
+            name
+            block{
+              name
+            }
+          }
+          	id
+            name
+            capacity
+            calendarId
+            resources {
+              id
+              name
+            }
+        }
+      }
+    }
+  }
+}

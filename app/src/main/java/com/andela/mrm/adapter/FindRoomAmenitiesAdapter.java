@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.andela.mrm.GetAllRoomsInALocationQuery;
 import com.andela.mrm.R;
 import com.pchmn.materialchips.ChipView;
 
@@ -20,14 +21,14 @@ public class FindRoomAmenitiesAdapter extends RecyclerView.Adapter
     /**
      * The Rooms.
      */
-    List<String> amenities;
+    List<GetAllRoomsInALocationQuery.Resource> amenities;
 
     /**
      * Instantiates a new Find room adapter.
      *
      * @param amenities the amenities
      */
-    public FindRoomAmenitiesAdapter(List<String> amenities) {
+    public FindRoomAmenitiesAdapter(List<GetAllRoomsInALocationQuery.Resource> amenities) {
         this.amenities = amenities;
     }
 
@@ -77,7 +78,7 @@ public class FindRoomAmenitiesAdapter extends RecyclerView.Adapter
          * @param position the position
          */
         public void setValues(int position) {
-            amenitiesView.setLabel(amenities.get(position));
+            amenitiesView.setLabel(amenities.get(position).name());
         }
     }
 }

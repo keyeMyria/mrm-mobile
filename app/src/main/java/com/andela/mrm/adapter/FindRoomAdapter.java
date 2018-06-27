@@ -5,13 +5,14 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.andela.mrm.GetAllRoomsInALocationQuery;
 import com.andela.mrm.R;
-import com.andela.mrm.room_booking.room_availability.models.Rooms;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class FindRoomAdapter extends RecyclerView.Adapter<FindRoomAdapter.ViewHo
     /**
      * The Rooms.
      */
-    List<Rooms> rooms;
+    List<GetAllRoomsInALocationQuery.Room> rooms;
     /**
      * The Context.
      */
@@ -34,7 +35,7 @@ public class FindRoomAdapter extends RecyclerView.Adapter<FindRoomAdapter.ViewHo
      * @param rooms   the amenities
      * @param context the context
      */
-    public FindRoomAdapter(List<Rooms> rooms, Context context) {
+    public FindRoomAdapter(List<GetAllRoomsInALocationQuery.Room> rooms, Context context) {
         this.rooms = rooms;
         this.context = context;
     }
@@ -96,12 +97,19 @@ public class FindRoomAdapter extends RecyclerView.Adapter<FindRoomAdapter.ViewHo
          * @param position the position
          */
         public void setValues(int position) {
-            capacity.setText(String.valueOf(rooms.get(position).getCapacity()));
-            roomLocation.setText(rooms.get(position).getLocation());
-            roomName.setText(rooms.get(position).getName());
+            String floor = rooms.get(position).floor().name();
+            String block = rooms.get(position).floor().block().name();
+            String name = rooms.get(position).name();
+
+            Log.e("Room", rooms.get(position).toString());
+            Log.e("room name", name);
+            String roomCapacity = String.valueOf(rooms.get(position).capacity());
+            capacity.setText(roomCapacity);
+            roomLocation.setText(block + ", " + floor);
+            roomName.setText(name);
             RecyclerView.LayoutManager layoutManager = new GridLayoutManager(context, 2);
             amenitiesRecyclerView
-                    .setAdapter(new FindRoomAmenitiesAdapter(rooms.get(position).getAmenities()));
+                    .setAdapter(new FindRoomAmenitiesAdapter(rooms.get(position).resources()));
             amenitiesRecyclerView.setLayoutManager(layoutManager);
         }
     }

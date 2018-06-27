@@ -1,37 +1,101 @@
 package com.andela.mrm.room_booking.room_availability.views;
 
+import android.Manifest;
+import android.accounts.AccountManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.andela.mrm.GetAllRoomsInALocationQuery;
 import com.andela.mrm.R;
 import com.andela.mrm.adapter.DropdownFilterAdapter;
 import com.andela.mrm.adapter.FindRoomAdapter;
 import com.andela.mrm.adapter.SelectedFilterAdapter;
-import com.andela.mrm.room_booking.room_availability.models.Rooms;
+import com.andela.mrm.presenter.GetAllRoomsInALocationFromApolloPresenter;
+import com.andela.mrm.presenter.GsuitePresenter;
+import com.apollographql.apollo.exception.ApolloException;
+import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.services.calendar.CalendarScopes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import pub.devrel.easypermissions.EasyPermissions;
+
+import static com.andela.mrm.room_booking.room_availability.views.RoomAvailabilityActivity.REQUEST_PERMISSION_GET_ACCOUNTS;
+
 
 /**
  * The type Find room activity.
  */
-public class FindRoomActivity extends AppCompatActivity {
+public class FindRoomActivity extends AppCompatActivity implements
+        GetAllRoomsInALocationFromApolloPresenter.IOnGetAllRoomsFromApolloCallback,
+        GsuitePresenter.IOnGsuitePresenterResponse, EasyPermissions.PermissionCallbacks {
+    ShimmerFrameLayout shimmerFrameLayout;
+    TextView numberOfAvailableRooms;
+    /**
+     * The Lagos location id.
+     */
+    static final int LAGOS_LOCATION_ID = 2;
     private ImageView closeActivity;
+    private static final String PREF_ACCOUNT_NAME = "accountName";
+    /**
+     * The Request account picker.
+     */
+    static final int REQUEST_ACCOUNT_PICKER = 1000;
+    /**
+     * The Request google play services.
+     */
+    static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
+    /**
+     * The Request authorization.
+     */
+    static final int REQUEST_AUTHORIZATION = 1001;
     /**
      * The Find room recycler view.
      */
     RecyclerView findRoomRecyclerView;
     /**
-     * The Room.
+     * The Filter availability.
      */
-    Rooms room;
-    public ImageView filterAvailability, filterLocation, filterCapacity, filterAmenities;
-    public RecyclerView availabilityFilterDropdown, locationFilterDropdown, capacityFilterDropdown,
-    amenitiesFilterDropdown, selectedFiltersDisplay;
+    public ImageView filterAvailability, /**
+     * The Filter location.
+     */
+    filterLocation, /**
+     * The Filter capacity.
+     */
+    filterCapacity, /**
+     * The Filter amenities.
+     */
+    filterAmenities;
+    /**
+     * The Availability filter dropdown.
+     */
+    public RecyclerView availabilityFilterDropdown, /**
+     * The Location filter dropdown.
+     */
+    locationFilterDropdown, /**
+     * The Capacity filter dropdown.
+     */
+    capacityFilterDropdown,
+    /**
+     * The Amenities filter dropdown.
+     */
+    amenitiesFilterDropdown, /**
+     * The Selected filters display.
+     */
+    selectedFiltersDisplay;
     /**
      * The Availabilty options.
      */
@@ -48,13 +112,32 @@ public class FindRoomActivity extends AppCompatActivity {
      * The Amenities option.
      */
     final List<String> amenitiesOption = new ArrayList<>();
+    /**
+     * The Filters.
+     */
     final List<String> filters = new ArrayList<>();
+    private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
+    /**
+     * The Credential.
+     */
+    GoogleAccountCredential credential;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_room);
+        shimmerFrameLayout = findViewById(R.id.layout_shimmer);
+        numberOfAvailableRooms = findViewById(R.id.text_result_count);
+
+        shimmerFrameLayout.startShimmerAnimation();
+        numberOfAvailableRooms.setVisibility(View.GONE);
+
+        credential = GoogleAccountCredential.usingOAuth2(
+                getApplicationContext(), Arrays.asList(SCOPES))
+                .setBackOff(new ExponentialBackOff());
+
+        getAllData();
 
         availabiltyOptions.add("Available");
         availabiltyOptions.add("Unavailable");
@@ -92,17 +175,31 @@ public class FindRoomActivity extends AppCompatActivity {
         setOnClickListenerForAmenititesFilter();
         updateFilters(filters);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this,
-                LinearLayoutManager.HORIZONTAL, false);
-        findRoomRecyclerView.setAdapter(new FindRoomAdapter(room.initializeRooms(), this));
-        findRoomRecyclerView.setLayoutManager(layoutManager);
-
         closeActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+    }
+
+    /**
+     * gets all data.
+     */
+    private void getAllData() {
+        new GetAllRoomsInALocationFromApolloPresenter(FindRoomActivity.this)
+                .getAllRooms(LAGOS_LOCATION_ID, this);
+    }
+
+    /**
+     * sets room adapter.
+     * @param rooms the list of rooms.
+     */
+    public void setRoomsAdapter(List<GetAllRoomsInALocationQuery.Room> rooms) {
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this,
+                LinearLayoutManager.HORIZONTAL, false);
+        findRoomRecyclerView.setAdapter(new FindRoomAdapter(rooms, this));
+        findRoomRecyclerView.setLayoutManager(layoutManager);
     }
 
     /**
@@ -206,5 +303,152 @@ public class FindRoomActivity extends AppCompatActivity {
                     LinearLayoutManager.HORIZONTAL, false);
             selectedFiltersDisplay.setAdapter(new SelectedFilterAdapter(filtersList));
             selectedFiltersDisplay.setLayoutManager(layoutManager);
+    }
+
+    /**
+     * gets room schedule.
+     * @param listOfAllRoomsId list of room ids.
+     * @param listOfAllRoomsFromApollo list of all rooms in a location from apollo.
+     */
+    private void getResourcesFreeBusySchedule(
+            List<String> listOfAllRoomsId,
+            List<GetAllRoomsInALocationQuery.Room> listOfAllRoomsFromApollo) {
+        new GsuitePresenter(credential, this, listOfAllRoomsId,
+                listOfAllRoomsFromApollo).execute();
+    }
+
+
+    @Override
+    public void onGetAllRoomsFromApolloError(ApolloException error) {
+     // TODO notify do something about error
+    }
+
+    @Override
+    public void onGetAllRoomsFromApolloSuccess(List<String> listOfAllRoomsId,
+                                               List<GetAllRoomsInALocationQuery.Room> rooms) {
+        getResourcesFreeBusySchedule(listOfAllRoomsId, rooms);
+    }
+
+
+    @Override
+    public void onGsuitePresenterSuccess(final List<GetAllRoomsInALocationQuery.Room>
+                                                     listOfAvailableRooms) {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                shimmerFrameLayout.stopShimmerAnimation();
+                shimmerFrameLayout.setVisibility(View.GONE);
+
+                numberOfAvailableRooms.setVisibility(View.VISIBLE);
+                numberOfAvailableRooms.setText("Available Rooms ("
+                        + listOfAvailableRooms.size()
+                        + ")");
+                setRoomsAdapter(listOfAvailableRooms);
+
+            }
+        });
+
+        Log.e("All Available", listOfAvailableRooms.toString());
+    }
+
+    @Override
+    public void onGsuitePresenterError(Exception error) {
+        // TODO notify do something about error
+        Log.e("Gsuite error", error.toString());
+    }
+
+    @Override
+    public void onGetSelectedName() {
+        chooseAccount();
+    }
+
+    /**
+     * choose Google account.
+     */
+    private void chooseAccount() {
+        if (EasyPermissions.hasPermissions(
+                this, Manifest.permission.GET_ACCOUNTS)) {
+            String accountName = getPreferences(Context.MODE_PRIVATE)
+                    .getString(PREF_ACCOUNT_NAME, null);
+            if (accountName != null) {
+                credential.setSelectedAccountName(accountName);
+                getAllData();
+            } else {
+                // Start a dialog from which the user can choose an account
+                startActivityForResult(
+                        credential.newChooseAccountIntent(),
+                        REQUEST_ACCOUNT_PICKER);
+            }
+        } else {
+            // Request the GET_ACCOUNTS permission via a user dialog
+            EasyPermissions.requestPermissions(
+                    this,
+                    "This app needs to access your Google account (via Contacts).",
+                    REQUEST_PERMISSION_GET_ACCOUNTS,
+                    Manifest.permission.GET_ACCOUNTS);
+        }
+    }
+
+    /**
+     * Called when an activity launched here (specifically, AccountPicker
+     * and authorization) exits, giving you the requestCode you started it with,
+     * the resultCode it returned, and any additional data from it.
+     *
+     * @param requestCode code indicating which activity result is incoming.
+     * @param resultCode  code indicating the result of the incoming
+     *                    activity result.
+     * @param data        Intent (containing result data) returned by incoming
+     *                    activity result.
+     */
+    @Override
+    protected void onActivityResult(
+            int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_GOOGLE_PLAY_SERVICES:
+                if (resultCode != RESULT_OK) {
+                    Log.v("GooglePlay services", "This app requires Google "
+                            + "Play Services."
+                            + " Please install Google Play Services on "
+                            + "your device and relaunch this app.");
+                } else {
+                    getAllData();
+                }
+                break;
+            case REQUEST_ACCOUNT_PICKER:
+                if (resultCode == RESULT_OK && data != null
+                        && data.getExtras() != null) {
+                    String accountName =
+                            data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                    if (accountName != null) {
+                        SharedPreferences settings =
+                                getPreferences(Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString(PREF_ACCOUNT_NAME, accountName);
+                        editor.apply();
+                        credential.setSelectedAccountName(accountName);
+                        getAllData();
+                    }
+                }
+                break;
+            case REQUEST_AUTHORIZATION:
+                if (resultCode == RESULT_OK) {
+                    getAllData();
+                }
+                break;
+            default:
+                //intentionally left blank
+        }
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+        // Intentionally left blank
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        // Intentionally left blank
     }
 }
