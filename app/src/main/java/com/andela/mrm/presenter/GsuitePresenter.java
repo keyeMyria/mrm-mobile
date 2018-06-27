@@ -1,8 +1,9 @@
 package com.andela.mrm.presenter;
 
 import android.os.AsyncTask;
-import android.util.Log;
+import android.support.annotation.Nullable;
 
+import com.andela.mrm.GetAllRoomsInALocationQuery;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.http.HttpTransport;
@@ -25,34 +26,38 @@ import java.util.Map;
 /**
  * The type Gsuite presenter.
  */
-public class GsuitePresenter extends AsyncTask<Void, Void, FreeBusyResponse> {
+public class GsuitePresenter extends AsyncTask<Void, Void, List<String>> {
 
-    private static final String APPLICATION_NAME = "Google Admin SDK Directory API Java Quickstart";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-    private static final String CREDENTIALS_FOLDER = "credentials";
-    /**
-     * The constant cognitioMeetingRoomId.
-     */
-    public String
-        cognitioMeetingRoomId = "andela.com_3339303430303931393530@resource.calendar.google.com",
-    /**
-     * The Eko meeting room id.
-     */
-    ekoMeetingRoomId = "andela.com_2d3630303638323533363632@resource.calendar.google.com";
-    String[] roomIds = {cognitioMeetingRoomId, ekoMeetingRoomId};
-
     private final Calendar mservice;
-    private Exception mLastError;
-
     private final GoogleAccountCredential credential;
+    private IOnGsuitePresenterResponse iOnGsuitePresenterResponse;
+    private List<String> listOfResourceCalendarIds;
+    private List<GetAllRoomsInALocationQuery.Room> listOfRooms;
 
     /**
      * Instantiates a new Gsuite presenter.
      *
-     * @param credential the credential
+     * @param credential                 the credential
+     * @param iOnGsuitePresenterResponse the on gsuite presenter response
+     * @param listOfResourceCalendarIds  the list of resource calendar ids
+     * @param listOfRooms                the list of rooms
      */
-    public GsuitePresenter(GoogleAccountCredential credential) {
+    public GsuitePresenter(GoogleAccountCredential credential,
+                           @Nullable IOnGsuitePresenterResponse iOnGsuitePresenterResponse,
+                           @Nullable List<String> listOfResourceCalendarIds,
+                           @Nullable List<GetAllRoomsInALocationQuery.Room> listOfRooms) {
         this.credential = credential;
+        if (iOnGsuitePresenterResponse != null) {
+            this.iOnGsuitePresenterResponse = iOnGsuitePresenterResponse;
+        }
+        if (listOfResourceCalendarIds != null) {
+            this.listOfResourceCalendarIds = listOfResourceCalendarIds;
+        }
+        if (listOfRooms != null) {
+            this.listOfRooms = listOfRooms;
+        }
+
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
         mservice = new Calendar.Builder(
                 transport, JSON_FACTORY, credential)
@@ -63,11 +68,13 @@ public class GsuitePresenter extends AsyncTask<Void, Void, FreeBusyResponse> {
 
 
     @Override
-    protected FreeBusyResponse doInBackground(Void... voids) {
+    protected List<String> doInBackground(Void... voids) {
         try {
             return getData();
         } catch (Exception error) {
-            mLastError = error;
+            if (iOnGsuitePresenterResponse != null) {
+                iOnGsuitePresenterResponse.onGsuitePresenterError(error);
+            }
             return null;
         }
     }
@@ -77,13 +84,15 @@ public class GsuitePresenter extends AsyncTask<Void, Void, FreeBusyResponse> {
      * @return freebusyResponse.
      * @throws IOException IOException.
      */
-    private FreeBusyResponse getData() throws IOException {
+    private List<String> getData() throws IOException {
         FreeBusyRequest request = new FreeBusyRequest();
         List<FreeBusyRequestItem> requestItems = new ArrayList<>();
+        List<String> listOfIdsOfCurrentlyAvailableRooms = new ArrayList<>();
         DateTime now = new DateTime(System.currentTimeMillis());
 
-        requestItems.add(new FreeBusyRequestItem().setId(cognitioMeetingRoomId));
-        requestItems.add(new FreeBusyRequestItem().setId(ekoMeetingRoomId));
+        for (String roomIds : listOfResourceCalendarIds) {
+            requestItems.add(new FreeBusyRequestItem().setId(roomIds));
+        }
 
         java.util.Calendar calendar = new GregorianCalendar();
         calendar.set(java.util.Calendar.HOUR_OF_DAY, 23);
@@ -98,20 +107,89 @@ public class GsuitePresenter extends AsyncTask<Void, Void, FreeBusyResponse> {
 
         Calendar.Freebusy.Query query = mservice.freebusy().query(request);
         query.setFields("calendars");
-        FreeBusyResponse freeBusyResponse = query.execute();
-        Map<String, FreeBusyCalendar> freeBusyCalendarMap = freeBusyResponse.getCalendars();
-//
-//        for(String timezones: TimeZone.getAvailableIDs()) {
-//            Log.e("timezones", timezones);
-//        }
-//        Log.e("default timezone", TimeZone.getDefault().getID());
-        Log.e("looping", "looppinggggg");
-        for (String ids : roomIds) {
-            Log.e("room", freeBusyCalendarMap.get(ids).getBusy().toString());
+
+        FreeBusyResponse freeBusyResponse = new FreeBusyResponse();
+        Map<String, FreeBusyCalendar> freeBusyCalendarMap;
+
+        try {
+            if (credential.getSelectedAccountName() == null) {
+                iOnGsuitePresenterResponse.onGetSelectedName();
+            }
+            freeBusyResponse = query.execute();
+
+        } catch (Exception e) {
+            if (iOnGsuitePresenterResponse != null) {
+                iOnGsuitePresenterResponse.onGsuitePresenterError(e);
+            }
         }
 
-//        Log.e("FreeBusyyy", freeBusyResponse + "");
-//        Log.e("FreeBusyyy calendar", freeBusyCalendarMap + "");
-        return freeBusyResponse;
+        freeBusyCalendarMap = freeBusyResponse.getCalendars();
+
+        final int upcomingEventPosition = 0;
+        for (String id : this.listOfResourceCalendarIds) {
+            Long nextEventStartTime;
+
+            if (freeBusyCalendarMap.get(id).getErrors() == null) {
+
+               if (freeBusyCalendarMap.get(id).getBusy().isEmpty()) {
+                   listOfIdsOfCurrentlyAvailableRooms.add(id);
+               } else {
+                   nextEventStartTime = freeBusyCalendarMap.get(id).getBusy()
+                        .get(upcomingEventPosition).getStart().getValue();
+                   if (now.getValue() < nextEventStartTime) {
+                    listOfIdsOfCurrentlyAvailableRooms.add(id);
+                   }
+               }
+
+            }
+        }
+
+        assert iOnGsuitePresenterResponse != null;
+        iOnGsuitePresenterResponse.onGsuitePresenterSuccess(
+                getAvailableRooms(listOfIdsOfCurrentlyAvailableRooms, listOfRooms));
+        return listOfIdsOfCurrentlyAvailableRooms;
+    }
+
+    /**
+     * @param listOfRoomIds list of room ids.
+     * @param rooms list of rooms.
+     * @return availableRooms.
+     */
+    private List<GetAllRoomsInALocationQuery.Room> getAvailableRooms(
+            List<String> listOfRoomIds, List<GetAllRoomsInALocationQuery.Room> rooms) {
+        List<GetAllRoomsInALocationQuery.Room> availableRooms = new ArrayList<>();
+        if (!rooms.isEmpty()) {
+            for (GetAllRoomsInALocationQuery.Room room : rooms) {
+                if (listOfRoomIds.contains(room.calendarId())) {
+                    availableRooms.add(room);
+                }
+            }
+        }
+        return availableRooms;
+    }
+
+
+    /**
+     * The interface On gsuite presenter response.
+     */
+    public interface IOnGsuitePresenterResponse {
+        /**
+         * On gsuite presenter success.
+         *
+         * @param listOfAvailableRooms the list of available rooms.
+         */
+        void onGsuitePresenterSuccess(List<GetAllRoomsInALocationQuery.Room> listOfAvailableRooms);
+
+        /**
+         * On gsuite presenter error.
+         *
+         * @param error the error
+         */
+        void onGsuitePresenterError(Exception error);
+
+        /**
+         * On get selected name.
+         */
+        void onGetSelectedName();
     }
 }
