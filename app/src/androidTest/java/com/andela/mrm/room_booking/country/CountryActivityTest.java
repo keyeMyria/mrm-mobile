@@ -67,7 +67,7 @@ public class CountryActivityTest {
      */
     @Test
     public void expectedRecyclerViewItemsAreDisplayed() {
-        String[] expectedCountries = new String[]{"Kenya", "Nigeria", "Uganda"};
+        String[] expectedCountries = new String[]{"Kampala", "Lagos", "Nairobi"};
 
         for (String country : expectedCountries) {
             onView(withText(country)).check(matches(isDisplayed()));

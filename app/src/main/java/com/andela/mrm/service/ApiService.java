@@ -19,31 +19,26 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
- *  Apollo client provider class.
+ * Apollo client provider class.
  */
-public final class MyApolloClient {
+public final class ApiService {
 
-    // TODO: Modify this when base url is finalized
-//    private static final String BASE_URL =
-//            "https://api.graph.cool/simple/v1/cjgdrz83r1t4k0173p13insaj";
-    private static ApolloClient myApolloClient;
+    private static final String BASE_URL = "http://converge-api.andela.com/mrm";
 
     /**
-     * private constructor.
-     * prevent instantiation
+     * Private class constructor.
      */
-    private MyApolloClient() {
-
+    private ApiService() {
+        // Prevents instantiation since this is an utility class
     }
 
     /**
-     * Gets my apollo client.
+     * Gets apollo client.
      *
      * @param context the context
-     * @param baseUrl the base url
      * @return a configured instance of apollo client
      */
-    public static ApolloClient getMyApolloClient(Context context, String baseUrl) {
+    public static ApolloClient getApolloClient(Context context) {
 
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -63,6 +58,11 @@ public final class MyApolloClient {
             @Override
             public CacheKey fromFieldRecordSet(@Nonnull ResponseField field,
                                                @Nonnull Map<String, Object> recordSet) {
+                if (recordSet.containsKey("id")) {
+                    String typeNameAndIdKey = recordSet
+                            .get("__typename") + "." + recordSet.get("id");
+                    return CacheKey.from(typeNameAndIdKey);
+                }
                 return formatCacheKey((String) recordSet.get("id"));
             }
 
@@ -82,13 +82,10 @@ public final class MyApolloClient {
             }
         };
 
-        myApolloClient = ApolloClient.builder()
-                .serverUrl(baseUrl)
+        return ApolloClient.builder()
+                .serverUrl(BASE_URL)
                 .normalizedCache(sqlCacheFactory, resolver)
                 .okHttpClient(okHttpClient)
                 .build();
-
-        return myApolloClient;
-
     }
 }

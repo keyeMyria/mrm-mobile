@@ -31,7 +31,7 @@ public class ResourcesInfoRepository implements ResourcesInfoContract.Data {
 
     @Override
     public void loadRoom(final Callback callback) {
-        mRoomQuery.enqueue(new ApolloCall.Callback<RoomQuery.Data>() {
+        mRoomQuery.clone().enqueue(new ApolloCall.Callback<RoomQuery.Data>() {
             @Override
             public void onResponse(@Nonnull Response<RoomQuery.Data> response) {
                 RoomQuery.GetRoomById result = response.data().getRoomById();
