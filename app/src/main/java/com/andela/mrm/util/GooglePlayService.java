@@ -31,8 +31,8 @@ public class GooglePlayService {
     /**
      * Show google play services availability error dialog.
      *
-     * @param connectionStatusCode the connection status code
-     * @param activity             the activity
+     * @param connectionStatusCode the connection status code.
+     * @param activity             the activity.
      */
     public void showGooglePlayServicesAvailabilityErrorDialog(
             final int connectionStatusCode, Activity activity) {
