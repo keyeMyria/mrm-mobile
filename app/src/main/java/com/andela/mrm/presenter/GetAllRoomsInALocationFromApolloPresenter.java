@@ -35,7 +35,6 @@ public class GetAllRoomsInALocationFromApolloPresenter {
      */
     public GetAllRoomsInALocationFromApolloPresenter(Context context) {
         this.context = context;
-
     }
 
     /**
