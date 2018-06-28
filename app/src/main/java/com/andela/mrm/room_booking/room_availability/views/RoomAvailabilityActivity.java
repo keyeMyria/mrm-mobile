@@ -197,7 +197,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
                     .show();
         } else {
             new MakeGoogleCalendarCallPresenter(mCredential, this).execute();
-//            new GsuitePresenter(mCredential, null).execute();
         }
     }
 

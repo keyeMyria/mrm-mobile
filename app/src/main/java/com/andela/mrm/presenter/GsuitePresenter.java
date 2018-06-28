@@ -1,5 +1,8 @@
 package com.andela.mrm.presenter;
 
+/**
+ * Created by Fred Adewole on 20/06/2018.
+ */
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 
@@ -131,15 +134,15 @@ public class GsuitePresenter extends AsyncTask<Void, Void, List<String>> {
 
             if (freeBusyCalendarMap.get(id).getErrors() == null) {
 
-               if (freeBusyCalendarMap.get(id).getBusy().isEmpty()) {
-                   listOfIdsOfCurrentlyAvailableRooms.add(id);
-               } else {
-                   nextEventStartTime = freeBusyCalendarMap.get(id).getBusy()
-                        .get(upcomingEventPosition).getStart().getValue();
-                   if (now.getValue() < nextEventStartTime) {
+                if (freeBusyCalendarMap.get(id).getBusy().isEmpty()) {
                     listOfIdsOfCurrentlyAvailableRooms.add(id);
-                   }
-               }
+                } else {
+                    nextEventStartTime = freeBusyCalendarMap.get(id).getBusy()
+                            .get(upcomingEventPosition).getStart().getValue();
+                    if (now.getValue() < nextEventStartTime) {
+                        listOfIdsOfCurrentlyAvailableRooms.add(id);
+                    }
+                }
 
             }
         }

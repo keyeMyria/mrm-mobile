@@ -1,5 +1,9 @@
 package com.andela.mrm.room_booking.room_availability.views;
 
+/**
+ * Created by Fred Adewole on 03/06/2018.
+ */
+
 import android.Manifest;
 import android.accounts.AccountManager;
 import android.content.Context;
