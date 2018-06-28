@@ -56,6 +56,16 @@ declare_env_variables() {
 /g' |  grep '\.html')"
     CIRCLE_ARTIFACTS_BUTTON="$(echo {\"type\": \"button\", \"text\": \"Checkstyle Lint Report\", \"url\": \"${CIRCLE_REPORT_ARTIFACTS}\"})"
 
+  elif [ "$CIRCLE_JOB" == 'report_coverage' ]; then
+    MESSAGE_TEXT="Coverage Reporting Failed! :scream:"
+
+    # Sorting through the artifact urls to get only the unit test and integration test reports
+    DEBUG_REPORT="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
+/g' |  grep 'jacocoTestReport\/html\/index\.html')"
+    CIRCLE_ARTIFACTS_BUTTON="$(echo \
+        "{\"type\": \"button\", \"text\": \"Test Coverage Report\", \"url\": \"${DEBUG_REPORT}\"}", \
+    )"
+
   elif [ "$CIRCLE_JOB" == 'test_instrumentation' ]; then
     MESSAGE_TEXT="Instrumentation Test Failed! :scream:"
     
