@@ -3,7 +3,7 @@ package com.andela.mrm.presenter;
 import android.content.Context;
 
 import com.andela.mrm.GetAllRoomsInALocationQuery;
-import com.andela.mrm.service.MyApolloClient;
+import com.andela.mrm.service.ApiService;
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
@@ -27,10 +27,6 @@ public class GetAllRoomsInALocationFromApolloPresenter {
      * The Context.
      */
     private final Context context;
-    /**
-     * The Base url.
-     */
-    static final String BASE_URL = "https://converge-api.andela.com/mrm";
 
     /**
      * Instantiates a new Get all rooms in a location from apollo presenter.
@@ -48,12 +44,10 @@ public class GetAllRoomsInALocationFromApolloPresenter {
      * @param locationId                       the location id
      * @param iOnGetAllRoomsFromApolloCallback the on get all rooms from apollo callback
      */
-    public void getAllRooms(
-            int locationId,
-            final IOnGetAllRoomsFromApolloCallback iOnGetAllRoomsFromApolloCallback) {
-        MyApolloClient.getMyApolloClient(context, BASE_URL)
-                .query(GetAllRoomsInALocationQuery
-                        .builder().locationId((long) locationId).build())
+    public void getAllRooms(int locationId, final IOnGetAllRoomsFromApolloCallback
+                                    iOnGetAllRoomsFromApolloCallback) {
+        ApiService.getApolloClient(context)
+                .query(GetAllRoomsInALocationQuery.builder().locationId((long) locationId).build())
                 .enqueue(new ApolloCall.Callback<GetAllRoomsInALocationQuery.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<GetAllRoomsInALocationQuery.Data>

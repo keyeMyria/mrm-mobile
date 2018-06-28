@@ -68,11 +68,22 @@ public class FloorSelectionActivityTest {
      */
     @Test
     public void expectRecyclerViewItemsToBeDisplayed() {
-        onView(withText("1st Floor")).check(matches(isDisplayed()));
-        onView(withText("2nd Floor")).check(matches(isDisplayed()));
-        onView(withText("3rd Floor")).check(matches(isDisplayed()));
-        onView(withText("4th Floor")).check(matches(isDisplayed()));
-        onView(withText("5th Floor")).check(matches(isDisplayed()));
+        // the data at this point from the backend has changed.
+        // The  recyclerview items now display the name of the wings instead of the floors which
+        // might later change again
+        // A permanent fix would be to use a dummy data for the activity instead of relying on what
+        // the backend provides
+        // TODO: Stated above
+//        onView(withText("1st Floor")).check(matches(isDisplayed()));
+//        onView(withText("2nd Floor")).check(matches(isDisplayed()));
+//        onView(withText("3rd Floor")).check(matches(isDisplayed()));
+//        onView(withText("4th Floor")).check(matches(isDisplayed()));
+//        onView(withText("5th Floor")).check(matches(isDisplayed()));
+        onView(withText("GoldCoast")).check(matches(isDisplayed()));
+        onView(withText("Naija")).check(matches(isDisplayed()));
+        onView(withText("Big Apple")).check(matches(isDisplayed()));
+
+
     }
 
     /**

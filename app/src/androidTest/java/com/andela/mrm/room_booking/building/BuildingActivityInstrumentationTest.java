@@ -59,80 +59,16 @@ public class BuildingActivityInstrumentationTest {
                     Context targetContext = InstrumentationRegistry.getInstrumentation()
                             .getTargetContext();
                     Intent result = new Intent(targetContext, BuildingActivity.class);
-                    result.putExtra("countryID", "1");
+                    result.putExtra("countryID", "0");
                     return result;
                 }
             };
 
     /**
-     * Runs before each test case, to register the espresso idling resource.
-     */
-    @Before
-    public void setUp() {
-        IdlingRegistry.getInstance().register(EspressoIdlingResource.getIdlingResource());
-    }
-
-    /**
-     * Test case that describes/tests for the visibility(properly loaded) of the layout header text.
-     */
-    @Test
-    public void testForCorrectLayoutHeaderText() {
-        String headerText = InstrumentationRegistry
-                .getTargetContext().getString(R.string.building_text);
-
-        onView(withId(R.id.building_text))
-                .check(matches(allOf(withText(headerText), isDisplayed())));
-    }
-
-    /**
-     * Test case that checks the visibility of the recycler view.
-     */
-    @Test
-    public void recyclerViewDisplayed() {
-
-        onView(withId(R.id.building_grid_view))
-                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-    }
-
-    /**
-     * Test case that describes/tests for the visibility(properly loaded) of the recyclerview items.
-     * And tests that at least one(1) button is clicked or clickable
-     */
-    @Test
-    public void testForCorrectDisplayedRecyclerViewItemsAndOnClickOfAny() {
-        int itemCount = getCount(R.id.building_grid_view);
-
-        onView(withId(R.id.building_text))
-                .check(matches(withText("What building is this meeting room in?")));
-
-        onView(withId(R.id.building_grid_view))
-                .check(matches(hasDescendant(withText("Epic Tower"))));
-
-        onView(withId(R.id.building_grid_view)).check(matches(hasChildCount(itemCount)));
-        Intents.init();
-
-        onView(withId(R.id.building_grid_view))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
-
-        intended(hasComponent(FloorSelectionActivity.class.getName()));
-
-        Intents.release();
-
-    }
-
-    /**
-     * Runs after each test case, to unregister the espresso idling resource.
-     */
-    @After
-    public void unregisterIdlingResource() {
-        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.getIdlingResource());
-    }
-
-    /**
      * Returns a view matcher that matches the targeted view hierarchy(position).
      *
-     * @param position - position of a specified item in the recyclerview
-     * @param itemMatcher - the current recyclerview child target view
+     * @param position     - position of a specified item in the recyclerview
+     * @param itemMatcher  - the current recyclerview child target view
      * @param targetViewId - resource id for the item in view (recyclerview's child element)
      * @return view matcher
      */
@@ -180,6 +116,67 @@ public class BuildingActivityInstrumentationTest {
 
         onView(allOf(withId(recyclerViewId), isDisplayed())).check(matches(matcher));
         return itemCount[0];
+    }
+
+    /**
+     * Runs before each test case, to register the espresso idling resource.
+     */
+    @Before
+    public void setUp() {
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.getIdlingResource());
+    }
+
+    /**
+     * Test case that describes/tests for the visibility(properly loaded) of the layout header text.
+     */
+    @Test
+    public void testForCorrectLayoutHeaderText() {
+        String headerText = InstrumentationRegistry
+                .getTargetContext().getString(R.string.building_text);
+
+        onView(withId(R.id.building_text))
+                .check(matches(allOf(withText(headerText), isDisplayed())));
+    }
+
+    /**
+     * Test case that checks the visibility of the recycler view.
+     */
+    @Test
+    public void recyclerViewDisplayed() {
+
+        onView(withId(R.id.building_grid_view))
+                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+    }
+
+    /**
+     * Test case that describes/tests for the visibility(properly loaded) of the recyclerview items.
+     * And tests that at least one(1) button is clicked or clickable
+     */
+    @Test
+    public void testForCorrectDisplayedRecyclerViewItemsAndOnClickOfAny() {
+        int itemCount = getCount(R.id.building_grid_view);
+
+        onView(withId(R.id.building_grid_view))
+                .check(matches(hasDescendant(withText("EPIC Center"))));
+
+        onView(withId(R.id.building_grid_view)).check(matches(hasChildCount(itemCount)));
+        Intents.init();
+
+        onView(withId(R.id.building_grid_view))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        intended(hasComponent(FloorSelectionActivity.class.getName()));
+
+        Intents.release();
+
+    }
+
+    /**
+     * Runs after each test case, to unregister the espresso idling resource.
+     */
+    @After
+    public void unregisterIdlingResource() {
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.getIdlingResource());
     }
 }
 
