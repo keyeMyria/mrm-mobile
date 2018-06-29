@@ -23,6 +23,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
  * Apollo client provider class.
  */
 public final class ApiService {
+
     private static final String BASE_URL = "http://converge-api.andela.com/mrm";
 
     /**
@@ -31,6 +32,7 @@ public final class ApiService {
     private ApiService() {
         // Prevents instantiation since this is an utility class
     }
+
     /**
      * Gets apollo client.
      *
@@ -38,6 +40,7 @@ public final class ApiService {
      * @return a configured instance of apollo client
      */
     public static ApolloClient getApolloClient(Context context) {
+
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient okHttpClient = getOkHttpClient(loggingInterceptor);
@@ -55,6 +58,7 @@ public final class ApiService {
                 }
                 return formatCacheKey((String) recordSet.get("id"));
             }
+
             @Nonnull
             @Override
             public CacheKey fromFieldArguments(@Nonnull ResponseField field,
