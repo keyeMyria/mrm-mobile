@@ -24,6 +24,7 @@ import com.andela.mrm.presenter.MakeGoogleCalendarCallPresenter;
 import com.andela.mrm.room_information.RoomInformationActivity;
 import com.andela.mrm.util.GooglePlayService;
 import com.andela.mrm.util.NetworkConnectivityChecker;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
@@ -114,7 +115,7 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
         setFindRoomLayoutListener();
 
 
-        playService = new GooglePlayService();
+        playService = new GooglePlayService(GoogleApiAvailability.getInstance());
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .add(R.id.frame_room_availability_details, new MeetingRoomDetailFragment())

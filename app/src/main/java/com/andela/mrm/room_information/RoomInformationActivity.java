@@ -22,6 +22,7 @@ import com.andela.mrm.room_information.resources_info.ResourcesInfoContract;
 import com.andela.mrm.room_information.resources_info.ResourcesInfoFragment;
 import com.andela.mrm.room_information.resources_info.ResourcesInfoFragment.Callbacks;
 import com.andela.mrm.room_information.resources_info.ResourcesInfoPresenter;
+import com.andela.mrm.util.NetworkConnectivityChecker;
 
 /**
  * The Room information activity class.
@@ -122,7 +123,7 @@ public class RoomInformationActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void showErrorMessage(final String message) {
+    public void showErrorMessage(final int message) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -136,6 +137,11 @@ public class RoomInformationActivity extends AppCompatActivity implements
                         .show();
             }
         });
+    }
+
+    @Override
+    public boolean isNetworkAvailable() {
+        return NetworkConnectivityChecker.isDeviceOnline(this);
     }
 
     /**
