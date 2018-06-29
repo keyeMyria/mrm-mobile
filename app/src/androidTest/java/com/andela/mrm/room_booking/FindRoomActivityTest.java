@@ -1,6 +1,10 @@
 package com.andela.mrm.room_booking;
 
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.uiautomator.UiDevice;
+import android.support.test.uiautomator.UiObject;
+import android.support.test.uiautomator.UiObjectNotFoundException;
+import android.support.test.uiautomator.UiSelector;
 import android.view.View;
 
 import com.andela.mrm.R;
@@ -9,6 +13,7 @@ import com.andela.mrm.room_booking.room_availability.views.FindRoomActivity;
 import org.junit.Rule;
 import org.junit.Test;
 
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -25,6 +30,17 @@ import static org.hamcrest.CoreMatchers.allOf;
  * The type Event schedule activity test.
  */
 public class FindRoomActivityTest {
+    private UiDevice mDevice;
+
+    /**
+     * Sets up.
+     *
+     * @throws Exception the exception
+     */
+    public void setUp() throws Exception {
+        mDevice = UiDevice.getInstance(getInstrumentation());
+        accountSelector();
+    }
 
     /**
      * The Activity test rule.
@@ -115,5 +131,25 @@ public class FindRoomActivityTest {
         onView(withId(R.id.close_find_room))
                 .perform((click()));
         assertTrue(activityTestRule.getActivity().isDestroyed());
+    }
+
+    /**
+     * Account selector.
+     *
+     * @throws UiObjectNotFoundException the ui object not found exception
+     */
+    public void accountSelector() throws UiObjectNotFoundException {
+        UiObject selectAccountDialogue = mDevice.findObject(new UiSelector()
+                .text("Choose an account"));
+
+        UiObject selectAccount = mDevice.findObject(new UiSelector()
+                .textStartsWith("LYQ774V3KKK"));
+
+        UiObject clickOButton = mDevice.findObject(new UiSelector().text("OK"));
+
+        if (selectAccountDialogue.exists()) {
+            selectAccount.click();
+            clickOButton.click();
+        }
     }
 }
