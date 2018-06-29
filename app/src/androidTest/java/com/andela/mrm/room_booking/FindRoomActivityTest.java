@@ -5,6 +5,7 @@ import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject;
 import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.support.test.uiautomator.UiSelector;
+import android.util.Log;
 import android.view.View;
 
 import com.andela.mrm.R;
@@ -150,6 +151,8 @@ public class FindRoomActivityTest {
         if (selectAccountDialogue.exists()) {
             selectAccount.click();
             clickOButton.click();
+        } else {
+            Log.e("Dialogue", "select account doesn't exist");
         }
     }
 }
