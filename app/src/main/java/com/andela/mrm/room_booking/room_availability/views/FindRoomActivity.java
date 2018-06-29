@@ -141,7 +141,7 @@ public class FindRoomActivity extends AppCompatActivity implements
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
 
-//        getAllData();
+        getAllData();
 
         availabiltyOptions.add("Available");
         availabiltyOptions.add("Unavailable");
