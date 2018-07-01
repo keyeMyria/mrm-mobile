@@ -5,10 +5,6 @@ def coverageSourceDirs = [
         'src/prod/java'
 ]
 
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
-}
-
 task jacocoTestReport(type: JacocoReport, dependsOn : 'test') {
     description = 'Generate JaCoCo coverage reports'
     group       = 'Reporting'
@@ -35,16 +31,18 @@ task jacocoTestReport(type: JacocoReport, dependsOn : 'test') {
                     '**/*Module_Provide*Factory.*',
                     '**/*_Factory.*',
                     '**/*_MembersInjector.*',
-                    '**/*_LifecycleAdapter.*'
+                    '**/*_LifecycleAdapter.*',
+                    '**/*Query$*',
+                    '**/*Query.*',
+                    '**/com/andela/mrm/fragment',
+                    '**/com/andela/mrm/type'
             ]
     )
 
     sourceDirectories = files(coverageSourceDirs)
     executionData     = fileTree(
             dir     : "$buildDir",
-            include : [ 'jacoco/testMockDebugUnitTest.exec',
-                        'jacoco/testMockReleaseUnitTest.exec',
-                        'outputs/code-coverage/connected/flavors/MOCK/coverage.ec' ]
+            include : ['**/*.exec', '**/*.ec']
     )
 
     doFirst {
@@ -54,5 +52,10 @@ task jacocoTestReport(type: JacocoReport, dependsOn : 'test') {
             }
         }
     }
+}
+
+task unifiedCoverageReport(dependsOn: ['clean', 'createMockDebugCoverageReport', 'jacocoTestReport']) {
+    description = 'Generates coverage report which includes both local unit tests and instrumentation tests'
+    group = 'Reporting'
 }
 

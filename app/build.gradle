@@ -8,7 +8,7 @@ apply from: rootProject.file('app/coverage.gradle')
 apply plugin: 'io.fabric'
 
 jacoco {
-    toolVersion = '0.8.0'
+    toolVersion = "${rootProject.jacocoVersion}"
 }
 
 tasks.withType(Test) {
