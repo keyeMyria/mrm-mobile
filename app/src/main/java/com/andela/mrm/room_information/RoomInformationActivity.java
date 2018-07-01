@@ -35,6 +35,7 @@ public class RoomInformationActivity extends AppCompatActivity implements
     private int mRoomId;
     ResourcesInfoContract.Actions mPresenter;
     private boolean mIsLoadingData;
+    private Room mRoom;
 
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
@@ -91,6 +92,7 @@ public class RoomInformationActivity extends AppCompatActivity implements
 
     @Override
     public void showRoomInfo(final Room room) {
+        mRoom = room;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -99,12 +101,21 @@ public class RoomInformationActivity extends AppCompatActivity implements
                 String roomLocation = room.floor().block().name() + ", " + room.floor().name();
                 mLocationText.setText(roomLocation);
 
-                ResourcesInfoFragment resourcesInfoFragment = getResourcesInfoFragment();
-                if (resourcesInfoFragment != null) {
-                    resourcesInfoFragment.showResourcesList(room.resources());
-                }
+                showRoomResources(room);
             }
         });
+    }
+
+    /**
+     * Displays list of room resources in the RoomResourcesFragment.
+     *
+     * @param room room
+     */
+    void showRoomResources(Room room) {
+        ResourcesInfoFragment resourcesInfoFragment = getResourcesInfoFragment();
+        if (resourcesInfoFragment != null && room != null) {
+            resourcesInfoFragment.showResourcesList(room.resources());
+        }
     }
 
     @Override
@@ -161,6 +172,7 @@ public class RoomInformationActivity extends AppCompatActivity implements
     @Override
     public void onViewLoaded() {
         showLoadingIndicator(mIsLoadingData);
+        showRoomResources(mRoom);
     }
 
     /**
