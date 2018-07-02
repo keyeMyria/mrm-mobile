@@ -11,8 +11,12 @@ import android.view.View;
 import com.andela.mrm.R;
 import com.andela.mrm.room_booking.room_availability.views.FindRoomActivity;
 
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+import org.junit.runners.MethodSorters;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
@@ -30,6 +34,8 @@ import static org.hamcrest.CoreMatchers.allOf;
 /**
  * The type Event schedule activity test.
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@RunWith(JUnit4.class)
 public class FindRoomActivityTest {
     private UiDevice mDevice;
 
@@ -41,6 +47,7 @@ public class FindRoomActivityTest {
     public void setUp() throws Exception {
         mDevice = UiDevice.getInstance(getInstrumentation());
         accountSelector();
+        accessContacts();
     }
 
     /**
@@ -54,7 +61,13 @@ public class FindRoomActivityTest {
      * Find room activity is displayed correctly.
      */
     @Test
-    public void FindRoomActivityIsDisplayedCorrectly() {
+    public void test1_FindRoomActivityIsDisplayedCorrectly() {
+        try {
+            accountSelector();
+        } catch (UiObjectNotFoundException e) {
+            e.printStackTrace();
+        }
+
         onView(withId(R.id.close_find_room))
                 .check(matches(isDisplayed()));
 
@@ -78,7 +91,7 @@ public class FindRoomActivityTest {
      * Filters are displayed correctly.
      */
     @Test
-    public void filtersAreDisplayedCorrectly() {
+    public void test2_filtersAreDisplayedCorrectly() {
         onView(withId(R.id.layout_filters))
                 .check(matches(allOf(isDisplayed(), hasChildCount(4))));
 
@@ -93,7 +106,7 @@ public class FindRoomActivityTest {
      * Filtered result layout is displayed.
      */
     @Test
-    public void filteredResultLayoutIsDisplayed() {
+    public void test3_filteredResultLayoutIsDisplayed() {
         View view = activityTestRule.getActivity().findViewById(R.id.layout_filters_display);
         assertNotNull(view);
     }
@@ -103,7 +116,7 @@ public class FindRoomActivityTest {
      * Dropdowns are present.
      */
     @Test
-    public void dropdownsArePresent() {
+    public void test4_dropdownsArePresent() {
         View view = activityTestRule.getActivity().findViewById(R.id.layout_filters_display);
         assertNotNull(view);
 
@@ -128,7 +141,7 @@ public class FindRoomActivityTest {
      * Close button finishes activity.
      */
     @Test
-    public void closeButtonFinishesActivity() {
+    public void test5_closeButtonFinishesActivity() {
         onView(withId(R.id.close_find_room))
                 .perform((click()));
         assertTrue(activityTestRule.getActivity().isDestroyed());
@@ -140,17 +153,53 @@ public class FindRoomActivityTest {
      * @throws UiObjectNotFoundException the ui object not found exception
      */
     public void accountSelector() throws UiObjectNotFoundException {
-        UiObject selectAccountDialogue = mDevice.findObject(new UiSelector()
-                .text("Choose an account"));
 
         UiObject selectAccount = mDevice.findObject(new UiSelector()
                 .textStartsWith("LYQ774V3KKK"));
 
+        UiObject clickOKButton = mDevice.findObject(new UiSelector().text("OK"));
+        if (selectAccount.exists()) {
+            selectAccount.click();
+            if (clickOKButton.exists()) {
+                clickOKButton.click();
+            }
+        }
+
+    }
+
+    /**
+     * Access contacts.
+     *
+     * @throws UiObjectNotFoundException the ui object not found exception
+     */
+    public void accessContacts() throws UiObjectNotFoundException {
+        UiObject selectAccountDialogue = mDevice.findObject(new UiSelector()
+                .text("Choose an account"));
+
+        UiObject allowGoogleAccount = mDevice.findObject(new UiSelector()
+                .text("This app needs to access your Google account (via Contacts)."));
+
+        UiObject allowContact = mDevice.findObject(new UiSelector()
+                .text("Allow MRM to access your contacts?"));
+
+        UiObject selectAccount = mDevice.findObject(new UiSelector()
+                .textStartsWith("LYQ774V3KKK"));
+
+        UiObject allowToAccessContacts = mDevice.findObject(new UiSelector()
+                .textStartsWith("ALLOW"));
+
         UiObject clickOButton = mDevice.findObject(new UiSelector().text("OK"));
 
-        if (selectAccountDialogue.exists()) {
+        UiObject allowGoogleAccountButton = mDevice.findObject(new UiSelector().text("OK"));
+
+        if (allowGoogleAccount.exists() && allowGoogleAccountButton.exists()) {
+            allowGoogleAccountButton.click();
+        }
+
+        if (selectAccountDialogue.exists() || allowContact.exists()) {
             selectAccount.click();
             clickOButton.click();
+            allowToAccessContacts.click();
         } else {
             Log.e("Dialogue", "select account doesn't exist");
         }
