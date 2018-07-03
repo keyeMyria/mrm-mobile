@@ -39,6 +39,7 @@ android {
             keyPassword rootProject.ext.keystoreProperties['keyPassword']
             storeFile rootProject.file(rootProject.ext.keystoreProperties['storeFile'])
             storePassword rootProject.ext.keystoreProperties['storePassword']
+            v2SigningEnabled true
         }
     }
     buildTypes {

@@ -443,8 +443,8 @@ jobs:
       - *export_gservices_key
       - *decode_gservices_key
       - run:
-          name: Gradle build (debug)
-          command: ./gradlew -PciBuild=true :app:assembleDebug :app:assembleAndroidTest
+          name: Gradle build (Release)
+          command: ./gradlew -PciBuild=true :app:assembleProdRelease :app:assembleAndroidTest
       - *persist_debug_workspace
       - store_artifacts:
           path: app/build/outputs/apk/
@@ -585,6 +585,7 @@ workflows:
       - deploy_production_build:
           requires:
             - test_unit
+            - deploy_test_build
           filters:
             branches:
               only: master
