@@ -53,7 +53,7 @@ public class FindRoomActivity extends AppCompatActivity implements
      */
     static final int LAGOS_LOCATION_ID = 2;
     private ImageView closeActivity;
-    private static final String PREF_ACCOUNT_NAME = "accountName";
+    public static final String PREF_ACCOUNT_NAME = "accountName";
     /**
      * The Request account picker.
      */
