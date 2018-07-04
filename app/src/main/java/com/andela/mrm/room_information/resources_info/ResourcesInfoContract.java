@@ -27,9 +27,16 @@ public interface ResourcesInfoContract {
         /**
          * Show error message.
          *
-         * @param message the message
+         * @param messageResourceId the message
          */
-        void showErrorMessage(String message);
+        void showErrorMessage(int messageResourceId);
+
+        /**
+         * Gets network availability Status from the view.
+         *
+         * @return the boolean
+         */
+        boolean isNetworkAvailable();
     }
 
     /**
@@ -66,10 +73,8 @@ public interface ResourcesInfoContract {
 
             /**
              * On data load failed.
-             *
-             * @param e the e
              */
-            void onDataLoadFailed(Exception e);
+            void onDataLoadFailed();
         }
 
     }

@@ -8,4 +8,5 @@
     <color name="transparent">#00000000</color>
     <color name="room_amenities">#8E8E93</color>
     <color name="checkboxChecked">#FF3359DB</color>
+    <color name="lineGray">#bbb</color>
 </resources>

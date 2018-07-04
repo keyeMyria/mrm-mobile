@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_room_availability_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_room_availability_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.andela.mrm.room_booking.room_availability.views.RoomAvailabilityActivity">
@@ -28,19 +28,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <FrameLayout
+    <HorizontalScrollView
         android:id="@+id/frame_room_availability_time_line"
         android:layout_width="match_parent"
-        android:layout_height="28dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="54dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
+        android:paddingEnd="20dp"
+        android:paddingStart="40dp"
+        android:scrollbars="none"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.andela.mrm.room_booking.room_availability.views.TimeLineScheduleView
+            android:id="@+id/view_time_line_strip"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="-48dp"
+            app:canvasHeight="200"
+            app:lengthOfSingleBar="170"
+            app:sizeOfText="25"
+            app:strokeWidth="2" />
+
+    </HorizontalScrollView>
 
     <FrameLayout
         android:id="@+id/frame_room_availability_details"

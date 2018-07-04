@@ -57,7 +57,7 @@ declare_env_variables() {
     CIRCLE_ARTIFACTS_BUTTON="$(echo {\"type\": \"button\", \"text\": \"Checkstyle Lint Report\", \"url\": \"${CIRCLE_REPORT_ARTIFACTS}\"})"
   
   elif [ "$CIRCLE_JOB" == 'report_coverage' ]; then
-    MESSAGE_TEXT="Instrumentation Test Passed! :smirk_cat:"
+    MESSAGE_TEXT="Coverage Reporting Passed! :smirk_cat:"
 
     # Sorting through the artifact urls to get only the unit test and integration test reports
     DEBUG_REPORT="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
@@ -92,6 +92,9 @@ declare_env_variables() {
 
     MESSAGE_TEXT="Deploy Test Build Succeeded :rocket:"
 
+
+  elif [ "$CIRCLE_JOB" == 'test_instrumentation' ]; then
+    MESSAGE_TEXT="Instrumentation Test Passed! :smirk_cat:"
 
   elif [ "$CIRCLE_JOB" == 'deploy_staging_build' ]; then
     CIRCLE_APK_ARTIFACTS="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\

@@ -3,7 +3,6 @@ package com.andela.mrm.room_information.resources_info;
 import android.content.Context;
 
 import com.andela.mrm.RoomQuery;
-import com.andela.mrm.util.NetworkConnectivityChecker;
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
@@ -34,23 +33,17 @@ public class ResourcesInfoRepository implements ResourcesInfoContract.Data {
         mRoomQuery.clone().enqueue(new ApolloCall.Callback<RoomQuery.Data>() {
             @Override
             public void onResponse(@Nonnull Response<RoomQuery.Data> response) {
-                RoomQuery.GetRoomById result = response.data().getRoomById();
-                if (result != null && !response.hasErrors()) {
-                    callback.onDataLoadSuccess(
-                            response.data().getRoomById().fragments().room());
+                RoomQuery.Data data = response.data();
+                if (response.hasErrors() || data == null) {
+                    callback.onDataLoadFailed();
                     return;
                 }
-                callback.onDataLoadFailed(new
-                        Exception(response.errors().get(0).message()));
+                callback.onDataLoadSuccess(data.getRoomById().fragments().room());
             }
 
             @Override
             public void onFailure(@Nonnull ApolloException e) {
-                if (!NetworkConnectivityChecker.isDeviceOnline(mContext)) {
-                    callback.onDataLoadFailed(new Exception("No network found"));
-                    return;
-                }
-                callback.onDataLoadFailed(new Exception("Could not retrieve data"));
+                callback.onDataLoadFailed();
             }
         });
     }

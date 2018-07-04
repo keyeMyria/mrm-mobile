@@ -22,6 +22,7 @@ import com.andela.mrm.room_information.resources_info.ResourcesInfoContract;
 import com.andela.mrm.room_information.resources_info.ResourcesInfoFragment;
 import com.andela.mrm.room_information.resources_info.ResourcesInfoFragment.Callbacks;
 import com.andela.mrm.room_information.resources_info.ResourcesInfoPresenter;
+import com.andela.mrm.util.NetworkConnectivityChecker;
 
 /**
  * The Room information activity class.
@@ -34,6 +35,7 @@ public class RoomInformationActivity extends AppCompatActivity implements
     private int mRoomId;
     ResourcesInfoContract.Actions mPresenter;
     private boolean mIsLoadingData;
+    private Room mRoom;
 
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
@@ -90,6 +92,7 @@ public class RoomInformationActivity extends AppCompatActivity implements
 
     @Override
     public void showRoomInfo(final Room room) {
+        mRoom = room;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -98,12 +101,21 @@ public class RoomInformationActivity extends AppCompatActivity implements
                 String roomLocation = room.floor().block().name() + ", " + room.floor().name();
                 mLocationText.setText(roomLocation);
 
-                ResourcesInfoFragment resourcesInfoFragment = getResourcesInfoFragment();
-                if (resourcesInfoFragment != null) {
-                    resourcesInfoFragment.showResourcesList(room.resources());
-                }
+                showRoomResources(room);
             }
         });
+    }
+
+    /**
+     * Displays list of room resources in the RoomResourcesFragment.
+     *
+     * @param room room
+     */
+    void showRoomResources(Room room) {
+        ResourcesInfoFragment resourcesInfoFragment = getResourcesInfoFragment();
+        if (resourcesInfoFragment != null && room != null) {
+            resourcesInfoFragment.showResourcesList(room.resources());
+        }
     }
 
     @Override
@@ -122,7 +134,7 @@ public class RoomInformationActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void showErrorMessage(final String message) {
+    public void showErrorMessage(final int message) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -136,6 +148,11 @@ public class RoomInformationActivity extends AppCompatActivity implements
                         .show();
             }
         });
+    }
+
+    @Override
+    public boolean isNetworkAvailable() {
+        return NetworkConnectivityChecker.isDeviceOnline(this);
     }
 
     /**
@@ -155,6 +172,7 @@ public class RoomInformationActivity extends AppCompatActivity implements
     @Override
     public void onViewLoaded() {
         showLoadingIndicator(mIsLoadingData);
+        showRoomResources(mRoom);
     }
 
     /**
