@@ -1,7 +1,6 @@
 package com.andela.mrm.room_booking;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
@@ -11,6 +10,7 @@ import com.andela.mrm.R;
 import com.andela.mrm.room_booking.room_availability.views.FindRoomActivity;
 import com.google.api.client.googleapis.extensions.android.accounts.GoogleAccountManager;
 
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,23 +36,27 @@ import static org.hamcrest.CoreMatchers.allOf;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(JUnit4.class)
 public class FindRoomActivityTest {
-    SharedPreferences.Editor editor;
 
     /**
      * The Activity test rule.
      */
     @Rule
     public ActivityTestRule<FindRoomActivity> activityTestRule =
-            new ActivityTestRule<>(FindRoomActivity.class);
+            new ActivityTestRule<>(FindRoomActivity.class, true, false);
 
     /**
      * Sets up.
-     *
-     * @throws Exception the exception
      */
-    public void setUp() throws Exception {
-        String name = new GoogleAccountManager(InstrumentationRegistry.getTargetContext())
-                .getAccounts()[0].name;
+    @Before
+    public void setUp() {
+        String name;
+        try {
+            name = new GoogleAccountManager(InstrumentationRegistry.getTargetContext())
+                    .getAccounts()[0].name;
+        } catch (ArrayIndexOutOfBoundsException exception) {
+            name = "";
+        }
+
         PreferenceManager
                 .getDefaultSharedPreferences(InstrumentationRegistry.getTargetContext())
                 .edit()

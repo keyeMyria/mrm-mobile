@@ -6,9 +6,7 @@ package com.andela.mrm.room_booking.room_availability.views;
 
 import android.Manifest;
 import android.accounts.AccountManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -47,14 +45,11 @@ import static com.andela.mrm.room_booking.room_availability.views.RoomAvailabili
 public class FindRoomActivity extends AppCompatActivity implements
         GetAllRoomsInALocationFromApolloPresenter.IOnGetAllRoomsFromApolloCallback,
         GsuitePresenter.IOnGsuitePresenterResponse, EasyPermissions.PermissionCallbacks {
-    ShimmerFrameLayout shimmerFrameLayout;
-    TextView numberOfAvailableRooms;
+    public static final String PREF_ACCOUNT_NAME = "accountName";
     /**
      * The Lagos location id.
      */
     static final int LAGOS_LOCATION_ID = 2;
-    private ImageView closeActivity;
-    public static final String PREF_ACCOUNT_NAME = "accountName";
     /**
      * The Request account picker.
      */
@@ -67,10 +62,27 @@ public class FindRoomActivity extends AppCompatActivity implements
      * The Request authorization.
      */
     static final int REQUEST_AUTHORIZATION = 1001;
+    private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
     /**
-     * The Find room recycler view.
+     * The Availabilty options.
      */
-    RecyclerView findRoomRecyclerView;
+    final List<String> availabiltyOptions = new ArrayList<>();
+    /**
+     * The Location options.
+     */
+    final List<String> locationOptions = new ArrayList<>();
+    /**
+     * The Capacity options.
+     */
+    final List<String> capacityOptions = new ArrayList<>();
+    /**
+     * The Amenities option.
+     */
+    final List<String> amenitiesOption = new ArrayList<>();
+    /**
+     * The Filters.
+     */
+    final List<String> filters = new ArrayList<>();
     /**
      * The Filter availability.
      */
@@ -101,32 +113,17 @@ public class FindRoomActivity extends AppCompatActivity implements
      * The Selected filters display.
      */
     selectedFiltersDisplay;
+    ShimmerFrameLayout shimmerFrameLayout;
+    TextView numberOfAvailableRooms;
     /**
-     * The Availabilty options.
+     * The Find room recycler view.
      */
-    final List<String> availabiltyOptions = new ArrayList<>();
-    /**
-     * The Location options.
-     */
-    final List<String> locationOptions = new ArrayList<>();
-    /**
-     * The Capacity options.
-     */
-    final List<String> capacityOptions = new ArrayList<>();
-    /**
-     * The Amenities option.
-     */
-    final List<String> amenitiesOption = new ArrayList<>();
-    /**
-     * The Filters.
-     */
-    final List<String> filters = new ArrayList<>();
-    private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
+    RecyclerView findRoomRecyclerView;
     /**
      * The Credential.
      */
     GoogleAccountCredential credential;
-
+    private ImageView closeActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,6 +195,7 @@ public class FindRoomActivity extends AppCompatActivity implements
 
     /**
      * sets room adapter.
+     *
      * @param rooms the list of rooms.
      */
     public void setRoomsAdapter(List<GetAllRoomsInALocationQuery.Room> rooms) {
@@ -304,15 +302,16 @@ public class FindRoomActivity extends AppCompatActivity implements
         if (selectedFiltersDisplay == null) {
             selectedFiltersDisplay = findViewById(R.id.layout_filters_display);
         }
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this,
-                    LinearLayoutManager.HORIZONTAL, false);
-            selectedFiltersDisplay.setAdapter(new SelectedFilterAdapter(filtersList));
-            selectedFiltersDisplay.setLayoutManager(layoutManager);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this,
+                LinearLayoutManager.HORIZONTAL, false);
+        selectedFiltersDisplay.setAdapter(new SelectedFilterAdapter(filtersList));
+        selectedFiltersDisplay.setLayoutManager(layoutManager);
     }
 
     /**
      * gets room schedule.
-     * @param listOfAllRoomsId list of room ids.
+     *
+     * @param listOfAllRoomsId         list of room ids.
      * @param listOfAllRoomsFromApollo list of all rooms in a location from apollo.
      */
     private void getResourcesFreeBusySchedule(
@@ -325,7 +324,7 @@ public class FindRoomActivity extends AppCompatActivity implements
 
     @Override
     public void onGetAllRoomsFromApolloError(ApolloException error) {
-     // TODO notify do something about error
+        // TODO notify do something about error
     }
 
     @Override
@@ -337,7 +336,7 @@ public class FindRoomActivity extends AppCompatActivity implements
 
     @Override
     public void onGsuitePresenterSuccess(final List<GetAllRoomsInALocationQuery.Room>
-                                                     listOfAvailableRooms) {
+                                                 listOfAvailableRooms) {
 
         runOnUiThread(new Runnable() {
             @Override
@@ -374,7 +373,8 @@ public class FindRoomActivity extends AppCompatActivity implements
     private void chooseAccount() {
         if (EasyPermissions.hasPermissions(
                 this, Manifest.permission.GET_ACCOUNTS)) {
-            String accountName = PreferenceManager.getDefaultSharedPreferences(this)
+            String accountName = PreferenceManager
+                    .getDefaultSharedPreferences(this)
                     .getString(PREF_ACCOUNT_NAME, null);
             if (accountName != null) {
                 credential.setSelectedAccountName(accountName);
@@ -427,11 +427,11 @@ public class FindRoomActivity extends AppCompatActivity implements
                     String accountName =
                             data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                     if (accountName != null) {
-                        SharedPreferences settings =
-                                getPreferences(Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString(PREF_ACCOUNT_NAME, accountName);
-                        editor.apply();
+                        PreferenceManager
+                                .getDefaultSharedPreferences(this)
+                                .edit()
+                                .putString(PREF_ACCOUNT_NAME, accountName)
+                                .apply();
                         credential.setSelectedAccountName(accountName);
                         getAllData();
                     }
