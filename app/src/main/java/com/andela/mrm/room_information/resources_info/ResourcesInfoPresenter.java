@@ -1,5 +1,6 @@
 package com.andela.mrm.room_information.resources_info;
 
+import com.andela.mrm.R;
 import com.andela.mrm.fragment.Room;
 import com.andela.mrm.room_information.resources_info.ResourcesInfoContract.Data;
 import com.andela.mrm.room_information.resources_info.ResourcesInfoContract.View;
@@ -34,9 +35,13 @@ public class ResourcesInfoPresenter implements ResourcesInfoContract.Actions {
             }
 
             @Override
-            public void onDataLoadFailed(Exception e) {
+            public void onDataLoadFailed() {
                 mView.showLoadingIndicator(false);
-                mView.showErrorMessage(e.getMessage());
+                if (!mView.isNetworkAvailable()) {
+                    mView.showErrorMessage(R.string.error_internet_connection);
+                    return;
+                }
+                mView.showErrorMessage(R.string.error_data_fetch_message);
             }
         });
     }

@@ -1,9 +1,9 @@
 package com.andela.mrm.room_booking;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.view.View;
 
@@ -18,7 +18,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.junit.runners.MethodSorters;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -52,11 +51,12 @@ public class FindRoomActivityTest {
      * @throws Exception the exception
      */
     public void setUp() throws Exception {
-        Context context = getInstrumentation().getTargetContext();
-        editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        editor
-                .putString(FindRoomActivity.PREF_ACCOUNT_NAME, new GoogleAccountManager(context)
-                            .getAccounts()[0].name)
+        String name = new GoogleAccountManager(InstrumentationRegistry.getTargetContext())
+                .getAccounts()[0].name;
+        PreferenceManager
+                .getDefaultSharedPreferences(InstrumentationRegistry.getTargetContext())
+                .edit()
+                .putString(FindRoomActivity.PREF_ACCOUNT_NAME, name)
                 .commit();
         activityTestRule.launchActivity(new Intent());
     }

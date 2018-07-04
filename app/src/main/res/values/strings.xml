@@ -65,4 +65,6 @@
     <string name="attend_icon">attend_icon</string>
     <string name="cancel_icon">cancel icon</string>
     <string name="snackbar_retry_text">RETRY</string>
+    <string name="error_internet_connection">No Internet Connection</string>
+    <string name="error_data_fetch_message">Error retrieving data</string>
 </resources>

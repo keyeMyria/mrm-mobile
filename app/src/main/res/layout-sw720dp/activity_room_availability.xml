@@ -12,27 +12,38 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/room"/>
+        android:src="@drawable/room" />
 
     <ImageView
         android:id="@+id/img_room_availability_background_gradient"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/room_availability_background_gradient"/>
+        android:src="@drawable/room_availability_background_gradient" />
 
-    <FrameLayout
+    <HorizontalScrollView
         android:id="@+id/frame_room_availability_time_line"
         android:layout_width="match_parent"
-        android:layout_height="28dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="54dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:paddingEnd="20dp"
+        android:paddingStart="40dp"
+        android:scrollbars="none"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.andela.mrm.room_booking.room_availability.views.TimeLineScheduleView
+            android:id="@+id/view_time_line_strip"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:canvasHeight="200"
+            app:lengthOfSingleBar="345"
+            app:rectHeightAboveLine="7"
+            app:sizeOfText="50"
+            app:strokeWidth="3"
+            app:textStartYPoint="150" />
+
+    </HorizontalScrollView>
 
     <FrameLayout
         android:id="@+id/frame_room_availability_details"

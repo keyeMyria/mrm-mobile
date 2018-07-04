@@ -46,6 +46,14 @@ public class ResourcesInfoFragment extends Fragment {
 
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && mCallbacks != null) {
+            mCallbacks.onViewLoaded();
+        }
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mCallbacks = (Callbacks) context;

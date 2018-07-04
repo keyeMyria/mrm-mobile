@@ -8,7 +8,7 @@ apply from: rootProject.file('app/coverage.gradle')
 apply plugin: 'io.fabric'
 
 jacoco {
-    toolVersion = '0.8.0'
+    toolVersion = "${rootProject.jacocoVersion}"
 }
 
 tasks.withType(Test) {
@@ -39,6 +39,7 @@ android {
             keyPassword rootProject.ext.keystoreProperties['keyPassword']
             storeFile rootProject.file(rootProject.ext.keystoreProperties['storeFile'])
             storePassword rootProject.ext.keystoreProperties['storePassword']
+            v2SigningEnabled true
         }
     }
     buildTypes {
@@ -128,6 +129,10 @@ dependencies {
 //  see https://github.com/andela/mrm-mobile/pull/59#pullrequestreview-131503339
 //  androidTestUtil "com.android.support.test:orchestrator:${rootProject.testRunner}"
     androidTestUtil "com.android.support.test:orchestrator:1.0.1"
+
+    // butter knife libraries
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -12,7 +12,20 @@ import com.google.android.gms.common.GoogleApiAvailability;
  */
 public class GooglePlayService {
 
+    /**
+     * The Request google play services.
+     */
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
+    private final GoogleApiAvailability mGoogleApiAvailability;
+
+    /**
+     * Instantiates a new Google play service.
+     *
+     * @param googleApiAvailability the google api availability
+     */
+    public GooglePlayService(GoogleApiAvailability googleApiAvailability) {
+        mGoogleApiAvailability = googleApiAvailability;
+    }
 
     /**
      * Is google play services available boolean.
@@ -21,10 +34,8 @@ public class GooglePlayService {
      * @return the boolean
      */
     public boolean isGooglePlayServicesAvailable(Context context) {
-        GoogleApiAvailability apiAvailability =
-                GoogleApiAvailability.getInstance();
         final int connectionStatusCode =
-                apiAvailability.isGooglePlayServicesAvailable(context);
+                mGoogleApiAvailability.isGooglePlayServicesAvailable(context);
         return connectionStatusCode == ConnectionResult.SUCCESS;
     }
 
@@ -36,8 +47,7 @@ public class GooglePlayService {
      */
     public void showGooglePlayServicesAvailabilityErrorDialog(
             final int connectionStatusCode, Activity activity) {
-        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-        Dialog dialog = apiAvailability.getErrorDialog(
+        Dialog dialog = mGoogleApiAvailability.getErrorDialog(
                 activity,
                 connectionStatusCode,
                 REQUEST_GOOGLE_PLAY_SERVICES);
@@ -51,11 +61,9 @@ public class GooglePlayService {
      * @param activity the activity
      */
     public void acquireGooglePlayServices(Context context, Activity activity) {
-        GoogleApiAvailability apiAvailability =
-                GoogleApiAvailability.getInstance();
         final int connectionStatusCode =
-                apiAvailability.isGooglePlayServicesAvailable(context);
-        if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
+                mGoogleApiAvailability.isGooglePlayServicesAvailable(context);
+        if (mGoogleApiAvailability.isUserResolvableError(connectionStatusCode)) {
             showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode, activity);
         }
     }

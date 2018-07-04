@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <declare-styleable name="TimeLineScheduleView">
+        <attr name="sizeOfText" format="float" />
+        <attr name="canvasHeight" format="integer" />
+        <attr name="strokeWidth" format="float" />
+        <attr name="lengthOfSingleBar" format="float" />
+        <attr name="textStartYPoint" format="float" />
+        <attr name="rectHeightAboveLine" format="float" />
+    </declare-styleable>
+</resources>
