@@ -124,6 +124,7 @@
 //        onView(withId(R.id.layout_support))
 //                .check(matches(allOf(isDisplayed(), hasChildCount(2), not(isClickable()))));
 //    }
+
 //
 //    /**
 //     * Room info button displayed.
@@ -169,3 +170,4 @@
 //    }
 //}
 //
+
