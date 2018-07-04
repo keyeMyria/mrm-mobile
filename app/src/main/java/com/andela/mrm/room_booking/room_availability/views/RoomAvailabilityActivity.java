@@ -109,11 +109,7 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
         setRoomInformationListener();
         setFindRoomLayoutListener();
         playService = new GooglePlayService(GoogleApiAvailability.getInstance());
-<<<<<<< HEAD
-        setUpFragments();// Sets up inflatable fragments(countdown timer and details fragments)
-=======
         setUpFragments(); // Sets up inflatable fragments(countdown timer and details fragments)
->>>>>>> [Chore #158323641] Pull changes from develop and modify files for code quality tools
         mCredential = GoogleAccountCredential.usingOAuth2(//Initialize credentials & service object.
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
