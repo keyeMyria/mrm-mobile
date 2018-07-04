@@ -63,7 +63,7 @@ public final class ApiService {
                                                @Nonnull Operation.Variables variables) {
                 return formatCacheKey((String) field.resolveArgument("id", variables));
             }
-            private CacheKey formatCacheKey(String id) {
+            CacheKey formatCacheKey(String id) {
                 return getCacheKey(id);
             }
         };
