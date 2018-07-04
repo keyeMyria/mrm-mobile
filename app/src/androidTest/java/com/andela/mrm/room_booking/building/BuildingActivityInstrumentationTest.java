@@ -178,4 +178,3 @@ public class BuildingActivityInstrumentationTest {
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.getIdlingResource());
     }
 }
-

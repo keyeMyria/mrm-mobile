@@ -1,7 +1,6 @@
 apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
-apply plugin: 'cpd'
 
 task checkstyle(type: Checkstyle) {
     description 'Check code standard'

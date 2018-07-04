@@ -84,7 +84,6 @@ public class RoomAvailabilityActivityTest {
      */
     @Test
     public void countDownTimerIsDisplayed() throws Exception {
-        Intents.init();
         onView(ViewMatchers.withId(R.id.frame_room_availability_countdown_timer))
                 .check(matches(isDisplayed()));
         onView(withId(R.id.text_time_left))
@@ -100,7 +99,6 @@ public class RoomAvailabilityActivityTest {
      */
     @Test
     public void linearLayoutHoldingNavigationIsPresent() {
-        Intents.init();
         onView(withId(R.id.linearLayout))
                 .check(matches(allOf(isDisplayed(), hasChildCount(4), not(isClickable()))));
     }
@@ -110,7 +108,6 @@ public class RoomAvailabilityActivityTest {
      */
     @Test
     public void scheduleButtonIsDisplayedProperly() {
-        Intents.init();
         onView(withId(R.id.layout_schedule))
                 .check(matches(allOf(isDisplayed(), hasChildCount(2), isClickable())));
     }
@@ -128,12 +125,12 @@ public class RoomAvailabilityActivityTest {
     /**
      * Support button displayed.
      */
-//    @Test
-//    public void supportButtonDisplayed() {
-//        Intents.init();
-//        onView(withId(R.id.layout_support))
-//                .check(matches(allOf(isDisplayed(), hasChildCount(2), not(isClickable()))));
-//    }
+    @Test
+    public void supportButtonDisplayed() {
+        //TODO: UPDATE WHEN BUTTON IS CLICKABLE
+        onView(withId(R.id.layout_support))
+                .check(matches(allOf(isDisplayed(), hasChildCount(2), not(isClickable()))));
+    }
 
     /**
      * Room info button displayed.
