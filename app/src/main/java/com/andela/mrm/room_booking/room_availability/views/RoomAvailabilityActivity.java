@@ -2,17 +2,15 @@ package com.andela.mrm.room_booking.room_availability.views;
 
 import android.Manifest;
 import android.accounts.AccountManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -47,38 +45,11 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
         CountDownTimerFragment.IOnTextChangeListener, IGoogleCalenderCallListener,
         MeetingRoomDetailFragment.IOnStartCountDown, EasyPermissions.PermissionCallbacks {
 
-    private FragmentManager fragmentManager;
-
-    @BindView(R.id.layout_schedule)
-    LinearLayout roomSchedule;
-
-    @BindView(R.id.layout_room_info)
-    LinearLayout roomInformation;
-
-    @BindView(R.id.layout_find_room)
-    LinearLayout findRoomLayout;
-
-    @BindView(R.id.view_time_line_strip)
-    TimeLineScheduleView timeLineStrip;
-
-    /**
-     * The Items.
-     */
-    public List<Event> items;
     /**
      * The constant EVENTS_IN_STRING.
      */
     public static final String EVENTS_IN_STRING = "eventsInString";
-    /**
-     * The Constraint layout.
-     */
-    @BindView(R.id.layout_room_availability_parent)
-    ConstraintLayout roomAvailabilityParentLayout;
-
-    /**
-     * The M credential.
-     */
-    GoogleAccountCredential mCredential;
+    public static final String PREF_ACCOUNT_NAME = "accountName";
     /**
      * The Request account picker.
      */
@@ -95,14 +66,33 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
      * The Request permission get accounts.
      */
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
-
+    private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
+    /**
+     * The Items.
+     */
+    public List<Event> items;
+    @BindView(R.id.layout_schedule)
+    LinearLayout roomSchedule;
+    @BindView(R.id.layout_room_info)
+    LinearLayout roomInformation;
+    @BindView(R.id.layout_find_room)
+    LinearLayout findRoomLayout;
+    @BindView(R.id.view_time_line_strip)
+    TimeLineScheduleView timeLineStrip;
+    /**
+     * The Constraint layout.
+     */
+    @BindView(R.id.layout_room_availability_parent)
+    ConstraintLayout roomAvailabilityParentLayout;
+    /**
+     * The M credential.
+     */
+    GoogleAccountCredential mCredential;
     /**
      * The Play service.
      */
     GooglePlayService playService;
-
-    private static final String PREF_ACCOUNT_NAME = "accountName";
-    private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
+    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,8 +210,10 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
     private void chooseAccount() {
         if (EasyPermissions.hasPermissions(
                 this, Manifest.permission.GET_ACCOUNTS)) {
-            String accountName = getPreferences(Context.MODE_PRIVATE)
+            String accountName = PreferenceManager.getDefaultSharedPreferences(this)
                     .getString(PREF_ACCOUNT_NAME, null);
+//            String accountName = getPreferences(Context.MODE_PRIVATE)
+//                    .getString(PREF_ACCOUNT_NAME, null);
             if (accountName != null) {
                 mCredential.setSelectedAccountName(accountName);
                 getResultsFromApi();
@@ -249,7 +241,7 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
      * @param requestCode - code indicating which activity result is incoming.
      * @param resultCode  - code indicating the result of the incoming
      *                    activity result.
-     * @param data     -   Intent (containing result data) returned by incoming
+     * @param data        -   Intent (containing result data) returned by incoming
      *                    activity result.
      */
     @Override
@@ -273,11 +265,14 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
                     String accountName =
                             data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
                     if (accountName != null) {
-                        SharedPreferences settings =
-                                getPreferences(Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString(PREF_ACCOUNT_NAME, accountName);
-                        editor.apply();
+                        PreferenceManager
+                                .getDefaultSharedPreferences(this)
+                                .edit().putString(PREF_ACCOUNT_NAME, accountName).apply();
+//                        SharedPreferences settings =
+//                                getPreferences(Context.MODE_PRIVATE);
+//                        SharedPreferences.Editor editor = settings.edit();
+//                        editor.putString(PREF_ACCOUNT_NAME, accountName);
+//                        editor.apply();
                         mCredential.setSelectedAccountName(accountName);
                         getResultsFromApi();
                     }
@@ -330,7 +325,7 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
      *
      * @param requestCode - The request code associated with the requested
      *                    permission
-     * @param list    -    The requested permission list. Never null.
+     * @param list        -    The requested permission list. Never null.
      */
     @Override
     public void onPermissionsDenied(int requestCode, List<String> list) {
@@ -436,20 +431,20 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
     @Override
     public void onCancelled(Exception mLastError) {
         if (mLastError != null) {
-          if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
+            if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
                 playService.showGooglePlayServicesAvailabilityErrorDialog(
-                       ((GooglePlayServicesAvailabilityIOException) mLastError)
-                               .getConnectionStatusCode(),
-                       RoomAvailabilityActivity.this);
-           } else if (mLastError instanceof UserRecoverableAuthIOException) {
-               startActivityForResult(
-                       ((UserRecoverableAuthIOException) mLastError).getIntent(),
-                      RoomAvailabilityActivity.REQUEST_AUTHORIZATION);
-          } else {
-              Log.v("This error occurred: ", "" + mLastError.getMessage());
-          }
-       } else {
-          Log.v("Cancelled", "Request cancelled.");
-       }
+                        ((GooglePlayServicesAvailabilityIOException) mLastError)
+                                .getConnectionStatusCode(),
+                        RoomAvailabilityActivity.this);
+            } else if (mLastError instanceof UserRecoverableAuthIOException) {
+                startActivityForResult(
+                        ((UserRecoverableAuthIOException) mLastError).getIntent(),
+                        RoomAvailabilityActivity.REQUEST_AUTHORIZATION);
+            } else {
+                Log.v("This error occurred: ", "" + mLastError.getMessage());
+            }
+        } else {
+            Log.v("Cancelled", "Request cancelled.");
+        }
     }
 }
