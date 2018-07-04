@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.LinearLayout;
 
 import com.andela.mrm.R;
@@ -31,10 +30,8 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecovera
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
-
 import java.util.Arrays;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -46,21 +43,15 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class RoomAvailabilityActivity extends AppCompatActivity implements
         CountDownTimerFragment.IOnTextChangeListener, IGoogleCalenderCallListener,
         MeetingRoomDetailFragment.IOnStartCountDown, EasyPermissions.PermissionCallbacks {
-
     private FragmentManager fragmentManager;
-
     @BindView(R.id.layout_schedule)
     LinearLayout roomSchedule;
-
     @BindView(R.id.layout_room_info)
     LinearLayout roomInformation;
-
     @BindView(R.id.layout_find_room)
     LinearLayout findRoomLayout;
-
     @BindView(R.id.view_time_line_strip)
     TimeLineScheduleView timeLineStrip;
-
     /**
      * The Items.
      */
@@ -74,7 +65,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
      */
     @BindView(R.id.layout_room_availability_parent)
     ConstraintLayout roomAvailabilityParentLayout;
-
     /**
      * The M credential.
      */
@@ -95,15 +85,12 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
      * The Request permission get accounts.
      */
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
-
     /**
      * The Play service.
      */
     GooglePlayService playService;
-
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,23 +107,14 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
         });
         findRoomLayout = findViewById(R.id.layout_find_room);
         setRoomInformationListener();
-
         setFindRoomLayoutListener();
-
         playService = new GooglePlayService(GoogleApiAvailability.getInstance());
-
-        // Sets up inflatable fragments(countdown timer and details fragments)
-        setUpFragments();
-
-        // Initialize credentials and service object.
-        mCredential = GoogleAccountCredential.usingOAuth2(
+        setUpFragments(); // Sets up inflatable fragments(countdown timer and details fragments)
+        mCredential = GoogleAccountCredential.usingOAuth2(//Initialize credentials & service object.
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
-
         getResultsFromApi();
-
     }
-
     @Override
     public void onTimeChange(int minutes) {
         MeetingRoomDetailFragment meetingRoomDetailFragment = (MeetingRoomDetailFragment)
@@ -145,7 +123,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
             meetingRoomDetailFragment.updateMinute(minutes);
         }
     }
-
     @Override
     public void onCountDownComplete() {
         MeetingRoomDetailFragment meetingRoomDetailFragment = (MeetingRoomDetailFragment)
@@ -154,7 +131,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
             meetingRoomDetailFragment.displayCheckInScreen();
         }
     }
-
     @Override
     public void startCountDown(long timeInMilliSeconds) {
         CountDownTimerFragment countDownTimerFragment = (CountDownTimerFragment)
@@ -166,7 +142,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
             countDownTimerFragment.setTimeRemainingText("Time Remaining");
         }
     }
-
     /**
      * On meeting ended.
      */
@@ -181,7 +156,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
             countDownTimerFragment.startTimer(8000);
         }
     }
-
     /**
      * Attempt to call the API, after verifying that all the preconditions are
      * satisfied. The preconditions are: Google Play Services installed, an
@@ -198,19 +172,13 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
             Snackbar
                     .make(roomAvailabilityParentLayout, "No Network Found",
                             Snackbar.LENGTH_INDEFINITE)
-                    .setAction("RETRY", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            getResultsFromApi();
-                        }
-                    })
+                    .setAction("RETRY", v -> getResultsFromApi())
                     .show();
         } else {
             new MakeGoogleCalendarCallPresenter(mCredential, this).execute();
             new GsuitePresenter(mCredential).execute();
         }
     }
-
     /**
      * Attempts to set the account used with the API credentials. If an account
      * name was previously saved it will use that one; otherwise an account
@@ -231,21 +199,16 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
                 mCredential.setSelectedAccountName(accountName);
                 getResultsFromApi();
             } else {
-                // Start a dialog from which the user can choose an account
-                startActivityForResult(
-                        mCredential.newChooseAccountIntent(),
-                        REQUEST_ACCOUNT_PICKER);
+                startActivityForResult(// Start a dialog from which the user can choose an account
+                        mCredential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
             }
         } else {
-            // Request the GET_ACCOUNTS permission via a user dialog
-            EasyPermissions.requestPermissions(
+            EasyPermissions.requestPermissions(// Request GET_ACCOUNTS permission via a user dialog
                     this,
                     "This app needs to access your Google account (via Contacts).",
-                    REQUEST_PERMISSION_GET_ACCOUNTS,
-                    Manifest.permission.GET_ACCOUNTS);
+                    REQUEST_PERMISSION_GET_ACCOUNTS, Manifest.permission.GET_ACCOUNTS);
         }
     }
-
     /**
      * Called when an activity launched here (specifically, AccountPicker
      * and authorization) exits, giving you the requestCode you started it with,
@@ -284,7 +247,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
                 //intentionally left blank
         }
     }
-
     /**
      * Instance where ResultCode equals result Ok and Data is not null.
      * @param resultCode integer value of result code
@@ -306,7 +268,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
             }
         }
     }
-
     /**
      * Respond to requests for permissions at runtime for API 23 and above.
      * @param requestCode  The request code passed in
@@ -323,7 +284,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
         EasyPermissions.onRequestPermissionsResult(
                 requestCode, permissions, grantResults, this);
     }
-
     /**
      * Callback for when a permission is granted using the EasyPermissions
      * library.
@@ -335,7 +295,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
     public void onPermissionsGranted(int requestCode, List<String> list) {
         // Do nothing.
     }
-
     /**
      * Callback for when a permission is denied using the EasyPermissions
      * library.
@@ -348,7 +307,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
     public void onPermissionsDenied(int requestCode, List<String> list) {
         // Do nothing.
     }
-
     /**
      * Checks whether the device currently has a network connection.
      *
@@ -357,7 +315,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
     private boolean isDeviceOnline() {
         return NetworkConnectivityChecker.isDeviceOnline(getApplicationContext());
     }
-
     /**
      * Sets up inflatable fragments(countdown timer and details fragments).
      */
@@ -368,22 +325,17 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
                 .add(R.id.frame_room_availability_countdown_timer, new CountDownTimerFragment())
                 .commit();
     }
-
     /**
      * Activates room information button.
      */
     private void setRoomInformationListener() {
-        roomInformation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: replace roomId with Id of current room
-                Intent intent = RoomInformationActivity.newIntent(
-                        RoomAvailabilityActivity.this, 3);
-                startActivity(intent);
-            }
+        roomInformation.setOnClickListener(v -> {
+            // TODO: replace roomId with Id of current room
+            Intent intent = RoomInformationActivity.newIntent(
+                    RoomAvailabilityActivity.this, 3);
+            startActivity(intent);
         });
     }
-
     /**
      * Activates onClickListener on both room schedule button and timeline strip.
      *
@@ -402,29 +354,16 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
             startActivity(intent);
         }
     }
-
     /**
      * Sets the onClick Listener.
      *
      * @param eventsInString String.
      */
     public void setRoomScheduleOnClickListener(@Nullable final String eventsInString) {
-        roomSchedule.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activateRoomScheduleOnClickListener(eventsInString);
-            }
-        });
+        roomSchedule.setOnClickListener(v -> activateRoomScheduleOnClickListener(eventsInString));
 
-        timeLineStrip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activateRoomScheduleOnClickListener(eventsInString);
-            }
-        });
+        timeLineStrip.setOnClickListener(v -> activateRoomScheduleOnClickListener(eventsInString));
     }
-
-
     /**
      * sets findRoomLayout Listener.
      */
@@ -435,12 +374,10 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
             startActivity(intent);
         });
     }
-
     @Override
     public void onSuccess(String itemsInString) {
         setRoomScheduleOnClickListener(itemsInString);
     }
-
     @Override
     public void onCancelled(Exception mLastError) {
         if (mLastError != null) {

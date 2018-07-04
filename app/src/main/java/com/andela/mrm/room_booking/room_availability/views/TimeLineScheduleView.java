@@ -89,39 +89,37 @@ public class TimeLineScheduleView extends View {
         if (attrs == null) {
             return;
         }
-
         TypedArray ta = getContext().obtainStyledAttributes(
                 attrs,
                 R.styleable.TimeLineScheduleView);
-
         try {
             canvasHeight = ta.getInt(R.styleable.TimeLineScheduleView_canvasHeight, 200);
             textSize = ta.getFloat(R.styleable.TimeLineScheduleView_sizeOfText, 25F);
             strokeWidth = ta.getFloat(R.styleable.TimeLineScheduleView_strokeWidth, 2F);
             lengthOfSingleTimeBar = ta.
                     getFloat(R.styleable.TimeLineScheduleView_lengthOfSingleBar, 170F);
-            textStartYPoint = ta.getFloat(R.styleable.TimeLineScheduleView_textStartYPoint, 120F);
+            textStartYPoint = ta.getFloat(R.styleable.TimeLineScheduleView_textStartYPoint,
+                    120F);
             rectHeightAboveLine = ta
                     .getFloat(R.styleable.TimeLineScheduleView_rectHeightAboveLine, 4F);
         } finally {
             ta.recycle();
         }
-
         mTimeLineArray = new ArrayList<>();
-
         populateArrayList(mTimeLineArray);
-
         // create thin line paint
-        mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mLinePaint.setStyle(Paint.Style.STROKE);
-        mLinePaint.setStrokeWidth(strokeWidth);
-        mLinePaint.setColor(getResources().getColor(R.color.lineGray));
+        createThinLinePaint();
 
         // create rectangular time-bar paint
-        mRectPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mRectPaint.setStyle(Paint.Style.FILL);
-
+        createRectangularTimeBarPaint();
         // create text-view paint
+        createTextViewPaint();
+    }
+
+    /**
+     * Method to create the textView paint.
+     */
+    public final void createTextViewPaint() {
         mTextPaint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
         mTextPaint.setColor(Color.WHITE);
         mTextPaint.setTextAlign(Paint.Align.LEFT);
@@ -129,6 +127,24 @@ public class TimeLineScheduleView extends View {
 
         Typeface dinpro = Typeface.createFromAsset(getContext().getAssets(), "font/dinpro.otf");
         mTextPaint.setTypeface(dinpro);
+    }
+
+    /**
+     * Method to create the rectangular time-bar paint.
+     */
+    public final void createRectangularTimeBarPaint() {
+        mRectPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mRectPaint.setStyle(Paint.Style.FILL);
+    }
+
+    /**
+     * Method that caters to the creation of the thin line paint.
+     */
+    public final void createThinLinePaint() {
+        mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mLinePaint.setStyle(Paint.Style.STROKE);
+        mLinePaint.setStrokeWidth(strokeWidth);
+        mLinePaint.setColor(getResources().getColor(R.color.lineGray));
     }
 
     /**
@@ -162,40 +178,15 @@ public class TimeLineScheduleView extends View {
         super.onDraw(canvas);
         float startXPoint = 0F;
         final float startEndYPoint = 85F;
-        float textStartXPoint;
-
-        for (int i = 0; i < numberOfSingleTimeBar; i++) {
-            String timePeriod = " am";
-            String timeText = 8 + i + timePeriod;
-
-            if (i == 0) {
-                textStartXPoint = startXPoint;
-            } else {
-                textStartXPoint = lengthOfSingleTimeBar * i;
-                if (i == 4) {
-                    timePeriod = " noon";
-                    timeText = 8 + i + timePeriod;
-                } else if (i > 4) {
-                    timePeriod = " pm";
-                    timeText = (i - 4) + timePeriod;
-                }
-            }
-
-            canvas.drawText(timeText, textStartXPoint, textStartYPoint, mTextPaint);
-        }
-
+        canvasDrawer(canvas, startXPoint);
         for (int i = 0; i <= (numberOfSingleTimeBar - 2); i++) {
             int meetingDuration = mTimeLineArray.get(i).getMeetingDuration();
             int timeBarColor = mTimeLineArray.get(i).getTimeBarColor();
             boolean isRoomAvailable = mTimeLineArray.get(i).isAvailable();
             float rectHeightBelowLine = rectHeightAboveLine;
-
             int lengthOfMeetingBar = (int) ((lengthOfSingleTimeBar * meetingDuration) / 60);
-
             final float endXPoint = startXPoint + lengthOfMeetingBar;
-
             mRectPaint.setColor(timeBarColor);
-
             if (i > 0) {
                 if (!isRoomAvailable) {
                     canvas.drawRect(startXPoint, startEndYPoint - rectHeightAboveLine,
@@ -208,17 +199,40 @@ public class TimeLineScheduleView extends View {
                 canvas.drawRect(startXPoint, startEndYPoint - rectHeightAboveLine,
                         lengthOfMeetingBar, startEndYPoint + rectHeightBelowLine, mRectPaint);
             }
-
             startXPoint += lengthOfMeetingBar;
+        }
+    }
+
+    /**
+     * Method to deal with drawing the canvas.
+     * @param canvas canvas instance to be drawn on
+     * @param startXPoint floating point integer to represent the start point
+     */
+    public void canvasDrawer(Canvas canvas, float startXPoint) {
+        float textStartXPoint;
+        for (int i = 0; i < numberOfSingleTimeBar; i++) {
+            String timePeriod = " am";
+            String timeText = 8 + i + timePeriod;
+            if (i == 0) {
+                textStartXPoint = startXPoint;
+            } else {
+                textStartXPoint = lengthOfSingleTimeBar * i;
+                if (i == 4) {
+                    timePeriod = " noon";
+                    timeText = 8 + i + timePeriod;
+                } else if (i > 4) {
+                    timePeriod = " pm";
+                    timeText = (i - 4) + timePeriod;
+                }
+            }
+            canvas.drawText(timeText, textStartXPoint, textStartYPoint, mTextPaint);
         }
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         // Compute the width and height required to render the custom view
-
         int width = MeasureSpec.getSize((int) (lengthOfSingleTimeBar * numberOfSingleTimeBar));
-
         setMeasuredDimension(width, canvasHeight);
     }
 
