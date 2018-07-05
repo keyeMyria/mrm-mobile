@@ -543,7 +543,7 @@ jobs:
           name: Upload coverage to code climate
           command: |
             export JACOCO_SOURCE_PATH=app/src/main/java
-            cp app/src/prod/java/com/andela/mrm/Injection.java app/src/main/java/com/andela/mrm/Injection.java
+            #cp app/src/prod/java/com/andela/mrm/Injection.java app/src/main/java/com/andela/mrm/Injection.java
             ./cc-test-reporter format-coverage app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml -t jacoco
             ./cc-test-reporter upload-coverage
       - store_artifacts:
@@ -563,32 +563,32 @@ workflows:
   version: 2
   lint_test_and_deployment:
     jobs:
-      - android_lint
-      - findbugs_lint
-      - pmd_lint
-      - checkstyle_lint
-      - test_unit:
-          requires:
-            - android_lint
-            - findbugs_lint
-            - pmd_lint
-            - checkstyle_lint
-      - deploy_test_build:
-          requires:
-            - test_unit
-      - deploy_staging_build:
-          requires:
-            - test_unit
-          filters:
-            branches:
-              only: staging
-      - deploy_production_build:
-          requires:
-            - test_unit
-            - deploy_test_build
-          filters:
-            branches:
-              only: master
+      #      - android_lint
+      #      - findbugs_lint
+      #      - pmd_lint
+      #      - checkstyle_lint
+      #      - test_unit:
+      #          requires:
+      #            - android_lint
+      #            - findbugs_lint
+      #            - pmd_lint
+      #            - checkstyle_lint
+      - deploy_test_build
+        #requires:
+        #- test_unit
+        #      - deploy_staging_build:
+        #          requires:
+        #            - test_unit
+        #          filters:
+        #            branches:
+        #              only: staging
+        #      - deploy_production_build:
+        #          requires:
+        #            - test_unit
+        #            - deploy_test_build
+        #          filters:
+        #            branches:
+        #              only: master
       - test_instrumentation:
           requires:
             - deploy_test_build
