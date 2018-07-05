@@ -93,28 +93,64 @@ public class GsuitePresenter extends AsyncTask<Void, Void, List<String>> {
         List<FreeBusyRequestItem> requestItems = new ArrayList<>();
         List<String> listOfIdsOfCurrentlyAvailableRooms = new ArrayList<>();
         DateTime now = new DateTime(System.currentTimeMillis());
-
         for (String roomIds : listOfResourceCalendarIds) {
             requestItems.add(new FreeBusyRequestItem().setId(roomIds));
         }
-
-        java.util.Calendar calendar = new GregorianCalendar();
-        calendar.set(java.util.Calendar.HOUR_OF_DAY, 23);
-        calendar.set(java.util.Calendar.MINUTE, 59);
-        calendar.set(java.util.Calendar.SECOND, 59);
-        Date midnight = calendar.getTime();
-
+        Date midnight = getMidnight();
         request.setTimeMin(now)
                 .setTimeMax(new DateTime(midnight.getTime()))
                 .setTimeZone("Africa/Lagos")
                 .setItems(requestItems);
-
         Calendar.Freebusy.Query query = mservice.freebusy().query(request);
         query.setFields("calendars");
-
         FreeBusyResponse freeBusyResponse = new FreeBusyResponse();
         Map<String, FreeBusyCalendar> freeBusyCalendarMap;
+        freeBusyResponse = tryCatchForGetFreeBusyResponse(query, freeBusyResponse);
+        freeBusyCalendarMap = freeBusyResponse.getCalendars();
+        final int upcomingEventPosition = 0;
+        loopToPopulateResourceCalendarId(listOfIdsOfCurrentlyAvailableRooms, now,
+                freeBusyCalendarMap, upcomingEventPosition);
+        assert iOnGsuitePresenterResponse != null;
+        iOnGsuitePresenterResponse.onGsuitePresenterSuccess(
+                getAvailableRooms(listOfIdsOfCurrentlyAvailableRooms, listOfRooms));
+        return listOfIdsOfCurrentlyAvailableRooms;
+    }
 
+    /**
+     * Extracted Method to get Resource Calendar ID's.
+     * @param listOfIdsOfCurrentlyAvailableRooms list of Available rooms
+     * @param now Current time
+     * @param freeBusyCalendarMap Mapd For FreeBusyCalendar Events
+     * @param upcomingEventPosition Integer of upcoming events
+     */
+    public void loopToPopulateResourceCalendarId(List<String> listOfIdsOfCurrentlyAvailableRooms,
+                                                 DateTime now,
+                                                 Map<String, FreeBusyCalendar> freeBusyCalendarMap,
+                                                 int upcomingEventPosition) {
+        for (String id : this.listOfResourceCalendarIds) {
+            Long nextEventStartTime;
+            if (freeBusyCalendarMap.get(id).getErrors() == null) {
+                if (freeBusyCalendarMap.get(id).getBusy().isEmpty()) {
+                    listOfIdsOfCurrentlyAvailableRooms.add(id);
+                } else {
+                    nextEventStartTime = freeBusyCalendarMap.get(id).getBusy()
+                            .get(upcomingEventPosition).getStart().getValue();
+                    if (now.getValue() < nextEventStartTime) {
+                        listOfIdsOfCurrentlyAvailableRooms.add(id);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Extracted Method to deal with the try catch functionality of FreeBusy response.
+     * @param query FreeBusy query
+     * @param freeBusyResponse response from FreeBusy Library
+     * @return FreeBusy response
+     */
+    public FreeBusyResponse tryCatchForGetFreeBusyResponse(Calendar.Freebusy.Query query,
+                                                           FreeBusyResponse freeBusyResponse) {
         try {
             if (credential.getSelectedAccountName() == null) {
                 iOnGsuitePresenterResponse.onGetSelectedName();
@@ -126,32 +162,19 @@ public class GsuitePresenter extends AsyncTask<Void, Void, List<String>> {
                 iOnGsuitePresenterResponse.onGsuitePresenterError(e);
             }
         }
+        return freeBusyResponse;
+    }
 
-        freeBusyCalendarMap = freeBusyResponse.getCalendars();
-
-        final int upcomingEventPosition = 0;
-        for (String id : this.listOfResourceCalendarIds) {
-            Long nextEventStartTime;
-
-            if (freeBusyCalendarMap.get(id).getErrors() == null) {
-
-                if (freeBusyCalendarMap.get(id).getBusy().isEmpty()) {
-                    listOfIdsOfCurrentlyAvailableRooms.add(id);
-                } else {
-                    nextEventStartTime = freeBusyCalendarMap.get(id).getBusy()
-                            .get(upcomingEventPosition).getStart().getValue();
-                    if (now.getValue() < nextEventStartTime) {
-                        listOfIdsOfCurrentlyAvailableRooms.add(id);
-                    }
-                }
-
-            }
-        }
-
-        assert iOnGsuitePresenterResponse != null;
-        iOnGsuitePresenterResponse.onGsuitePresenterSuccess(
-                getAvailableRooms(listOfIdsOfCurrentlyAvailableRooms, listOfRooms));
-        return listOfIdsOfCurrentlyAvailableRooms;
+    /**
+     * Method to get the midnight time of the current day.
+     * @return get calendar time
+     */
+    public Date getMidnight() {
+        java.util.Calendar calendar = new GregorianCalendar();
+        calendar.set(java.util.Calendar.HOUR_OF_DAY, 23);
+        calendar.set(java.util.Calendar.MINUTE, 59);
+        calendar.set(java.util.Calendar.SECOND, 59);
+        return calendar.getTime();
     }
 
     /**

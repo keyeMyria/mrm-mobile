@@ -146,7 +146,6 @@ public class BuildingActivityInstrumentationTest {
         onView(withId(R.id.building_grid_view))
                 .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
     }
-
     /**
      * Test case that describes/tests for the visibility(properly loaded) of the recyclerview items.
      * And tests that at least one(1) button is clicked or clickable
@@ -169,7 +168,6 @@ public class BuildingActivityInstrumentationTest {
         Intents.release();
 
     }
-
     /**
      * Runs after each test case, to unregister the espresso idling resource.
      */
