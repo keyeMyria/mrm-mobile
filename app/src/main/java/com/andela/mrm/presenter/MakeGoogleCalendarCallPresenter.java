@@ -73,35 +73,35 @@ public class MakeGoogleCalendarCallPresenter extends AsyncTask<Void, Void, List<
      */
     private List<Event> getDataFromApi() throws IOException {
         // List the next 10 events from the primary calendar.
-
         List<Event> items;
         List<CalendarEvent> calendarEvents = new ArrayList<>();
         DateTime now = new DateTime(System.currentTimeMillis());
-        List<EventAttendee> attendees;
-
         /**
          * This part is to get the midnight of current day.
          */
-        Calendar calendar = new GregorianCalendar();
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 59);
-        Date midnight = calendar.getTime();
+        Date midnight = getMidnight(); //Gets midnight of the current day
+        items = getEvents(now, midnight);
+        populateCalendar(items, calendarEvents);
 
-        Events events = mService.events().list("primary")
-                .setTimeMin(now)
-                .setTimeMax(new DateTime(midnight.getTime())) // We need the midnight here
-                .setOrderBy("startTime")
-                .setSingleEvents(true)
-                .execute();
-        items = events.getItems();
+        String listItemInGson = new Gson().toJson(calendarEvents);
+        if (googleCalenderCallListener != null) {
+            googleCalenderCallListener.onSuccess(listItemInGson);
+        }
+        return items;
+    }
 
+    /**
+     * Method to populate the calendar entries for the day.
+     * @param items list to store all the days events
+     * @param calendarEvents list to store all calendar events for the day
+     */
+    public void populateCalendar(List<Event> items, List<CalendarEvent> calendarEvents) {
+        List<EventAttendee> attendees;
         for (Event e : items) {
             DateTime start = e.getStart().getDateTime();
             DateTime end = e.getEnd().getDateTime();
             attendees = e.getAttendees();
             String creator = e.getCreator().getEmail();
-
 
             if (start == null) {
                 start = e.getStart().getDate();
@@ -110,17 +110,41 @@ public class MakeGoogleCalendarCallPresenter extends AsyncTask<Void, Void, List<
             if (end == null) {
                 end = e.getEnd().getDate();
             }
-
             calendarEvents.add(new CalendarEvent(e.getSummary(),
                     start.getValue(),
                     end.getValue(), attendees, creator));
         }
+    }
 
-        String listItemInGson = new Gson().toJson(calendarEvents);
-        if (googleCalenderCallListener != null) {
-            googleCalenderCallListener.onSuccess(listItemInGson);
-        }
+    /**
+     * Method to list all the events for the current day.
+     * @param now DateTime value for the current point in time
+     * @param midnight DateTime value for midnight of the current day
+     * @return event Items of the day's events
+     * @throws IOException Exception Handler
+     */
+    public List<Event> getEvents(DateTime now, Date midnight) throws IOException {
+        List<Event> items;
+        Events events = mService.events().list("primary")
+                .setTimeMin(now)
+                .setTimeMax(new DateTime(midnight.getTime())) // We need the midnight here
+                .setOrderBy("startTime")
+                .setSingleEvents(true)
+                .execute();
+        items = events.getItems();
         return items;
+    }
+
+    /**
+     * Extracted Method to cater to the getting midnight of the current day.
+     * @return midnight of the current day
+     */
+    public Date getMidnight() {
+        Calendar calendar = new GregorianCalendar();
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        return calendar.getTime();
     }
 
 

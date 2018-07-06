@@ -1,6 +1,7 @@
 package com.andela.mrm.room_information;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -94,12 +95,8 @@ public class RoomInformation {
     public static List<RoomInformation> setRooms() {
         List<RoomInformation> roomInfo = new ArrayList<>();
         List<String> roomItems = new ArrayList<>();
-
-        roomItems.add("Apple TV");
-        roomItems.add("Projector");
-        roomItems.add("Jabra Speaker");
-        roomItems.add("Headphones");
-
+        String[] roomItem = {"Apple TV", "Projector", "Jabra Speaker", "Headphones"};
+        roomItems.addAll(Arrays.asList(roomItem));
         roomInfo.add(new
                 RoomInformation(COGNITIO,
                 roomItems, 2, 10, LAGOS, JABRA));

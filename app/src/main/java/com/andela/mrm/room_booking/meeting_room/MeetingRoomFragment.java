@@ -68,13 +68,10 @@ public class MeetingRoomFragment extends Fragment {
         int numCols = 5;
 
         if (meetingRoomSize == 0) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    view.findViewById(R.id.text_select_meeting_room).setVisibility(View.GONE);
-                    view.findViewById(R.id.meeting_rooms_grid_view).setVisibility(View.GONE);
-                    view.findViewById(R.id.text_no_meeting_room).setVisibility(View.VISIBLE);
-                }
+            getActivity().runOnUiThread(() -> {
+                view.findViewById(R.id.text_select_meeting_room).setVisibility(View.GONE);
+                view.findViewById(R.id.meeting_rooms_grid_view).setVisibility(View.GONE);
+                view.findViewById(R.id.text_no_meeting_room).setVisibility(View.VISIBLE);
             });
         } else {
             if (meetingRoomSize > 0 && meetingRoomSize < 5) {
@@ -85,13 +82,10 @@ public class MeetingRoomFragment extends Fragment {
             mRecyclerView = getView().findViewById(R.id.meeting_rooms_grid_view);
             mRecyclerView.setHasFixedSize(true);
             mlayoutManager = new GridLayoutManager(getContext(), numCols);
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mRecyclerView.setLayoutManager(mlayoutManager);
-                    RecyclerView.Adapter adapter = new MeetingRoomAdapter(meetingRooms);
-                    mRecyclerView.setAdapter(adapter);
-                }
+            getActivity().runOnUiThread(() -> {
+                mRecyclerView.setLayoutManager(mlayoutManager);
+                RecyclerView.Adapter adapter = new MeetingRoomAdapter(meetingRooms);
+                mRecyclerView.setAdapter(adapter);
             });
         }
     }

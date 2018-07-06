@@ -93,48 +93,65 @@ public class GsuitePresenter extends AsyncTask<Void, Void, List<String>> {
         List<FreeBusyRequestItem> requestItems = new ArrayList<>();
         List<String> listOfIdsOfCurrentlyAvailableRooms = new ArrayList<>();
         DateTime now = new DateTime(System.currentTimeMillis());
-
         for (String roomIds : listOfResourceCalendarIds) {
             requestItems.add(new FreeBusyRequestItem().setId(roomIds));
         }
-
-        java.util.Calendar calendar = new GregorianCalendar();
-        calendar.set(java.util.Calendar.HOUR_OF_DAY, 23);
-        calendar.set(java.util.Calendar.MINUTE, 59);
-        calendar.set(java.util.Calendar.SECOND, 59);
-        Date midnight = calendar.getTime();
-
+        Date midnight = getMidnight();
         request.setTimeMin(now)
                 .setTimeMax(new DateTime(midnight.getTime()))
                 .setTimeZone("Africa/Lagos")
                 .setItems(requestItems);
-
         Calendar.Freebusy.Query query = mservice.freebusy().query(request);
         query.setFields("calendars");
-
         FreeBusyResponse freeBusyResponse = new FreeBusyResponse();
         Map<String, FreeBusyCalendar> freeBusyCalendarMap;
+        freeBusyResponse = getFreeBusyResponse(query, freeBusyResponse);
+        freeBusyCalendarMap = freeBusyResponse.getCalendars();
+        final int upcomingEventPosition = 0;
+        populateResourceCalendarIdsList(listOfIdsOfCurrentlyAvailableRooms, now,
+                                        freeBusyCalendarMap, upcomingEventPosition);
+        assert iOnGsuitePresenterResponse != null;
+        iOnGsuitePresenterResponse.onGsuitePresenterSuccess(
+                getAvailableRooms(listOfIdsOfCurrentlyAvailableRooms, listOfRooms));
+        return listOfIdsOfCurrentlyAvailableRooms;
+    }
 
+    /**
+     * Extracted method containing the try catch block for the free busy response.
+     * @param query query sent to the free busy library
+     * @param freeBusyResponse Response gained from freebusy library
+     * @return FreeBusy response
+     */
+
+    public FreeBusyResponse getFreeBusyResponse(Calendar.Freebusy.Query query,
+                                                FreeBusyResponse freeBusyResponse) {
         try {
             if (credential.getSelectedAccountName() == null) {
                 iOnGsuitePresenterResponse.onGetSelectedName();
             }
             freeBusyResponse = query.execute();
-
         } catch (Exception e) {
             if (iOnGsuitePresenterResponse != null) {
                 iOnGsuitePresenterResponse.onGsuitePresenterError(e);
             }
         }
+        return freeBusyResponse;
+    }
 
-        freeBusyCalendarMap = freeBusyResponse.getCalendars();
-
-        final int upcomingEventPosition = 0;
+    /**
+     * Extracted Method to Populate the Resource Calendar Id's list.
+     * @param listOfIdsOfCurrentlyAvailableRooms List of available rooms
+     * @param now current time
+     * @param freeBusyCalendarMap Map provided by free busy
+     * @param upcomingEventPosition position of upcoming calendar events
+     */
+    public void populateResourceCalendarIdsList(List<String> listOfIdsOfCurrentlyAvailableRooms,
+                                                DateTime now,
+                                                Map<String, FreeBusyCalendar> freeBusyCalendarMap,
+                                                int upcomingEventPosition) {
         for (String id : this.listOfResourceCalendarIds) {
             Long nextEventStartTime;
-
             if (freeBusyCalendarMap.get(id).getErrors() == null) {
-
                 if (freeBusyCalendarMap.get(id).getBusy().isEmpty()) {
                     listOfIdsOfCurrentlyAvailableRooms.add(id);
                 } else {
@@ -144,14 +161,20 @@ public class GsuitePresenter extends AsyncTask<Void, Void, List<String>> {
                         listOfIdsOfCurrentlyAvailableRooms.add(id);
                     }
                 }
-
             }
         }
+    }
 
-        assert iOnGsuitePresenterResponse != null;
-        iOnGsuitePresenterResponse.onGsuitePresenterSuccess(
-                getAvailableRooms(listOfIdsOfCurrentlyAvailableRooms, listOfRooms));
-        return listOfIdsOfCurrentlyAvailableRooms;
+    /**
+     * Method to get Midnight of the current day.
+     * @return midnight of the current day
+     */
+    public Date getMidnight() {
+        java.util.Calendar calendar = new GregorianCalendar();
+        calendar.set(java.util.Calendar.HOUR_OF_DAY, 23);
+        calendar.set(java.util.Calendar.MINUTE, 59);
+        calendar.set(java.util.Calendar.SECOND, 59);
+        return calendar.getTime();
     }
 
     /**

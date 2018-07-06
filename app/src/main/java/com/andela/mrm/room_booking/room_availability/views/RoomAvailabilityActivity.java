@@ -12,7 +12,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.LinearLayout;
 
 import com.andela.mrm.R;
@@ -97,30 +96,18 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_availability);
-
         ButterKnife.bind(this);
-
         setRoomScheduleOnClickListener(null);
-
         setRoomInformationListener();
-
         setFindRoomLayoutListener();
-
-
         playService = new GooglePlayService(GoogleApiAvailability.getInstance());
-
-        // Sets up inflatable fragments(countdown timer and details fragments)
-        setUpFragments();
-
+        setUpFragments(); // Sets up inflatable fragments(countdown timer and details fragments)
         // Initialize credentials and service object.
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
-
         getResultsFromApi();
-
     }
-
     @Override
     public void onTimeChange(int minutes) {
         MeetingRoomDetailFragment meetingRoomDetailFragment = (MeetingRoomDetailFragment)
@@ -129,7 +116,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
             meetingRoomDetailFragment.updateMinute(minutes);
         }
     }
-
     @Override
     public void onCountDownComplete() {
         MeetingRoomDetailFragment meetingRoomDetailFragment = (MeetingRoomDetailFragment)
@@ -138,7 +124,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
             meetingRoomDetailFragment.displayCheckInScreen();
         }
     }
-
     @Override
     public void startCountDown(long timeInMilliSeconds) {
         CountDownTimerFragment countDownTimerFragment = (CountDownTimerFragment)
@@ -150,7 +135,6 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
             countDownTimerFragment.setTimeRemainingText("Time Remaining");
         }
     }
-
     /**
      * On meeting ended.
      */
@@ -182,12 +166,7 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
             Snackbar
                     .make(roomAvailabilityParentLayout, "No Network Found",
                             Snackbar.LENGTH_INDEFINITE)
-                    .setAction("RETRY", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            getResultsFromApi();
-                        }
-                    })
+                    .setAction("RETRY", v -> getResultsFromApi())
                     .show();
         } else {
             new MakeGoogleCalendarCallPresenter(mCredential, this).execute();
@@ -215,14 +194,12 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
                 mCredential.setSelectedAccountName(accountName);
                 getResultsFromApi();
             } else {
-                // Start a dialog from which the user can choose an account
-                startActivityForResult(
+                startActivityForResult(//Start a dialog from which the user can choose an account
                         mCredential.newChooseAccountIntent(),
                         REQUEST_ACCOUNT_PICKER);
             }
         } else {
-            // Request the GET_ACCOUNTS permission via a user dialog
-            EasyPermissions.requestPermissions(
+            EasyPermissions.requestPermissions(//Request the GET_ACCOUNTS permission via user dialog
                     this,
                     "This app needs to access your Google account (via Contacts).",
                     REQUEST_PERMISSION_GET_ACCOUNTS,
@@ -234,12 +211,9 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
      * Called when an activity launched here (specifically, AccountPicker
      * and authorization) exits, giving you the requestCode you started it with,
      * the resultCode it returned, and any additional data from it.
-     *
      * @param requestCode - code indicating which activity result is incoming.
-     * @param resultCode  - code indicating the result of the incoming
-     *                    activity result.
-     * @param data        -   Intent (containing result data) returned by incoming
-     *                    activity result.
+     * @param resultCode  - code indicating the result of the incoming activity result.
+     * @param data        -   Intent (containing result data) returned by incoming activity result.
      */
     @Override
     protected void onActivityResult(
@@ -257,20 +231,7 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
                 }
                 break;
             case REQUEST_ACCOUNT_PICKER:
-                if (resultCode == RESULT_OK && data != null
-                        && data.getExtras() != null) {
-                    String accountName =
-                            data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-                    if (accountName != null) {
-                        PreferenceManager
-                                .getDefaultSharedPreferences(this)
-                                .edit()
-                                .putString(PREF_ACCOUNT_NAME, accountName)
-                                .apply();
-                        mCredential.setSelectedAccountName(accountName);
-                        getResultsFromApi();
-                    }
-                }
+                resultCodeEqualsResultOkDataNotNull(resultCode, data);
                 break;
             case REQUEST_AUTHORIZATION:
                 if (resultCode == RESULT_OK) {
@@ -283,8 +244,29 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
     }
 
     /**
+     * Extracted Method that deals with ResultCode equaling resultOk and Data not null.
+     * @param resultCode integer value of the result code
+     * @param data data recieved via intent
+     */
+    public void resultCodeEqualsResultOkDataNotNull(int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && data != null
+                && data.getExtras() != null) {
+            String accountName =
+                    data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+            if (accountName != null) {
+                PreferenceManager
+                        .getDefaultSharedPreferences(this)
+                        .edit()
+                        .putString(PREF_ACCOUNT_NAME, accountName)
+                        .apply();
+                mCredential.setSelectedAccountName(accountName);
+                getResultsFromApi();
+            }
+        }
+    }
+
+    /**
      * Respond to requests for permissions at runtime for API 23 and above.
-     *
      * @param requestCode  The request code passed in
      *                     requestPermissions(android.app.Activity, String, int, String[])
      * @param permissions  The requested permissions. Never null.
@@ -299,42 +281,31 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
         EasyPermissions.onRequestPermissionsResult(
                 requestCode, permissions, grantResults, this);
     }
-
     /**
-     * Callback for when a permission is granted using the EasyPermissions
-     * library.
-     *
-     * @param requestCode The request code associated with the requested
-     *                    permission
+     * Callback for when a permission is granted using the EasyPermissions library.
+     * @param requestCode The request code associated with the requested permission
      * @param list        The requested permission list. Never null.
      */
     @Override
     public void onPermissionsGranted(int requestCode, List<String> list) {
         // Do nothing.
     }
-
     /**
-     * Callback for when a permission is denied using the EasyPermissions
-     * library.
-     *
-     * @param requestCode - The request code associated with the requested
-     *                    permission
+     * Callback for when a permission is denied using the EasyPermissions library.
+     * @param requestCode - The request code associated with the requested permission
      * @param list        -    The requested permission list. Never null.
      */
     @Override
     public void onPermissionsDenied(int requestCode, List<String> list) {
         // Do nothing.
     }
-
     /**
      * Checks whether the device currently has a network connection.
-     *
      * @return true if the device has a network connection, false otherwise.
      */
     private boolean isDeviceOnline() {
         return NetworkConnectivityChecker.isDeviceOnline(getApplicationContext());
     }
-
     /**
      * Sets up inflatable fragments(countdown timer and details fragments).
      */
@@ -345,25 +316,19 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
                 .add(R.id.frame_room_availability_countdown_timer, new CountDownTimerFragment())
                 .commit();
     }
-
     /**
      * Activates room information button.
      */
     private void setRoomInformationListener() {
-        roomInformation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: replace roomId with Id of current room
-                Intent intent = RoomInformationActivity.newIntent(
-                        RoomAvailabilityActivity.this, 3);
-                startActivity(intent);
-            }
+        roomInformation.setOnClickListener(v -> {
+            // TODO: replace roomId with Id of current room
+            Intent intent = RoomInformationActivity.newIntent(
+                    RoomAvailabilityActivity.this, 3);
+            startActivity(intent);
         });
     }
-
     /**
      * Activates onClickListener on both room schedule button and timeline strip.
-     *
      * @param eventsInString - list of events in strings
      */
     void activateRoomScheduleOnClickListener(@Nullable final String eventsInString) {
@@ -379,49 +344,28 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
             startActivity(intent);
         }
     }
-
-
     /**
      * Sets the onClick Listener.
-     *
      * @param eventsInString String.
      */
     public void setRoomScheduleOnClickListener(@Nullable final String eventsInString) {
-        roomSchedule.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activateRoomScheduleOnClickListener(eventsInString);
-            }
-        });
-
-        timeLineStrip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activateRoomScheduleOnClickListener(eventsInString);
-            }
-        });
+        roomSchedule.setOnClickListener(v -> activateRoomScheduleOnClickListener(eventsInString));
+        timeLineStrip.setOnClickListener(v -> activateRoomScheduleOnClickListener(eventsInString));
     }
-
-
     /**
      * sets findRoomLayout Listener.
      */
     public void setFindRoomLayoutListener() {
-        findRoomLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RoomAvailabilityActivity.this,
-                        FindRoomActivity.class);
-                startActivity(intent);
-            }
+        findRoomLayout.setOnClickListener(v -> {
+            Intent intent = new Intent(RoomAvailabilityActivity.this,
+                    FindRoomActivity.class);
+            startActivity(intent);
         });
     }
-
     @Override
     public void onSuccess(String itemsInString) {
         setRoomScheduleOnClickListener(itemsInString);
     }
-
     @Override
     public void onCancelled(Exception mLastError) {
         if (mLastError != null) {

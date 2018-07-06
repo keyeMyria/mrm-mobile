@@ -186,7 +186,6 @@ public class EventScheduleAdapter extends RecyclerView.Adapter<EventScheduleAdap
          */
         public void setValue(final int position) {
             String extension;
-
             if (calendarEvents.get(position).getEndTime() == null) {
                 duration.setText("All day");
                 eventTitle.setText("Free Till End Of Day");
@@ -195,39 +194,11 @@ public class EventScheduleAdapter extends RecyclerView.Adapter<EventScheduleAdap
             } else {
                 Long end = calendarEvents.get(position).getEndTime();
                 Long start  = calendarEvents.get(position).getStartTime();
-
-                if (calendarEvents.get(position).getAttendees() != null) {
-                    final int noOfAttendees = calendarEvents.get(position).getAttendees().size();
-                    noOfAttendeesView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            showAttendees(position);
-                        }
-                    });
-
-                    closeRecyclerView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                        hideAttendees(noOfAttendees);
-                        }
-                    });
-
-                    noOfAttendeesView.setText(new StringBuilder().append(noOfAttendees)
-                            .append(" Participants").toString());
-                    staticImageParticipants.setVisibility(View.VISIBLE);
-
-                    AttendeesAdapter attendeesAdapter =
-                            new AttendeesAdapter(calendarEvents.get(position).getAttendees());
-                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context,
-                            LinearLayoutManager.VERTICAL, false);
-                    attendeesRecyclerView.setLayoutManager(layoutManager);
-                    attendeesRecyclerView.setAdapter(attendeesAdapter);
-                }
+                getEventAttendees(position);
                 Long diff = end - start;
                 eventTitle.setText(calendarEvents.get(position).getSummary());
                 startTime.setText(formatTime(start, "GMT+1", false));
                 String format = formatTime(diff, "GMT", true);
-
                 if (isMinute) {
                     extension = "min";
                 } else {
@@ -235,13 +206,36 @@ public class EventScheduleAdapter extends RecyclerView.Adapter<EventScheduleAdap
                 }
                 duration.setText(format + extension);
             }
-
             if ("Available".equals(calendarEvents.get(position).getSummary())) {
                 availabilityIndicator.setBackgroundColor(Color.GREEN);
             } else {
                 availabilityIndicator.setBackgroundColor(Color.RED);
             }
 
+        }
+
+        /**
+         * Extracted Method to deal with obtaining event Attendees.
+         * @param position integer value of attendees
+         */
+        public void getEventAttendees(final int position) {
+            if (calendarEvents.get(position).getAttendees() != null) {
+                final int noOfAttendees = calendarEvents.get(position).getAttendees().size();
+                noOfAttendeesView.setOnClickListener(v -> showAttendees(position));
+
+                closeRecyclerView.setOnClickListener(v -> hideAttendees(noOfAttendees));
+
+                noOfAttendeesView.setText(new StringBuilder().append(noOfAttendees)
+                        .append(" Participants").toString());
+                staticImageParticipants.setVisibility(View.VISIBLE);
+
+                AttendeesAdapter attendeesAdapter =
+                        new AttendeesAdapter(calendarEvents.get(position).getAttendees());
+                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context,
+                        LinearLayoutManager.VERTICAL, false);
+                attendeesRecyclerView.setLayoutManager(layoutManager);
+                attendeesRecyclerView.setAdapter(attendeesAdapter);
+            }
         }
 
         /**

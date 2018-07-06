@@ -18,28 +18,18 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        inflateLoginButton();
-        inflateOnBoarding();
+        inflateButtons();
     }
 
     /**
      * Inflates the login button fragment.
      */
-    private void inflateLoginButton() {
+    private void inflateButtons() {
         LoginButtonFragment buttonFragment = new LoginButtonFragment();
+        OnBoardingFragment onBoardingFragment = new OnBoardingFragment();
         manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.add(R.id.frame_first, buttonFragment, "button_frag");
-        transaction.commit();
-    }
-
-    /**
-     * Inflates the onBoarding fragment.
-     */
-    private void inflateOnBoarding() {
-       OnBoardingFragment onBoardingFragment = new OnBoardingFragment();
-        manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
         transaction.add(R.id.frame_second, onBoardingFragment, "on_board_frag");
         transaction.commit();
     }
