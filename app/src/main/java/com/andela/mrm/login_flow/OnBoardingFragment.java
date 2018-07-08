@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.andela.mrm.R;
-import com.andela.mrm.adapter.ImageSliderAdapter;
 import com.andela.mrm.util.ScreenSizeChecker;
 
 /**

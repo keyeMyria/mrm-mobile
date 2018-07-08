@@ -21,16 +21,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".room_booking.meeting_room.RoomSelectionActivity"
+            android:name=".room_setup.meeting_room.MeetingRoomActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".room_booking.building.BuildingActivity"
+            android:name=".room_setup.building.BuildingActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".room_booking.country.CountryActivity"
+            android:name=".room_setup.country.CountryActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".room_booking.floor.FloorSelectionActivity"
+            android:name=".room_setup.floor.FloorSelectionActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".login_flow.LoginActivity"
@@ -42,10 +42,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".room_booking.room_availability.views.RoomAvailabilityActivity"
+            android:name=".room_availability.RoomAvailabilityActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".room_booking.room_availability.views.EventScheduleActivity"
+            android:name=".room_events.EventScheduleActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.Transparent" />
         <activity
@@ -53,7 +53,7 @@
             android:screenOrientation="landscape"
             android:theme="@style/Theme.Transparent"
             />
-        <activity android:name=".room_booking.room_availability.views.FindRoomActivity"
+        <activity android:name=".find_rooms.FindRoomActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Theme.Transparent"/>
     </application>

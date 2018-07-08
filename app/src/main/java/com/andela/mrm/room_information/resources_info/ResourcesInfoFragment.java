@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.andela.mrm.R;
-import com.andela.mrm.adapter.RoomResourcesAdapter;
 import com.andela.mrm.fragment.Room;
 
 import java.util.ArrayList;

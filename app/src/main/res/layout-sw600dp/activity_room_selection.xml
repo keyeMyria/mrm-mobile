@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.andela.mrm.room_booking.meeting_room.RoomSelectionActivity">
+    tools:context="com.andela.mrm.room_setup.meeting_room.MeetingRoomActivity">
 
 
     <FrameLayout

@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import com.andela.mrm.R;
-import com.andela.mrm.room_booking.country.CountryActivity;
+import com.andela.mrm.room_setup.country.CountryActivity;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;

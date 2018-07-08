@@ -5,7 +5,7 @@
     android:id="@+id/layout_room_availability_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.andela.mrm.room_booking.room_availability.views.RoomAvailabilityActivity">
+    tools:context=".room_availability.RoomAvailabilityActivity">
 
     <ImageView
         android:id="@+id/img_room_availability_background_image"
@@ -32,7 +32,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.andela.mrm.room_booking.room_availability.views.TimeLineScheduleView
+        <com.andela.mrm.room_availability.TimeLineScheduleView
             android:id="@+id/view_time_line_strip"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -77,7 +77,7 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:context="com.andela.mrm.room_booking.room_availability.FeedBackFragment">
+            tools:context=".room_availability.FeedBackFragment">
 
             <LinearLayout
                 android:id="@+id/layout_find_room"

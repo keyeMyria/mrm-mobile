@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.andela.mrm.R;
-import com.andela.mrm.room_booking.country.CountryActivity;
+import com.andela.mrm.room_setup.country.CountryActivity;
 
 /**
  * A {@link Fragment} subclass.

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.andela.mrm.room_booking.room_availability.views.MeetingRoomDetailFragment">
+    tools:context=".room_availability.MeetingRoomDetailFragment">
 
     <LinearLayout
         android:id="@+id/room_availability_room_detail"

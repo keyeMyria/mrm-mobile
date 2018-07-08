@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.andela.mrm.room_booking.room_availability.views.CountDownTimerFragment">
+    tools:context=".room_availability.CountDownTimerFragment">
 
     <TextView
         android:id="@+id/count_down_display"

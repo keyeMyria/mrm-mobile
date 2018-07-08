@@ -29,11 +29,6 @@ android {
         testInstrumentationRunnerArguments clearPackageData: 'true'
         multiDexEnabled true
 
-        compileOptions {
-            sourceCompatibility JavaVersion.VERSION_1_8
-            targetCompatibility JavaVersion.VERSION_1_8
-        }
-
         lintOptions {
             abortOnError false
         }
@@ -66,7 +61,6 @@ android {
 
         }
     }
-
     sourceSets {
         mock {
             java.srcDirs('src/mock/java')
@@ -75,7 +69,6 @@ android {
             java.srcDirs('src/prod/java')
         }
     }
-
     testOptions {
         execution 'ANDROID_TEST_ORCHESTRATOR'
         animationsDisabled true
@@ -84,12 +77,16 @@ android {
             includeAndroidResources = true
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 
 dependencies {
     implementation "com.google.firebase:firebase-perf:${rootProject.firebasePref}"
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.android.support:appcompat-v7:${rootProject.supportVersion}"
     implementation "com.android.support.constraint:constraint-layout:${rootProject.constraintLayout}"
     implementation "com.android.support:design:${rootProject.supportVersion}"
@@ -128,11 +125,14 @@ dependencies {
     implementation "com.google.firebase:firebase-core:${rootProject.firebasePref}"
     implementation "com.crashlytics.sdk.android:crashlytics:${rootProject.crashlyticsVersion}"
     implementation "com.android.support.test.espresso.idling:idling-concurrent:${rootProject.espressoVersion}"
-    implementation "com.facebook.shimmer:shimmer:0.1.0@aar"
+    implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
     testImplementation "org.mockito:mockito-core:${rootProject.mockitoVersion}"
-//  TODO: test:orchestrator should have the same version as the other support:test libs.i.e. `testRunner`
-//  see https://github.com/andela/mrm-mobile/pull/59#pullrequestreview-131503339
-//  androidTestUtil "com.android.support.test:orchestrator:${rootProject.testRunner}"
+
+    //  TODO: test:orchestrator should have the same version as the other support:test libs.i.e. `testRunner`
+
+    //  see https://github.com/andela/mrm-mobile/pull/59#pullrequestreview-131503339
+
+    //  androidTestUtil "com.android.support.test:orchestrator:${rootProject.testRunner}"
     androidTestUtil "com.android.support.test:orchestrator:1.0.1"
 
     // butter knife libraries

@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.andela.mrm.R;
-import com.andela.mrm.adapter.SimilarRoomAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

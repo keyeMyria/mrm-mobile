@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    tools:context="com.andela.mrm.room_booking.building.BuildingFragment">
+    tools:context="com.andela.mrm.room_setup.building.BuildingFragment">
 
     <TextView
         android:id="@+id/building_text"
