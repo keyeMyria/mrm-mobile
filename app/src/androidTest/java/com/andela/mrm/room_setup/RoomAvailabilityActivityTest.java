@@ -20,8 +20,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.swipeLeft;
+import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasChildCount;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -152,7 +155,6 @@ public class RoomAvailabilityActivityTest {
      */
     @Test
     public void timeLineStripeIsDisplayedAndWorksAsRequired() {
-//        Intents.init();
 
         onView(allOf(withId(R.id.view_time_line_strip),
                 isDescendantOfA(allOf(withId(R.id.frame_room_availability_time_line),
@@ -162,17 +164,12 @@ public class RoomAvailabilityActivityTest {
                 withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
                 .check(matches(isDisplayed()));
 
-//        onView(allOf(withId(R.id.frame_room_availability_time_line),
-//                hasChildCount(1),
-//                hasDescendant(withId(R.id.view_time_line_strip)),
-//                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
-//                not(isClickable())))
-//                .check(matches(isDisplayed()))
-//                .perform(swipeLeft(), swipeRight())
-//                .perform(click());
-//
-//        intended(hasComponent(EventScheduleActivity.class.getName()));
-
-//        Intents.release();
+        onView(allOf(withId(R.id.frame_room_availability_time_line),
+                hasChildCount(1),
+                hasDescendant(withId(R.id.view_time_line_strip)),
+                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+                not(isClickable())))
+                .check(matches(isDisplayed()))
+                .perform(swipeLeft(), swipeRight());
     }
 }

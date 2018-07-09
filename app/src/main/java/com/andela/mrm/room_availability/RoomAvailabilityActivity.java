@@ -20,6 +20,7 @@ import com.andela.mrm.room_events.EventScheduleActivity;
 import com.andela.mrm.room_information.RoomInformationActivity;
 import com.andela.mrm.util.GooglePlayService;
 import com.andela.mrm.util.NetworkConnectivityChecker;
+import com.andela.mrm.widget.TimeLineScheduleView;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;

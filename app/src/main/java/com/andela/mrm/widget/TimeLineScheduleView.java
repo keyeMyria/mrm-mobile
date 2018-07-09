@@ -1,4 +1,4 @@
-package com.andela.mrm.room_availability;
+package com.andela.mrm.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.andela.mrm.R;
+import com.andela.mrm.room_availability.TimeLine;
 
 import java.util.ArrayList;
 import java.util.List;

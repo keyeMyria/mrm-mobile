@@ -32,7 +32,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.andela.mrm.room_availability.TimeLineScheduleView
+        <com.andela.mrm.widget.TimeLineScheduleView
             android:id="@+id/view_time_line_strip"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
