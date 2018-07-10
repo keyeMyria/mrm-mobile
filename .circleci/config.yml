@@ -14,6 +14,7 @@ gcloud_config: &gcloud_config
     - image: google/cloud-sdk:latest
   environment:
   TERM: dumb
+  INSTRUMENT_TEST_FAILURE: false
 
 workspace: &workspace
     ~/repo
@@ -483,8 +484,7 @@ jobs:
           name: Notifying slack channel on fail
           when: on_fail
           command: |
-            export FAILED_EARLY=true
-            echo ${FAILED_EARLY} ${TERM} ===============
+            echo ${INSTRUMENT_TEST_FAILURE} ${TERM} ===============
             bash ~/repo/.circleci/notify_slack_fail.sh
       - run:
           name: Run instrumented test on Firebase Test Lab
@@ -511,7 +511,7 @@ jobs:
           name: Download instrumented test results from Firebase Test Lab on fail fail
           when: on_fail
           command: |
-            echo ${FAILED_EARLY} ${TERM} =================
+            echo ${INSTRUMENT_TEST_FAILURE} ${TERM} =================
             mkdir firebase
             gsutil -m cp -r -U "`gsutil ls gs://test-lab-42q965dw0t03q-w3crkis8m06h6 | tail -1`*" /root/repo/firebase/ || true
       - store_artifacts:
