@@ -485,6 +485,7 @@ jobs:
           name: Notifying slack channel on fail
           when: on_fail
           command: |
+            echo 'export INSTRUMENT_TEST_FAILURE=false' >> $BASH_ENV
             echo ${INSTRUMENT_TEST_FAILURE} ${TERM} ===============
             bash ~/repo/.circleci/notify_slack_fail.sh
       - run:
