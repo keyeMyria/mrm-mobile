@@ -4,6 +4,7 @@ default: &defaults
   working_directory: ~/repo
   environment:
   TERM: dumb
+  INSTRUMENT_TEST_FAILURE: false
   # Customize the JVM maximuum heap limit
   _JAVA_OPTIONS: "-Xmx2048m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
   GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m"'
@@ -14,7 +15,6 @@ gcloud_config: &gcloud_config
     - image: google/cloud-sdk:latest
   environment:
   TERM: dumb
-  INSTRUMENT_TEST_FAILURE: false
 
 workspace: &workspace
     ~/repo
