@@ -483,6 +483,7 @@ jobs:
           name: Notifying slack channel on fail
           when: on_fail
           command: |
+            export FAILED_EARLY=true
             bash ~/repo/.circleci/notify_slack_fail.sh
       - run:
           name: Run instrumented test on Firebase Test Lab
@@ -491,7 +492,7 @@ jobs:
           name: Create directory to store test results
           command: mkdir firebase
       - run:
-          name: Download instrumented test results from Firebase Test Lab
+          name: Download instrumented test results from Firebase Test Lab on success
           command: gsutil -m cp -r -U "`gsutil ls gs://test-lab-42q965dw0t03q-w3crkis8m06h6 | tail -1`*" /root/repo/firebase/ || true
       - *persist_firebase_workspace
       - store_artifacts:
@@ -506,9 +507,10 @@ jobs:
           command: |
             bash ~/repo/.circleci/notify_slack.sh
       - run:
-          name: Notifying slack channel on fail
+          name: Download instrumented test results from Firebase Test Lab on fail fail
           when: on_fail
           command: |
+            echo ${FAILED_EARLY} =================
             mkdir firebase
             gsutil -m cp -r -U "`gsutil ls gs://test-lab-42q965dw0t03q-w3crkis8m06h6 | tail -1`*" /root/repo/firebase/ || true
       - store_artifacts:
