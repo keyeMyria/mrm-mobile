@@ -1,6 +1,9 @@
 package com.andela.mrm.room_information.resources_info;
 
+import com.andela.mrm.GetRoomsInABlockQuery;
 import com.andela.mrm.fragment.Room;
+
+import java.util.List;
 
 /**
  * Room resources info contract interface.
@@ -32,6 +35,13 @@ public interface ResourcesInfoContract {
         void showErrorMessage(int messageResourceId);
 
         /**
+         * Show similar rooms method.
+         *
+         * @param rooms - List of rooms
+         */
+        void showSimilarRooms(List<GetRoomsInABlockQuery.Room> rooms);
+
+        /**
          * Gets network availability Status from the view.
          *
          * @return the boolean
@@ -56,20 +66,31 @@ public interface ResourcesInfoContract {
         /**
          * Load room.
          *
-         * @param callback the callback
+         * @param callback - the callback
+         * @param roomId - roomId
          */
-        void loadRoom(Callback callback);
+        void loadRoom(Callback<Room> callback, int roomId);
+
+        /**
+         * Load similar rooms method.
+         * @param rooms - Rooms in a block
+         * @param blockId - Block id
+         */
+        void loadSimilarRooms(Callback<GetRoomsInABlockQuery.GetRoomsInABlock> rooms, int blockId);
+
 
         /**
          * The interface Callback.
+         *
+         * @param <T> - Callback parameter
          */
-        interface Callback {
+        interface Callback<T> {
             /**
              * On data load success.
              *
-             * @param room the room
+             * @param data the room
              */
-            void onDataLoadSuccess(Room room);
+            void onDataLoadSuccess(T data);
 
             /**
              * On data load failed.

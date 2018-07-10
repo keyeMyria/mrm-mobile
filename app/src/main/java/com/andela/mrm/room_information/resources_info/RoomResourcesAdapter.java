@@ -20,9 +20,9 @@ public class RoomResourcesAdapter extends RecyclerView.Adapter<RoomResourcesAdap
     private List<Room.Resource> mResources;
 
     /**
-     * Instantiates a new Room resources adapter.
+     * Instantiates a new Room mResources adapter.
      *
-     * @param resources the resources
+     * @param resources the mResources
      */
     public RoomResourcesAdapter(List<Room.Resource> resources) {
         mResources = resources;
@@ -49,9 +49,9 @@ public class RoomResourcesAdapter extends RecyclerView.Adapter<RoomResourcesAdap
     }
 
     /**
-     * Sets resources and calls notifyDataSetChanged.
+     * Sets mResources and calls notifyDataSetChanged.
      *
-     * @param resources the resources
+     * @param resources the mResources
      */
     public void setResources(List<Room.Resource> resources) {
         mResources = resources;
@@ -91,7 +91,7 @@ public class RoomResourcesAdapter extends RecyclerView.Adapter<RoomResourcesAdap
         public void bind(Room.Resource resource) {
             mResourceName.setText(resource.name());
             // TODO: implement set quantity when data is available from the backend
-//            mResourceQuantity.setText(resource.quantity());
+           // TODO: mResourceQuantity.setText(resource.quantity());
         }
     }
 }

@@ -1,14 +1,14 @@
-package com.andela.mrm.room_information;
+package com.andela.mrm.room_information.similar_rooms;
 
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.andela.mrm.R;
-import com.pchmn.materialchips.ChipView;
+import com.andela.mrm.fragment.Room;
 
 import java.util.List;
 
@@ -20,22 +20,22 @@ public class SimilarRoomAmenitiesAdapter extends
     /**
      * The Room amenities.
      */
-    List<String> roomAmenities;
+    List<Room.Resource> mResources;
 
     /**
      * Instantiates a new Similar room amenities adapter.
      *
-     * @param roomAmenities the room amenities
+     * @param resources the room amenities
      */
-    public SimilarRoomAmenitiesAdapter(List<String> roomAmenities) {
-        this.roomAmenities = roomAmenities;
+    public SimilarRoomAmenitiesAdapter(List<Room.Resource> resources) {
+        mResources = resources;
     }
 
     @NonNull
     @Override
     public SimilarRoomAmenitiesAdapter.ViewHolder onCreateViewHolder(
             @NonNull ViewGroup parent, int viewType) {
-        ConstraintLayout view = (ConstraintLayout) LayoutInflater.from(parent.getContext())
+        View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.partial_single_amenity, parent, false);
 
         return new ViewHolder(view);
@@ -44,22 +44,20 @@ public class SimilarRoomAmenitiesAdapter extends
     @Override
     public void onBindViewHolder(
             @NonNull SimilarRoomAmenitiesAdapter.ViewHolder holder, int position) {
-        holder.chip.setLabel(roomAmenities.get(position));
+        holder.bind(mResources.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return roomAmenities.size();
+        return mResources.size();
     }
 
     /**
      * The type View holder.
      */
     class ViewHolder extends RecyclerView.ViewHolder {
-        /**
-         * The Chip.
-         */
-        ChipView chip;
+
+        private final TextView resourceNameText;
 
         /**
          * Instantiates a new View holder.
@@ -68,8 +66,18 @@ public class SimilarRoomAmenitiesAdapter extends
          */
         ViewHolder(View itemView) {
             super(itemView);
+            resourceNameText = itemView.
+                    findViewById(R.id.text_resource_name_fragment_similar_rooms);
+        }
 
-            chip = itemView.findViewById(R.id.single_chip);
+        /**
+         * Bind method for room resources.
+         * @param resource - Room resources
+         */
+        public void bind(Room.Resource resource) {
+            // TODO: add resource count when avaiable from backend
+            // TODO: String resourceName = resource.name() + "(" + resource.count() + ")";
+            resourceNameText.setText(resource.name());
         }
     }
 }

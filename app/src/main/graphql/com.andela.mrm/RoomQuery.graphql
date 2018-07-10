@@ -4,6 +4,20 @@ query Room($roomId: Int!) {
   }
 }
 
+query GetRoomsInABlock($blockId: Int!) {
+  getRoomsInABlock(blockId: $blockId) {
+    id
+    name
+    floors {
+      id
+      name
+      rooms {
+        ...Room
+      }
+    }
+  }
+}
+
 fragment Room on Room {
   id
   name

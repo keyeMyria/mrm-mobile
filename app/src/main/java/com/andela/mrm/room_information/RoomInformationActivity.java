@@ -13,37 +13,42 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.andela.mrm.GetRoomsInABlockQuery;
 import com.andela.mrm.Injection;
 import com.andela.mrm.R;
 import com.andela.mrm.fragment.Room;
 import com.andela.mrm.room_information.resources_info.ResourcesInfoContract;
 import com.andela.mrm.room_information.resources_info.ResourcesInfoFragment;
-import com.andela.mrm.room_information.resources_info.ResourcesInfoFragment.Callbacks;
 import com.andela.mrm.room_information.resources_info.ResourcesInfoPresenter;
+import com.andela.mrm.room_information.similar_rooms.SimilarRoomsFragment;
 import com.andela.mrm.util.NetworkConnectivityChecker;
+
+import java.util.List;
 
 /**
  * The Room information activity class.
  */
 public class RoomInformationActivity extends AppCompatActivity implements
-        ResourcesInfoContract.View, Callbacks {
+        ResourcesInfoContract.View,
+        SimilarRoomsFragment.Callbacks, ResourcesInfoFragment.Callbacks {
 
     private static final String EXTRA_ROOM_ID = "com.andela.mrm.room_id";
 
-    private int mRoomId;
     ResourcesInfoContract.Actions mPresenter;
-    private boolean mIsLoadingData;
-    private Room mRoom;
-
-    private TabLayout mTabLayout;
-    private ViewPager mViewPager;
-
-    private ImageButton mCloseActivityBtn;
     TextView mCapacityText;
     TextView mRoomNameText;
     TextView mLocationText;
+
+    private List<GetRoomsInABlockQuery.Room> mRooms;
+    private Room mRoom;
+
+    private TabLayout mTabLayout;
+    ViewPager mViewPager;
+    ProgressBar mProgressBar;
+    private ImageButton mCloseActivityBtn;
 
     /**
      * Prepares the intent required to launch this activity.
@@ -63,12 +68,16 @@ public class RoomInformationActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room_information);
 
-        mRoomId = getIntent().getIntExtra(EXTRA_ROOM_ID, 0);
-        mPresenter = new ResourcesInfoPresenter(this, Injection
-                .provideResourcesInfoData(this, mRoomId));
+        int roomId = getIntent().getIntExtra(EXTRA_ROOM_ID, 0);
+        mPresenter = new ResourcesInfoPresenter(this,
+                Injection.provideResourcesInfoData(this),
+                roomId
+        );
 
         mViewPager = findViewById(R.id.view_pager_fragment_container_activity_room_info);
         mTabLayout = findViewById(R.id.tablayout_room_info);
+        mProgressBar = findViewById(R.id.progressbar_activity_room_information);
+
         mCloseActivityBtn = findViewById(R.id.button_close_room_info);
         mCapacityText = findViewById(R.id.text_capacity_number_activity_room_info);
         mRoomNameText = findViewById(R.id.text_room_name_activity_room_info);
@@ -106,6 +115,29 @@ public class RoomInformationActivity extends AppCompatActivity implements
         });
     }
 
+
+    @Override
+    public void showSimilarRooms(final List<GetRoomsInABlockQuery.Room> rooms) {
+        mRooms = rooms;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                fragmentShowSimilarRooms(rooms);
+            }
+        });
+    }
+
+    /**
+     * Show similar rooms fragment.
+     * @param rooms - rooms
+     */
+    void fragmentShowSimilarRooms(List<GetRoomsInABlockQuery.Room> rooms) {
+        SimilarRoomsFragment similarRoomsFragment = getSimilarRoomsFragment();
+        if (similarRoomsFragment != null) {
+            similarRoomsFragment.setSimilarRooms(rooms);
+        }
+    }
+
     /**
      * Displays list of room resources in the RoomResourcesFragment.
      *
@@ -113,21 +145,22 @@ public class RoomInformationActivity extends AppCompatActivity implements
      */
     void showRoomResources(Room room) {
         ResourcesInfoFragment resourcesInfoFragment = getResourcesInfoFragment();
-        if (resourcesInfoFragment != null && room != null) {
+        if (resourcesInfoFragment != null) {
             resourcesInfoFragment.showResourcesList(room.resources());
         }
     }
 
     @Override
     public void showLoadingIndicator(final boolean isLoading) {
-        mIsLoadingData = isLoading;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                // TODO: use a loader in this activity and display or dismiss here, possibly shimmer
-                ResourcesInfoFragment resourcesInfoFragment = getResourcesInfoFragment();
-                if (resourcesInfoFragment != null) {
-                    resourcesInfoFragment.showLoadingIndicator(isLoading);
+                if (isLoading) {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    mViewPager.setVisibility(View.GONE);
+                } else {
+                    mProgressBar.setVisibility(View.GONE);
+                    mViewPager.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -169,10 +202,32 @@ public class RoomInformationActivity extends AppCompatActivity implements
         return null;
     }
 
+    /**
+     * Get similar rooms fragment method.
+     *
+     * @return null
+     */
+    SimilarRoomsFragment getSimilarRoomsFragment() {
+        int currentViewPagerFragment = mViewPager.getCurrentItem();
+        if (currentViewPagerFragment == 1) {
+            return (SimilarRoomsFragment)
+                    mViewPager.getAdapter().instantiateItem(mViewPager, currentViewPagerFragment);
+        }
+        return null;
+    }
+
     @Override
     public void onViewLoaded() {
-        showLoadingIndicator(mIsLoadingData);
-        showRoomResources(mRoom);
+        if (mRooms != null) {
+            fragmentShowSimilarRooms(mRooms);
+        }
+    }
+
+    @Override
+    public void onFragmentViewsLoaded() {
+        if (mRoom != null) {
+            showRoomResources(mRoom);
+        }
     }
 
     /**
@@ -200,7 +255,7 @@ public class RoomInformationActivity extends AppCompatActivity implements
             if (position == 0) {
                 return ResourcesInfoFragment.newInstance();
             } else if (position == 1) {
-                return new SimilarRoomFragment();
+                return new SimilarRoomsFragment();
             }
             return null;
         }

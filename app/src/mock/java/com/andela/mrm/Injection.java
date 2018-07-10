@@ -21,10 +21,9 @@ public class Injection {
      * Provides a mock implementation of Room Resources Info Data contract.
      *
      * @param context the context
-     * @param roomId  the room id
      * @return the resources info contract . data
      */
-    public static ResourcesInfoContract.Data provideResourcesInfoData(Context context, int roomId) {
+    public static ResourcesInfoContract.Data provideResourcesInfoData(Context context) {
         List<Resource> resources = Arrays.asList(
                 new Resource("", "", "Apple TV"),
                 new Resource("", "", "Notebook")
@@ -33,10 +32,10 @@ public class Injection {
         Floor floor = new Floor("", "", "4th Floor", block);
         final Room room = new Room(
                 "",
-                String.valueOf(roomId),
+                String.valueOf(1),
                 "cognitio",
                 "",
-                roomId,
+                1,
                 "",
                 floor,
                 resources);

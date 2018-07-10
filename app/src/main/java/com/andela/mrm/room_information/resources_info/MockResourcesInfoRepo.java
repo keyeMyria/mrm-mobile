@@ -1,5 +1,6 @@
 package com.andela.mrm.room_information.resources_info;
 
+import com.andela.mrm.GetRoomsInABlockQuery;
 import com.andela.mrm.fragment.Room;
 
 /**
@@ -22,10 +23,17 @@ public class MockResourcesInfoRepo implements ResourcesInfoContract.Data {
      * Load room.
      *
      * @param callback the callback
+     * @param roomId
      */
     @Override
-    public void loadRoom(Callback callback) {
-        callback.onDataLoadSuccess(mRoom);
+    public void loadRoom(Callback<Room> callback, int roomId) {
+        // TODO: implement later
+    }
+
+    @Override
+    public void loadSimilarRooms(Callback<GetRoomsInABlockQuery.GetRoomsInABlock> rooms,
+                                 int blockId) {
+        // TODO: implement later
     }
 
     /**

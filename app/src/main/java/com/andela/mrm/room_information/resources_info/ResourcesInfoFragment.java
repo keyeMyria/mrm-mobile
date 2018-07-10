@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import com.andela.mrm.R;
 import com.andela.mrm.fragment.Room;
@@ -22,14 +21,13 @@ import java.util.List;
  */
 public class ResourcesInfoFragment extends Fragment {
 
-    private Callbacks mCallbacks;
-
     private final GridLayoutManager mLayoutManager = new GridLayoutManager(getContext(), 4);
     private final RoomResourcesAdapter mResourcesAdapter = new
             RoomResourcesAdapter(new ArrayList<Room.Resource>(0));
 
     private RecyclerView mRecyclerView;
-    private ProgressBar mProgressBar;
+
+    private Callbacks mCallbacks;
 
     /**
      * New instance resources info fragment.
@@ -41,15 +39,6 @@ public class ResourcesInfoFragment extends Fragment {
         ResourcesInfoFragment fragment = new ResourcesInfoFragment();
         fragment.setArguments(args);
         return fragment;
-    }
-
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && mCallbacks != null) {
-            mCallbacks.onViewLoaded();
-        }
     }
 
     @Override
@@ -64,23 +53,23 @@ public class ResourcesInfoFragment extends Fragment {
         View view = inflater
                 .inflate(R.layout.fragment_room_resources, container, false);
 
-        mProgressBar = view.findViewById(R.id.progress_bar_loading_resources);
         mRecyclerView = view.findViewById(R.id.room_resources_recycler_view);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mResourcesAdapter);
-
-        mCallbacks.onViewLoaded();
+        mCallbacks.onFragmentViewsLoaded();
 
         return view;
     }
 
+    /**
+     * Called when the fragment is no longer attached to its activity.  This
+     * is called after {@link #onDestroy()}.
+     */
     @Override
     public void onDetach() {
         super.onDetach();
         mCallbacks = null;
     }
-
 
     /**
      * Show resources list.
@@ -88,33 +77,18 @@ public class ResourcesInfoFragment extends Fragment {
      * @param resources the resources
      */
     public void showResourcesList(List<Room.Resource> resources) {
-        mResourcesAdapter.setResources(resources);
-    }
-
-    /**
-     * Show loading indicator.
-     *
-     * @param isLoading the is loading
-     */
-    public void showLoadingIndicator(boolean isLoading) {
-        if (mProgressBar != null && mRecyclerView != null) {
-            if (isLoading) {
-                mProgressBar.setVisibility(View.VISIBLE);
-                mRecyclerView.setVisibility(View.GONE);
-            } else {
-                mProgressBar.setVisibility(View.GONE);
-                mRecyclerView.setVisibility(View.VISIBLE);
-            }
+        if (mRecyclerView != null) {
+            mRecyclerView.setAdapter(new RoomResourcesAdapter(resources));
         }
     }
 
     /**
-     * The interface Callbacks.
+     * Callback interface.
      */
     public interface Callbacks {
         /**
-         * On view loaded.
+         * onFragmentViewsLoaded method.
          */
-        void onViewLoaded();
+        void onFragmentViewsLoaded();
     }
 }

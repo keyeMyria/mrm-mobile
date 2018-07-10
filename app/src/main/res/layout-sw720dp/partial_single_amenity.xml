@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/text_resource_name_fragment_similar_rooms"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="3dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <com.pchmn.materialchips.ChipView
-        android:id="@+id/single_chip"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        app:labelColor="#000"
-        app:label="Chip"
-        app:backgroundColor="#FFF"
-        app:hasAvatarIcon="false" />
-
-</android.support.constraint.ConstraintLayout>
+    android:layout_marginEnd="7dp"
+    android:background="@drawable/bg_room_resource_text"
+    android:padding="7dp"
+    android:textSize="18sp" />
 
