@@ -489,9 +489,6 @@ jobs:
           name: Download instrumented test results from Firebase Test Lab
           command: gsutil -m cp -r -U "`gsutil ls gs://test-lab-42q965dw0t03q-w3crkis8m06h6 | tail -1`*" /root/repo/firebase/ || true
       - *persist_firebase_workspace
-      - store_artifacts:
-          path: firebase/
-          destination: /firebase/
 
     # Sending notification
       - run:
@@ -503,9 +500,16 @@ jobs:
           name: Notifying slack channel on fail
           when: on_fail
           command: |
-            printenv
             mkdir firebase
             gsutil -m cp -r -U "`gsutil ls gs://test-lab-42q965dw0t03q-w3crkis8m06h6 | tail -1`*" /root/repo/firebase/ || true
+      - store_artifacts:
+          when: on_fail
+          path: firebase/
+          destination: /firebase/
+      - run:
+          name: Notifying slack channel on fail
+          when: on_fail
+          command: |
             bash ~/repo/.circleci/notify_slack_fail.sh
 
   report_coverage:
