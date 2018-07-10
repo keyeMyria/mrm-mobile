@@ -503,6 +503,8 @@ jobs:
           name: Notifying slack channel on fail
           when: on_fail
           command: |
+            mkdir firebase
+            gsutil -m cp -r -U "`gsutil ls gs://test-lab-42q965dw0t03q-w3crkis8m06h6 | tail -1`*" /root/repo/firebase/ || true
             bash ~/repo/.circleci/notify_slack_fail.sh
 
   report_coverage:
