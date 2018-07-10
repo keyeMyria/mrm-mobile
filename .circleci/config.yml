@@ -479,7 +479,7 @@ jobs:
           name: Export Failure Determinant
           when: on_success
           command: |
-            echo 'export INSTRUMENT_TEST_FAILURE=false' >> $BASH_ENV
+            echo 'export INSTRUMENT_TEST_ARTIFACT=exempted' >> $BASH_ENV
       - run:
           name: Set Google Cloud target project
           command: gcloud config set project andela-learnin
@@ -490,14 +490,14 @@ jobs:
           name: Notifying slack channel on fail
           when: on_fail
           command: |
-            if [ ${INSTRUMENT_TEST_FAILURE} == false ]; then
+            if [ ${INSTRUMENT_TEST_FAILURE} == exempted ]; then
               bash ~/repo/.circleci/notify_slack_fail.sh
             fi
       - run:
           name: Modify Failure Determinant
           when: on_success
           command: |
-            echo 'export INSTRUMENT_TEST_FAILURE=true' >> $BASH_ENV
+            echo 'export INSTRUMENT_TEST_ARTIFACT=required' >> $BASH_ENV
       - run:
           name: Run instrumented test on Firebase Test Lab
           command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/mock/debug/app-mock-debug.apk --test app/build/outputs/apk/androidTest/mock/debug/app-mock-debug-androidTest.apk --device model=Nexus7,version=22,locale=en,orientation=landscape --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec --directories-to-pull=/sdcard --timeout 20m
@@ -523,7 +523,7 @@ jobs:
           name: Download instrumented test results from Firebase Test Lab on fail fail
           when: on_fail
           command: |
-            if [ ${INSTRUMENT_TEST_FAILURE} == true ]; then
+            if [ ${INSTRUMENT_TEST_ARTIFACT} == required ]; then
               mkdir firebase
               gsutil -m cp -r -U "`gsutil ls gs://test-lab-42q965dw0t03q-w3crkis8m06h6 | tail -1`*" /root/repo/firebase/ || true
             fi
@@ -535,7 +535,7 @@ jobs:
           name: Notifying slack channel on fail
           when: on_fail
           command: |
-            if [ ${INSTRUMENT_TEST_FAILURE} == true ]; then
+            if [ ${INSTRUMENT_TEST_ARTFACT} == required ]; then
               bash ~/repo/.circleci/notify_slack_fail.sh
             fi
 
