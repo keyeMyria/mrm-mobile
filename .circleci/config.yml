@@ -481,7 +481,7 @@ jobs:
           command: gcloud auth activate-service-account mrm-android-editor@andela-learning.iam.gserviceaccount.com --key-file client-secret.json && gcloud firebase test android models list
       - run:
           name: Run instrumented test on Firebase Test Lab
-          command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/mock/debug/app-mock-debug.apk --test app/build/outputs/apk/androidTest/mock/debug/app-mock-debug-androidTest.apk --device model=Nexus7,version=22,locale=en,orientation=landscape --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec --directories-to-pull=/sdcard --timeout 20m || false
+          command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/mock/debug/app-mock-debug.apk --test app/build/outputs/apk/androidTest/mock/debug/app-mock-debug-androidTest.apk --device model=Nexus7,version=22,locale=en,orientation=landscape --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec --directories-to-pull=/sdcard --timeout 20m
       - run:
           name: Create directory to store test results
           command: mkdir firebase
@@ -503,6 +503,7 @@ jobs:
           name: Notifying slack channel on fail
           when: on_fail
           command: |
+            printenv
             mkdir firebase
             gsutil -m cp -r -U "`gsutil ls gs://test-lab-42q965dw0t03q-w3crkis8m06h6 | tail -1`*" /root/repo/firebase/ || true
             bash ~/repo/.circleci/notify_slack_fail.sh
