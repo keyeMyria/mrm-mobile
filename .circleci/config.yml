@@ -15,6 +15,7 @@ gcloud_config: &gcloud_config
     - image: google/cloud-sdk:latest
   environment:
   TERM: dumb
+  INSTRUMENT_TEST_FAILURE: false
 
 workspace: &workspace
     ~/repo
