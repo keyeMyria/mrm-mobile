@@ -483,7 +483,7 @@ jobs:
       - *failure_determinant
       - run:
           name: Set Google Cloud target project
-          command: gcloud config set project andela-learnin
+          command: gcloud config set project andela-learning
       - run:
           name: Authenticate with Google Cloud
           command: gcloud auth activate-service-account mrm-android-editor@andela-learning.iam.gserviceaccount.com --key-file client-secret.json && gcloud firebase test android models list
@@ -539,7 +539,7 @@ jobs:
           name: Notifying slack channel on fail
           when: on_fail
           command: |
-            if [ "$INSTRUMENT_TEST_ARTFACT" == required ]; then
+            if [ "$INSTRUMENT_TEST_ARTIFACT" == required ]; then
               bash ~/repo/.circleci/notify_slack_fail.sh
             fi
 
