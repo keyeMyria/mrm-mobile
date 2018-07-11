@@ -15,12 +15,9 @@ declare_env_variables() {
 
 
   # Retrieving the urls for the CircleCI artifacts
-  echo $INSTRUMENT_TEST_ARTIFACT ".............."
   if [ "$INSTRUMENT_TEST_ARTIFACT" != exempted ]; then
-    echo "**************** !exempted ********************"
     CIRCLE_ARTIFACTS_URL="$(curl https://circleci.com/api/v1.1/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}/artifacts?circle-token=${CIRCLE_TOKEN} | grep -o 'https://[^"]*')"
   fi
-  echo "============================proceed============"
 
   # Assigning slack messages based on the CircleCI job name
 
