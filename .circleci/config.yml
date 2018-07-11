@@ -480,6 +480,7 @@ jobs:
       - *attach_debug_workspace
       - *export_gcloud_key
       - *decode_gcloud_key
+      - *failure_determinant
       - run:
           name: Set Google Cloud target project
           command: gcloud config set project andela-learning
@@ -489,6 +490,13 @@ jobs:
       - run:
           name: Run instrumented test on Firebase Test Lab
           command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/mock/debug/app-mock-debug.apk --test app/build/outputs/apk/androidTest/mock/debug/app-mock-debug-androidTest.apk --device model=Nexus7,version=22,locale=en,orientation=landscape --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec --directories-to-pull=/sdcard --timeout 20m
+      - run:
+          name: Notifying slack channel on fail
+          when: on_fail
+          command: |
+            if [ "${INSTRUMENT_TEST_ARTIFACT}" == exempted ]; then
+              bash ~/repo/.circleci/notify_slack_fail.sh
+            fi
       - run:
           name: Create directory to store test results
           command: mkdir firebase
