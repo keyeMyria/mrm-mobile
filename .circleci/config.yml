@@ -490,8 +490,8 @@ jobs:
           name: Notifying slack channel on fail
           when: on_fail
           command: |
-            echo $INSTRUMENT_TEST_FAILURE =============
-            if [ "${INSTRUMENT_TEST_FAILURE}" == exempted ]; then
+            echo $INSTRUMENT_TEST_ARTIFACT =============
+            if [ "${INSTRUMENT_TEST_ARTIFACT}" == exempted ]; then
               echo "check.>>>>>>>>>>>>"
               bash ~/repo/.circleci/notify_slack_fail.sh
             fi
