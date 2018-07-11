@@ -496,13 +496,11 @@ jobs:
               echo "check.>>>>>>>>>>>>"
               bash ~/repo/.circleci/notify_slack_fail.sh
             fi
-      - modify_failure_determinant:
-          <<: *failure_determinant
-          run: 
-            name: Modify Failure Determinant
-            when: on_success
-            command: |
-              echo 'export INSTRUMENT_TEST_ARTIFACT=required' >> $BASH_ENV
+      - run:
+          name: Modify Failure Determinant
+          when: on_success
+          command: |
+            echo 'export INSTRUMENT_TEST_ARTIFACT=required' >> $BASH_ENV
       - run:
           name: Run instrumented test on Firebase Test Lab
           when: on_success
