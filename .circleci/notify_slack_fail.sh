@@ -15,7 +15,7 @@ declare_env_variables() {
 
 
   # Retrieving the urls for the CircleCI artifacts
-  if [ ${INSTRUMENT_TEST_ARTFACT} == required ]; then
+  if [ "$INSTRUMENT_TEST_ARTFACT" == required ]; then
     CIRCLE_ARTIFACTS_URL="$(curl https://circleci.com/api/v1.1/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}/artifacts?circle-token=${CIRCLE_TOKEN} | grep -o 'https://[^"]*')"
   fi
 

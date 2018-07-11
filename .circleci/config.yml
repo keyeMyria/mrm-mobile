@@ -490,7 +490,7 @@ jobs:
           name: Notifying slack channel on fail
           when: on_fail
           command: |
-            if [ ${INSTRUMENT_TEST_FAILURE} == exempted ]; then
+            if [ "${INSTRUMENT_TEST_FAILURE}" == exempted ]; then
               bash ~/repo/.circleci/notify_slack_fail.sh
             fi
       - run:
@@ -523,7 +523,7 @@ jobs:
           name: Download instrumented test results from Firebase Test Lab on fail fail
           when: on_fail
           command: |
-            if [ ${INSTRUMENT_TEST_ARTIFACT} == required ]; then
+            if [ "$INSTRUMENT_TEST_ARTIFACT" == required ]; then
               mkdir firebase
               gsutil -m cp -r -U "`gsutil ls gs://test-lab-42q965dw0t03q-w3crkis8m06h6 | tail -1`*" /root/repo/firebase/ || true
             fi
@@ -535,7 +535,7 @@ jobs:
           name: Notifying slack channel on fail
           when: on_fail
           command: |
-            if [ ${INSTRUMENT_TEST_ARTFACT} == required ]; then
+            if [ "$INSTRUMENT_TEST_ARTFACT" == required ]; then
               bash ~/repo/.circleci/notify_slack_fail.sh
             fi
 
