@@ -4,7 +4,6 @@ default: &defaults
   working_directory: ~/repo
   environment:
   TERM: dumb
-  INSTRUMENT_TEST_FAILURE: false
   # Customize the JVM maximuum heap limit
   _JAVA_OPTIONS: "-Xmx2048m -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
   GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m"'
@@ -15,7 +14,6 @@ gcloud_config: &gcloud_config
     - image: google/cloud-sdk:latest
   environment:
   TERM: dumb
-  INSTRUMENT_TEST_FAILURE: false
 
 workspace: &workspace
     ~/repo
@@ -35,6 +33,13 @@ export_gservices_key: &export_gservices_key
   run:
     name: Export Google Services key environment variable
     command: echo 'export GOOGLE_SERVICES_JSON="$GOOGLE_SERVICES_JSON"' >> $BASH_ENV
+
+export_failure_determinant: &failure_determinant
+  run:
+    name: Export Failure Determinant
+    when: on_success
+    command: |
+      echo 'export INSTRUMENT_TEST_ARTIFACT=exempted' >> $BASH_ENV
 
 decode_gservices_key: &decode_gservices_key
   run:
@@ -475,11 +480,6 @@ jobs:
       - *attach_debug_workspace
       - *export_gcloud_key
       - *decode_gcloud_key
-      - run:
-          name: Export Failure Determinant
-          when: on_success
-          command: |
-            echo 'export INSTRUMENT_TEST_ARTIFACT=exempted' >> $BASH_ENV
       - run:
           name: Set Google Cloud target project
           command: gcloud config set project andela-learnin
