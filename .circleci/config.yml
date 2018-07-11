@@ -34,6 +34,13 @@ export_gservices_key: &export_gservices_key
     name: Export Google Services key environment variable
     command: echo 'export GOOGLE_SERVICES_JSON="$GOOGLE_SERVICES_JSON"' >> $BASH_ENV
 
+export_failure_determinant: &failure_determinant
+  run:
+    name: Export Failure Determinant
+    when: on_success
+    command: |
+      echo 'export INSTRUMENT_TEST_ARTIFACT=exempted' >> $BASH_ENV
+
 decode_gservices_key: &decode_gservices_key
   run:
     name: Decode Google Services JSON key
