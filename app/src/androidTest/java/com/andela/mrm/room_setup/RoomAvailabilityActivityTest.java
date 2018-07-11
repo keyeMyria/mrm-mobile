@@ -143,6 +143,7 @@ public class RoomAvailabilityActivityTest {
     public void scheduleButtonWorksAsRequired() {
         Intents.init();
         onView(withId(R.id.layout_schedule))
+                .check(matches((allOf(isDisplayed(), not(isClickable())))));
                 .check(matches(allOf(isDisplayed(), isClickable())));
         onView(withId(R.id.layout_schedule))
                 .check(matches(hasChildCount(2)));
