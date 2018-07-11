@@ -483,7 +483,7 @@ jobs:
       - *failure_determinant
       - run:
           name: Set Google Cloud target project
-          command: gcloud config set project andela-learning
+          command: gcloud config set project andela-learnin
       - run:
           name: Authenticate with Google Cloud
           command: gcloud auth activate-service-account mrm-android-editor@andela-learning.iam.gserviceaccount.com --key-file client-secret.json && gcloud firebase test android models list
