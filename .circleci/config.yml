@@ -482,6 +482,7 @@ jobs:
       - *attach_debug_workspace
       - *export_gcloud_key
       - *decode_gcloud_key
+      - *failure_determinant
       - run:
           name: Set Google Cloud target project
           command: gcloud config set project andela-learnin
