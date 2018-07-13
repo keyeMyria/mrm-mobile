@@ -1,15 +1,27 @@
 package com.andela.mrm.room_setup;
 
+import android.app.Activity;
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.contrib.RecyclerViewActions;
+import android.support.test.espresso.intent.Intents;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.view.View;
+import android.widget.TextView;
 
 import com.andela.mrm.R;
 import com.andela.mrm.room_events.CalendarEvent;
 import com.andela.mrm.room_events.EventScheduleActivity;
+import com.andela.mrm.room_events.EventScheduleAdapter;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,14 +30,22 @@ import java.util.List;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasData;
 import static android.support.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.not;
 
 /**
  * The type Event schedule activity test.
@@ -111,5 +131,46 @@ public class EventScheduleActivityTest {
                 .addAvailableTimeSlots(availableEvent).size() == 4);
     }
 
+    /**
+     * DisplayUpcoming events view sets text properly
+     */
+    @Test
+    public void displayUpcomingEventsViewSetsText() throws Throwable {
+        List<CalendarEvent> upcomingEvents = new ArrayList<>();
+        int blankEvents = upcomingEvents.size();
+        assertEquals(blankEvents, 0);
 
+        TextView upComing = activityTestRule.getActivity()
+                .findViewById(R.id.text_upcoming_events);
+
+        Calendar calendar = new GregorianCalendar();
+        calendar.set(Calendar.HOUR_OF_DAY, 15);
+        calendar.set(Calendar.MINUTE, 00);
+        calendar.set(Calendar.SECOND, 00);
+        Date startTime = calendar.getTime();
+        CalendarEvent eventA = new CalendarEvent("Event A", startTime.getTime(),
+                startTime.getTime() + 1800000, null, null);
+
+
+        upcomingEvents.add(eventA);
+
+        activityTestRule.runOnUiThread(() -> activityTestRule.getActivity()
+                .displayUpcomingEventsView(upcomingEvents, upComing));
+
+        onView(withId(R.id.text_upcoming_events))
+                .check(matches(withText("Upcoming Events: 1")));
+    }
+
+
+    /**
+     * Test if Event Schedule Adapter works well
+     */
+    @Test
+    public void eventScheduleAdapterWorksWell() {
+        onView(withId(R.id.layout_event_recycler_view))
+                .check(matches(not(withContentDescription("events"))));
+
+    }
 }
+
+

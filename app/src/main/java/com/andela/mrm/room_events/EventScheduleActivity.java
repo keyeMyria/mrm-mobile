@@ -61,7 +61,6 @@ public class EventScheduleActivity extends Activity {
 
     /**
      * Add available time slots list.
-     *
      * @param calendarEvents the calendar events
      * @return the list
      */
@@ -129,11 +128,10 @@ public class EventScheduleActivity extends Activity {
 
     /**
      * Displays a view detailing the number of upcoming events.
-     *
-     * @param calendarEvents - list of calender events for a day
+     *  @param calendarEvents - list of calender events for a day
      * @param view - text view containing upcoming events count
      */
-    private void displayUpcomingEventsView(List<CalendarEvent> calendarEvents, TextView view) {
+    public void displayUpcomingEventsView(List<CalendarEvent> calendarEvents, TextView view) {
         int numberOfUpComingEvents = calendarEvents.size();
         String upcomingEventsDisplayText = "Upcoming Events: " + numberOfUpComingEvents;
 
