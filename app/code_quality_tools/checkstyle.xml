@@ -8,7 +8,7 @@
 
     <!--Number of lines in a file-->
     <module name="FileLength">
-        <property name="max" value="400"/>
+        <property name="max" value="500"/>
     </module>
     <module name="FileTabCharacter"/>
 
