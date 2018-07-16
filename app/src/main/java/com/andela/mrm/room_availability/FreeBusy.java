@@ -5,20 +5,17 @@ package com.andela.mrm.room_availability;
  */
 public class TimeLine {
     private final int meetingDuration;
-    private final int timeBarColor;
-    private final boolean isAvailable;
+    private final boolean mIsBusy;
 
     /**
      * Creates object instance of the TimeLine class.
      *
      * @param meetingDuration - time duration for event
-     * @param timeBarColor - color for rectangular time bar
-     * @param isAvailable - specifies if a period of time is available or booked
+     * @param isBusy - specifies if a period of time is available or booked
      */
-    public TimeLine(int meetingDuration, int timeBarColor, boolean isAvailable) {
+    public TimeLine(int meetingDuration, boolean isBusy) {
         this.meetingDuration = meetingDuration;
-        this.timeBarColor = timeBarColor;
-        this.isAvailable = isAvailable;
+        this.mIsBusy = isBusy;
     }
 
     /**
@@ -31,20 +28,19 @@ public class TimeLine {
     }
 
     /**
-     * Time bar color.
-     *
-     * @return - color of custom view bar
-     */
-    public int getTimeBarColor() {
-        return timeBarColor;
-    }
-
-    /**
      * Meeting room availability.
      *
      * @return - boolean value indicating availability of meeting room
      */
-    public boolean isAvailable() {
-        return isAvailable;
+    public boolean isBusy() {
+        return mIsBusy;
+    }
+
+    @Override
+    public String toString() {
+        return "TimeLine{" +
+                "meetingDuration=" + meetingDuration +
+                ", mIsBusy=" + mIsBusy +
+                '}';
     }
 }

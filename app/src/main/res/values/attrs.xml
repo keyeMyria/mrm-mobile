@@ -7,5 +7,6 @@
         <attr name="lengthOfSingleBar" format="float" />
         <attr name="textStartYPoint" format="float" />
         <attr name="rectHeightAboveLine" format="float" />
+        <attr name="shapeStartYPoint" format="float" />
     </declare-styleable>
 </resources>

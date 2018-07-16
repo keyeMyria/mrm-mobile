@@ -14,22 +14,30 @@ import android.view.View;
 import com.andela.mrm.R;
 import com.andela.mrm.room_availability.TimeLine;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * TimeLineScheduleView Custom Class.
  */
 public class TimeLineScheduleView extends View {
-    Paint mLinePaint, mRectPaint;
-    TextPaint mTextPaint;
-    float lengthOfSingleTimeBar, textSize, strokeWidth;
-    int numberOfSingleTimeBar = 14;
-    int canvasHeight;
-    float textStartYPoint, rectHeightAboveLine;
+    private static final float DIFF_TEXT_STARTY_SHAPE_STARTY = 35F;
 
-    // TimeLine Model
-    List<TimeLine> mTimeLineArray;
+    private Paint mLinePaint;
+    private Paint mRectPaint;
+    private TextPaint mTextPaint;
+
+    private float mHourScaleXLength;
+    private float textSize;
+    private float strokeWidth;
+    private int canvasHeight;
+    private float textStartYPoint;
+    private float shapeStartYPoint;
+    private float mRectHeight;
+
+    @Nullable
+    private List<FreeBusy> mFreeBusyList;
+    private int mTotalHours;
+    private int mStartHour;
 
     /**
      * Simple constructor to use when creating a view from code.
@@ -80,6 +88,22 @@ public class TimeLineScheduleView extends View {
     }
 
     /**
+     * Computes the total number of hours to be drawn by this view.
+     *
+     * @param freeBusyList List of data to compute hours from
+     * @return total number of hours from freeBusy list
+     */
+    private static int getTotalFreeBusyHours(@Nullable List<FreeBusy> freeBusyList) {
+        int totalFreeBusyDuration = 0;
+        if (freeBusyList != null) {
+            for (FreeBusy freeBusy : freeBusyList) {
+                totalFreeBusyDuration += freeBusy.getDuration();
+            }
+        }
+        return (int) Math.ceil(totalFreeBusyDuration / 60.0);
+    }
+
+    /**
      * Initializes Paint objects.
      *
      * @param attrs - custom attributes
@@ -88,55 +112,54 @@ public class TimeLineScheduleView extends View {
         if (attrs == null) {
             return;
         }
-        TypedArray ta = getContext().obtainStyledAttributes(
-                attrs,
-                R.styleable.TimeLineScheduleView);
+        TypedArray ta = getContext()
+                .obtainStyledAttributes(attrs, R.styleable.TimeLineScheduleView);
         try {
             canvasHeight = ta.getInt(R.styleable.TimeLineScheduleView_canvasHeight, 200);
             textSize = ta.getFloat(R.styleable.TimeLineScheduleView_sizeOfText, 25F);
             strokeWidth = ta.getFloat(R.styleable.TimeLineScheduleView_strokeWidth, 2F);
-            lengthOfSingleTimeBar = ta.
+            mHourScaleXLength = ta.
                     getFloat(R.styleable.TimeLineScheduleView_lengthOfSingleBar, 170F);
-            textStartYPoint = ta.getFloat(R.styleable.TimeLineScheduleView_textStartYPoint, 120F);
-            rectHeightAboveLine = ta
-                    .getFloat(R.styleable.TimeLineScheduleView_rectHeightAboveLine, 4F);
+
+            shapeStartYPoint = ta.getFloat(R.styleable.TimeLineScheduleView_shapeStartYPoint, 85F);
+            textStartYPoint = ta.getFloat(R.styleable.TimeLineScheduleView_textStartYPoint,
+                    shapeStartYPoint + DIFF_TEXT_STARTY_SHAPE_STARTY);
+            mRectHeight = ta.getFloat(R.styleable.TimeLineScheduleView_rectHeightAboveLine, 5F);
         } finally {
             ta.recycle();
         }
-        mTimeLineArray = new ArrayList<>();
-        populateArrayList(mTimeLineArray);
-        // create thin line paint
-        createThinLinePaint();
-        // create rectangular time-bar paint
-        createRectangularTimeBarPaint();
-        // create text-view paint
-        createTextViewPaint();
-        Typeface dinpro = Typeface.createFromAsset(getContext().getAssets(), "font/dinpro.otf");
-        mTextPaint.setTypeface(dinpro);
+
+        initializeThinLinePaint();
+        initializeRectangularPaint();
+        initializeTextViewPaint();
     }
 
     /**
-     * Extracted Method to create Text View Paint.
+     * Initializes the paint used in drawing texts in the view.
      */
-    public final void createTextViewPaint() {
+    private void initializeTextViewPaint() {
+        Typeface dinpro = Typeface
+                .createFromAsset(getContext().getAssets(), "font/dinpro.otf");
+
         mTextPaint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
         mTextPaint.setColor(Color.WHITE);
         mTextPaint.setTextAlign(Paint.Align.LEFT);
         mTextPaint.setTextSize(textSize);
+        mTextPaint.setTypeface(dinpro);
     }
 
     /**
-     * Extracted Method to create the rectangular time bar.
+     * Initializes the paint used in drawing rectangle shapes in the view.
      */
-    public final void createRectangularTimeBarPaint() {
+    private void initializeRectangularPaint() {
         mRectPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mRectPaint.setStyle(Paint.Style.FILL);
     }
 
     /**
-     * Extracted Method to create the thinLine paint.
+     * Initializes paint used in drawing thin lines.
      */
-    public final void createThinLinePaint() {
+    private void initializeThinLinePaint() {
         mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mLinePaint.setStyle(Paint.Style.STROKE);
         mLinePaint.setStrokeWidth(strokeWidth);
@@ -144,96 +167,117 @@ public class TimeLineScheduleView extends View {
     }
 
     /**
-     * Populates an array list of schedule events.
+     * Populates the data used in drawing the timeline.
      *
-     * @param mTimeLineArray - array containing list of dummy schedule events
+     * @param freeBusyList - array containing list of {@link FreeBusy}
+     * @param startHour    - hour to start drawing the TimeLine view from
      */
-    private void populateArrayList(List<TimeLine> mTimeLineArray) {
-        // dummy meeting duration in minutes for both booked and available time slots, alternatively
-        int[] timeDuration = {60, 90, 60, 45, 45, 15, 60, 75, 60, 150, 60, 40, 80};
+    public void setTimeLineData(List<FreeBusy> freeBusyList, int startHour) {
+        mFreeBusyList = freeBusyList;
+        mStartHour = startHour;
+        mTotalHours = getTotalFreeBusyHours(mFreeBusyList);
 
-        for (int i = 0; i < timeDuration.length; i++) {
-            int timeBarColor = Color.WHITE;
-            boolean isRoomAvailable = false;
-
-            if (i == 2) {
-                timeBarColor = Color.GREEN;
-            }
-
-            if ((i + 2) % 2 != 0) {
-                isRoomAvailable = true;
-            }
-
-            mTimeLineArray.add(new TimeLine(timeDuration[i], timeBarColor, isRoomAvailable));
-        }
-
+        requestLayout();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        float startXPoint = 0F;
-        final float startEndYPoint = 85F;
-        canvasDrawer(canvas, startXPoint);
-        for (int i = 0; i <= (numberOfSingleTimeBar - 2); i++) {
-            int meetingDuration = mTimeLineArray.get(i).getMeetingDuration();
-            int timeBarColor = mTimeLineArray.get(i).getTimeBarColor();
-            boolean isRoomAvailable = mTimeLineArray.get(i).isAvailable();
-            float rectHeightBelowLine = rectHeightAboveLine;
-            int lengthOfMeetingBar = (int) ((lengthOfSingleTimeBar * meetingDuration) / 60);
-            final float endXPoint = startXPoint + lengthOfMeetingBar;
-            mRectPaint.setColor(timeBarColor);
-            if (i > 0) {
-                if (!isRoomAvailable) {
-                    canvas.drawRect(startXPoint, startEndYPoint - rectHeightAboveLine,
-                            endXPoint, startEndYPoint + rectHeightBelowLine, mRectPaint);
-                } else {
-                    canvas.drawLine(startXPoint, startEndYPoint,
-                            endXPoint, startEndYPoint, mLinePaint);
-                }
-            } else {
-                canvas.drawRect(startXPoint, startEndYPoint - rectHeightAboveLine,
-                        lengthOfMeetingBar, startEndYPoint + rectHeightBelowLine, mRectPaint);
-            }
-            startXPoint += lengthOfMeetingBar;
+        if (mFreeBusyList != null) {
+            drawTimeTexts(canvas, mTotalHours, mStartHour);
+            drawTimeLineShapes(canvas, mFreeBusyList);
         }
     }
 
     /**
-     * Method to deal with drawing the canvas.
+     * Draws the time/period texts starting from the start hour.
      *
-     * @param canvas      canvas instance to be drawn on
-     * @param startXPoint floating point integer to represent the start point
+     * @param canvas     canvas instance to be drawn on.
+     * @param totalHours total number of time periods to be drawn - in hours
+     * @param startHour  reference time
      */
-    public void canvasDrawer(Canvas canvas, float startXPoint) {
-        float textStartXPoint;
-        for (int i = 0; i < numberOfSingleTimeBar; i++) {
-            String timePeriod = " am";
-            String timeText = 8 + i + timePeriod;
-            if (i == 0) {
-                textStartXPoint = startXPoint;
+    private void drawTimeTexts(Canvas canvas, int totalHours, int startHour) {
+        final int noon = 12;
+
+        for (int i = 0; i < totalHours; i++) {
+            float nextStartX = mHourScaleXLength * i;
+            int nextHour = startHour + i;
+            String timeText;
+            if (nextHour < noon) {
+                timeText = nextHour + " am";
+            } else if (nextHour == noon) {
+                timeText = nextHour + " noon";
             } else {
-                textStartXPoint = lengthOfSingleTimeBar * i;
-                if (i == 4) {
-                    timePeriod = " noon";
-                    timeText = 8 + i + timePeriod;
-                } else if (i > 4) {
-                    timePeriod = " pm";
-                    timeText = (i - 4) + timePeriod;
-                }
+                timeText = (nextHour - noon) + " pm";
             }
-            canvas.drawText(timeText, textStartXPoint, textStartYPoint, mTextPaint);
+            canvas.drawText(timeText, nextStartX, textStartYPoint, mTextPaint);
         }
+    }
+
+    /**
+     * Draws the shapes progressively that each represent an availability status within a time
+     * range.
+     *
+     * @param canvas       canvas instance to be drawn on
+     * @param freeBusyList List of {@link FreeBusy}
+     */
+    private void drawTimeLineShapes(Canvas canvas, List<FreeBusy> freeBusyList) {
+        float startX = 0;
+        for (int i = 0; i < freeBusyList.size(); i++) {
+            FreeBusy freeBusy = freeBusyList.get(i);
+            int length = (int) ((freeBusy.getDuration() * mHourScaleXLength) / 60);
+            switch (freeBusy.getStatus()) {
+                case BUSY:
+                    drawRect(canvas, startX, length, Color.WHITE);
+                    break;
+                case BUSY_CURRENT:
+                    drawRect(canvas, startX, length, Color.GREEN);
+                    break;
+                case BUSY_CURRENT_CHECKED_IN:
+                    drawRect(canvas, startX, length, Color.RED);
+                    break;
+                case FREE:
+                    drawLine(canvas, startX, length);
+                    break;
+                default:
+                    break;
+            }
+            startX += length;
+        }
+    }
+
+    /**
+     * Draws a single rect specified by the parameters.
+     *
+     * @param canvas Canvas
+     * @param startX Starting point on the x-axis
+     * @param length Length of the rectangle
+     * @param color  Paint color
+     */
+    private void drawRect(Canvas canvas, float startX, float length, int color) {
+        mRectPaint.setColor(color);
+        final float top = shapeStartYPoint + mRectHeight;
+        final float bottom = shapeStartYPoint - mRectHeight;
+        final float right = startX + length;
+
+        canvas.drawRect(startX, top, right, bottom, mRectPaint);
+    }
+
+    /**
+     * Draws a single line on the canvas specified by the parameters.
+     *
+     * @param canvas Canvas
+     * @param startX starting point on the x-axis
+     * @param length length of the line
+     */
+    private void drawLine(Canvas canvas, float startX, float length) {
+        float stopX = startX + length;
+        canvas.drawLine(startX, shapeStartYPoint, stopX, shapeStartYPoint, mLinePaint);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        // Compute the width and height required to render the custom view
-
-        int width = MeasureSpec.getSize((int) (lengthOfSingleTimeBar * numberOfSingleTimeBar));
-
+        int width = MeasureSpec.getSize((int) (mTotalHours * mHourScaleXLength));
         setMeasuredDimension(width, canvasHeight);
     }
-
-
 }
