@@ -66,6 +66,6 @@
     <string name="cancel_icon">cancel icon</string>
     <string name="snackbar_retry_text">RETRY</string>
     <string name="error_internet_connection">No Internet Connection</string>
-    <string name="error_data_fetch_message">Error retrieving data</string>
     <string name="error_text">Oh Snap! It\'s not you, it\'s us. Please try again much later.</string>
+    <string name="error_data_fetch_message">An Error Occurred, Please Try Again Later</string>
 </resources>

@@ -3,6 +3,7 @@ package com.andela.mrm.service;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.andela.mrm.R;
 import com.apollographql.apollo.ApolloClient;
 import com.apollographql.apollo.api.Operation;
 import com.apollographql.apollo.api.ResponseField;
@@ -11,6 +12,11 @@ import com.apollographql.apollo.cache.normalized.CacheKeyResolver;
 import com.apollographql.apollo.cache.normalized.NormalizedCacheFactory;
 import com.apollographql.apollo.cache.normalized.sql.ApolloSqlHelper;
 import com.apollographql.apollo.cache.normalized.sql.SqlNormalizedCacheFactory;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.calendar.Calendar;
 
 import java.util.Map;
 
@@ -40,12 +46,11 @@ public final class ApiService {
      * @return a configured instance of apollo client
      */
     public static ApolloClient getApolloClient(Context context) {
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient okHttpClient = getOkHttpClient(loggingInterceptor);
+        OkHttpClient okHttpClient = getOkHttpClient();
+
         ApolloSqlHelper apolloSqlHelper = ApolloSqlHelper.create(context, "mCache_db");
         NormalizedCacheFactory sqlCacheFactory = new SqlNormalizedCacheFactory(apolloSqlHelper);
-        CacheKeyResolver resolver = new CacheKeyResolver() { //Create the cache key resolver
+        CacheKeyResolver resolver = new CacheKeyResolver() {
             @Nonnull
             @Override
             public CacheKey fromFieldRecordSet(@Nonnull ResponseField field,
@@ -77,9 +82,9 @@ public final class ApiService {
       * @param resolver Resolver for the
       * @return new OkHttpClient instance
       */
-    public static ApolloClient apolloClientBuilder(OkHttpClient okHttpClient,
-                                                   NormalizedCacheFactory sqlCacheFactory,
-                                                   CacheKeyResolver resolver) {
+    private static ApolloClient apolloClientBuilder(OkHttpClient okHttpClient,
+                                                    NormalizedCacheFactory sqlCacheFactory,
+                                                    CacheKeyResolver resolver) {
         return ApolloClient.builder()
                 .serverUrl(BASE_URL)
                 .normalizedCache(sqlCacheFactory, resolver)
@@ -102,13 +107,32 @@ public final class ApiService {
 
     /**
      * Extract Method to create OkHttpClient.
-     * @param loggingInterceptor loggingInterceptor logginf interceptor Instance
      * @return new OkHttpClient instance
      */
     @NonNull
-    public static OkHttpClient getOkHttpClient(HttpLoggingInterceptor loggingInterceptor) {
+    private static OkHttpClient getOkHttpClient() {
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
         return new OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
+                .build();
+    }
+
+    /**
+     * Gets calendar service.
+     *
+     * @param accountCredential the account credential
+     * @param context           the context
+     * @return the calendar service
+     */
+    public static Calendar getCalendarService(GoogleAccountCredential accountCredential,
+                                              Context context) {
+        HttpTransport transport = AndroidHttp.newCompatibleTransport();
+        JacksonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+
+        return new Calendar.Builder(transport, jsonFactory, accountCredential)
+                .setApplicationName(context.getString(R.string.app_name))
                 .build();
     }
 }

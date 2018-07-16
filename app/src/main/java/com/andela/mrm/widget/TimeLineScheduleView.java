@@ -12,7 +12,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.andela.mrm.R;
-import com.andela.mrm.room_availability.TimeLine;
+import com.andela.mrm.room_availability.FreeBusy;
 
 import java.util.List;
 

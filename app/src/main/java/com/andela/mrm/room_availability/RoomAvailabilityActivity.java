@@ -15,9 +15,11 @@ import android.util.Log;
 import android.widget.LinearLayout;
 
 import com.andela.mrm.R;
+import com.andela.mrm.data.CalendarDataRepository;
 import com.andela.mrm.find_rooms.FindRoomActivity;
 import com.andela.mrm.room_events.EventScheduleActivity;
 import com.andela.mrm.room_information.RoomInformationActivity;
+import com.andela.mrm.service.ApiService;
 import com.andela.mrm.util.GooglePlayService;
 import com.andela.mrm.util.NetworkConnectivityChecker;
 import com.andela.mrm.widget.TimeLineScheduleView;
@@ -25,21 +27,34 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.api.client.util.DateTime;
 import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.FreeBusyRequest;
+import com.google.api.services.calendar.model.TimePeriod;
 
 import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
+import static com.andela.mrm.data.CalendarDataRepository.createFreeBusyList;
+import static com.andela.mrm.util.DateTimeUtils.getHour;
+import static com.andela.mrm.util.DateTimeUtils.getTime;
+
 /**
  * The type Room availability activity.
+ * // TODO: needs thorough refactoring
  */
+@SuppressWarnings("PMD.GodClass")
 public class RoomAvailabilityActivity extends AppCompatActivity implements
         CountDownTimerFragment.IOnTextChangeListener, IGoogleCalenderCallListener,
         MeetingRoomDetailFragment.IOnStartCountDown, EasyPermissions.PermissionCallbacks {
@@ -51,6 +66,9 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
+
+    private static final DateTime DAILY_START_TIME = getTime(8, 0, 0);
+    private static final DateTime DAILY_END_TIME = getTime(22, 0, 0);
 
     public List<Event> items;
     @BindView(R.id.layout_schedule)
@@ -68,6 +86,8 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
     GooglePlayService playService;
     private FragmentManager fragmentManager;
 
+    private Disposable mDisposable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +102,89 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
+
         getResultsFromApi();
+    }
+
+    /**
+     * Gets the currently signed-in user's account name from shared preferences.
+     *
+     * @return account name or null
+     */
+    @Nullable
+    private String getAcctNameFromSharedPref() {
+        return PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .getString(PREF_ACCOUNT_NAME, null);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mDisposable != null) {
+            mDisposable.dispose();
+        }
+    }
+
+    /**
+     * Retrieves the FreeBusy Schedule for the current room.
+     *
+     * @return Disposable
+     */
+    @NonNull
+    private Disposable getCalendarFreeBusySchedule() {
+        // TODO: this should be passed in dynamically or retrieved from SharedPreferences
+        String calendarId = "andela.com_3236383234313334373439@resource.calendar.google.com";
+
+        Calendar calendarService = ApiService.getCalendarService(mCredential, this);
+        FreeBusyRequest request = CalendarDataRepository.buildFreeBusyRequest(calendarId,
+                DAILY_START_TIME, DAILY_END_TIME);
+
+        return new CalendarDataRepository(calendarService)
+                .getCalendarFreeBusySchedule(request)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::createFreeBusyPeriods,
+                        this::handleCalendarDataFetchError);
+    }
+
+    /**
+     * Error Handler for getCalendarFreeBusySchedule.
+     * <p>
+     * TODO: belongs to the presenter
+     * NOTE: Error handling here has been made generic to prevent the app from crashing.
+     * Different errors might occur, but this will be streamlined once the SignIn functionality
+     * has been implemented
+     *
+     * @param exception Exception object
+     */
+    private void handleCalendarDataFetchError(Throwable exception) {
+        Log.e(getClass().getSimpleName(), "CalendarDataFetchError", exception);
+        if (!isDeviceOnline()) {
+            Snackbar.make(roomAvailabilityParentLayout,
+                    R.string.error_internet_connection, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.snackbar_retry_text, v -> getCalendarFreeBusySchedule())
+                    .show();
+        } else {
+            Snackbar.make(roomAvailabilityParentLayout,
+                    R.string.error_data_fetch_message, Snackbar.LENGTH_INDEFINITE)
+                    .show();
+        }
+    }
+
+    /**
+     * Response handler for getCalendarFreeBusySchedule.
+     * <p>
+     * TODO: belongs to the presenter
+     *
+     * @param timePeriods List of TimePeriods returned from the call.
+     */
+    private void createFreeBusyPeriods(List<TimePeriod> timePeriods) {
+
+        List<FreeBusy> freeBusyList =
+                createFreeBusyList(timePeriods, DAILY_START_TIME, DAILY_END_TIME);
+
+        timeLineStrip.setTimeLineData(freeBusyList, getHour(DAILY_START_TIME));
     }
 
     @Override
@@ -150,6 +252,7 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
                     .show();
         } else {
             new MakeGoogleCalendarCallPresenter(mCredential, this).execute();
+            mDisposable = getCalendarFreeBusySchedule();
         }
     }
 
@@ -167,9 +270,7 @@ public class RoomAvailabilityActivity extends AppCompatActivity implements
     private void chooseAccount() {
         if (EasyPermissions.hasPermissions(
                 this, Manifest.permission.GET_ACCOUNTS)) {
-            String accountName = PreferenceManager
-                    .getDefaultSharedPreferences(this)
-                    .getString(PREF_ACCOUNT_NAME, null);
+            String accountName = getAcctNameFromSharedPref();
             if (accountName != null) {
                 mCredential.setSelectedAccountName(accountName);
                 getResultsFromApi();

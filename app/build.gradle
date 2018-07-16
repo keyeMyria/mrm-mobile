@@ -118,7 +118,6 @@ dependencies {
     implementation("com.google.apis:google-api-services-calendar:${rootProject.googleApiServicesCalendar}") {
         exclude group: 'org.apache.httpcomponents'
     }
-
     annotationProcessor "com.github.bumptech.glide:compiler:${rootProject.glideVersion}"
     implementation "com.apollographql.apollo:apollo-http-cache:${rootProject.apolloRuntime}"
     implementation "com.apollographql.apollo:apollo-android-support:${rootProject.apolloRuntime}"
@@ -138,6 +137,8 @@ dependencies {
     // butter knife libraries
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.16'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

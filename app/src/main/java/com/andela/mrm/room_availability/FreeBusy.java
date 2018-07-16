@@ -1,46 +1,70 @@
 package com.andela.mrm.room_availability;
 
 /**
- * Schedule TimeLine Stripe Model class.
+ * FreeBusy Model class.
  */
-public class TimeLine {
-    private final int meetingDuration;
-    private final boolean mIsBusy;
+public class FreeBusy {
+    private final int mDuration;
+    private final Status mStatus;
+
 
     /**
-     * Creates object instance of the TimeLine class.
+     * Instantiates a new FreeBusy.
      *
-     * @param meetingDuration - time duration for event
-     * @param isBusy - specifies if a period of time is available or booked
+     * @param mDuration the m duration
+     * @param status    the status
      */
-    public TimeLine(int meetingDuration, boolean isBusy) {
-        this.meetingDuration = meetingDuration;
-        this.mIsBusy = isBusy;
+    public FreeBusy(int mDuration, Status status) {
+        this.mDuration = mDuration;
+        mStatus = status;
     }
 
     /**
-     * Meeting duration in minutes.
+     * Duration in minutes.
      *
      * @return - length(time) of event in minutes
      */
-    public int getMeetingDuration() {
-        return meetingDuration;
+    public int getDuration() {
+        return mDuration;
     }
 
     /**
-     * Meeting room availability.
+     * Gets status.
      *
-     * @return - boolean value indicating availability of meeting room
+     * @return the status
      */
-    public boolean isBusy() {
-        return mIsBusy;
+    public Status getStatus() {
+        return mStatus;
     }
 
     @Override
     public String toString() {
-        return "TimeLine{" +
-                "meetingDuration=" + meetingDuration +
-                ", mIsBusy=" + mIsBusy +
-                '}';
+        return "FreeBusy{"
+                + "mDuration=" + mDuration
+                + ", mStatus=" + mStatus
+                + '}';
+    }
+
+
+    /**
+     * The enum Status.
+     */
+    public enum Status {
+        /**
+         * Busy status.
+         */
+        BUSY,
+        /**
+         * Busy current status.
+         */
+        BUSY_CURRENT,
+        /**
+         * Busy current checked in status.
+         */
+        BUSY_CURRENT_CHECKED_IN,
+        /**
+         * Free status.
+         */
+        FREE
     }
 }
