@@ -34,6 +34,13 @@ export_gservices_key: &export_gservices_key
     name: Export Google Services key environment variable
     command: echo 'export GOOGLE_SERVICES_JSON="$GOOGLE_SERVICES_JSON"' >> $BASH_ENV
 
+export_failure_determinant: &failure_determinant
+  run:
+    name: Export Failure Determinant
+    when: on_success
+    command: |
+      echo 'export INSTRUMENT_TEST_ARTIFACT=exempted' >> $BASH_ENV
+
 decode_gservices_key: &decode_gservices_key
   run:
     name: Decode Google Services JSON key
@@ -473,6 +480,7 @@ jobs:
       - *attach_debug_workspace
       - *export_gcloud_key
       - *decode_gcloud_key
+      - *failure_determinant
       - run:
           name: Set Google Cloud target project
           command: gcloud config set project andela-learning
@@ -484,7 +492,20 @@ jobs:
           command: |
             bash ~/repo/.circleci/setup_java.sh
       - run:
+          name: Notifying slack channel on fail
+          when: on_fail
+          command: |
+            if [ "${INSTRUMENT_TEST_ARTIFACT}" == exempted ]; then
+              bash ~/repo/.circleci/notify_slack_fail.sh
+            fi
+      - run:
+          name: Modify Failure Determinant
+          when: on_success
+          command: |
+            echo 'export INSTRUMENT_TEST_ARTIFACT=required' >> $BASH_ENV
+      - run:
           name: Run test on Firebase Test Lab with Flank
+          when: on_success
           command: |
             cat ~/repo/.circleci/config.properties >> /root/repo/config.properties
             curl -O https://jitpack.io/com/github/TestArmada/flank/v2.0.3/flank-v2.0.3.jar
@@ -493,10 +514,11 @@ jobs:
           name: Create directory to store test results
           command: mkdir firebase
       - run:
-          name: Download instrumented test results from Firebase Test Lab
-          command: gsutil -m cp -r -U "`gsutil ls gs://test-lab-42q965dw0t03q-w3crkis8m06h6 | tail -1`*" /root/repo/firebase/ || true
+          name: Download instrumented test results from Firebase Test Lab on success
+          command: gsutil -m cp -r -U "`gsutil ls gs://andela-learning-flank | tail -1`*" /root/repo/firebase/ || true
       - *persist_firebase_workspace
       - store_artifacts:
+          when: on_success
           path: firebase/
           destination: /firebase/
 
@@ -507,10 +529,24 @@ jobs:
           command: |
             bash ~/repo/.circleci/notify_slack.sh
       - run:
+          name: Download instrumented test results from Firebase Test Lab on fail fail
+          when: on_fail
+          command: |
+            if [ "$INSTRUMENT_TEST_ARTIFACT" == required ]; then
+              mkdir firebase
+              gsutil -m cp -r -U "`gsutil ls gs://andela-learning-flank | tail -1`*" /root/repo/firebase/ || true
+            fi
+      - store_artifacts:
+          when: on_fail
+          path: firebase/
+          destination: /firebase/
+      - run:
           name: Notifying slack channel on fail
           when: on_fail
           command: |
-            bash ~/repo/.circleci/notify_slack_fail.sh
+            if [ "$INSTRUMENT_TEST_ARTIFACT" == required ]; then
+              bash ~/repo/.circleci/notify_slack_fail.sh
+            fi
 
   report_coverage:
     <<: *defaults
@@ -532,7 +568,11 @@ jobs:
           name: Move Firebase Coverage Report
           command: |
             mkdir -p app/build/outputs/code-coverage/connected/flavors/MOCK
-            cp firebase/Nexus7-22-en-landscape/artifacts/coverage.ec app/build/outputs/code-coverage/connected/flavors/MOCK/coverage.ec
+            cp firebase/0/Nexus7-22-en-landscape/artifacts/coverage.ec app/build/outputs/code-coverage/connected/flavors/MOCK/coverage0.ec
+            cp firebase/1/Nexus7-22-en-landscape/artifacts/coverage.ec app/build/outputs/code-coverage/connected/flavors/MOCK/coverage1.ec
+            cp firebase/2/Nexus7-22-en-landscape/artifacts/coverage.ec app/build/outputs/code-coverage/connected/flavors/MOCK/coverage2.ec
+            cp firebase/3/Nexus7-22-en-landscape/artifacts/coverage.ec app/build/outputs/code-coverage/connected/flavors/MOCK/coverage3.ec
+            cp firebase/4/Nexus7-22-en-landscape/artifacts/coverage.ec app/build/outputs/code-coverage/connected/flavors/MOCK/coverage4.ec
       - *export_gservices_key
       - *decode_gservices_key
       - run:
@@ -570,32 +610,32 @@ workflows:
   version: 2
   lint_test_and_deployment:
     jobs:
-      - android_lint
-      - findbugs_lint
-      - pmd_lint
-      - checkstyle_lint
-      - test_unit:
-          requires:
-            - android_lint
-            - findbugs_lint
-            - pmd_lint
-            - checkstyle_lint
+    #   - android_lint
+    #   - findbugs_lint
+    #   - pmd_lint
+    #   - checkstyle_lint
+      - test_unit
+        #   requires:
+        #     - android_lint
+        #     - findbugs_lint
+        #     - pmd_lint
+        #     - checkstyle_lint
       - deploy_test_build:
           requires:
             - test_unit
-      - deploy_staging_build:
-          requires:
-            - test_unit
-          filters:
-            branches:
-              only: staging
-      - deploy_production_build:
-          requires:
-            - test_unit
-            - deploy_test_build
-          filters:
-            branches:
-              only: master
+    #   - deploy_staging_build:
+    #       requires:
+    #         - test_unit
+    #       filters:
+    #         branches:
+    #           only: staging
+    #   - deploy_production_build:
+    #       requires:
+    #         - test_unit
+    #         - deploy_test_build
+    #       filters:
+    #         branches:
+    #           only: master
       - test_instrumentation:
           requires:
             - deploy_test_build

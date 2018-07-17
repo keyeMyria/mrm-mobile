@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.andela.mrm.AllLocationsQuery;
 import com.andela.mrm.R;
@@ -27,7 +28,15 @@ public class CountryFragment extends Fragment implements RoomSetupContract.Count
      */
     RoomSetupPresenter mRoomSetupPresenter = new RoomSetupPresenter(this);
 
+    /**
+     * The View.
+     */
     View view;
+    /**
+     * The M recycler view.
+     */
+    RecyclerView mRecyclerView;
+
 
     /**
      * The Progress dialog.
@@ -41,8 +50,7 @@ public class CountryFragment extends Fragment implements RoomSetupContract.Count
         view = inflater.inflate(R.layout.fragment_country, container, false);
 
         queryApi();
-        view = inflater
-                .inflate(R.layout.fragment_country, container, false);
+
         return view;
     }
 
@@ -57,37 +65,34 @@ public class CountryFragment extends Fragment implements RoomSetupContract.Count
         progressDialog.show();
 
         mRoomSetupPresenter.getAllLocations(this,
-                new RoomSetupPresenter.DataLoadedCallback() {
-            @Override
-            public void onDataLoaded(boolean dataLoaded) {
-                if (dataLoaded) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            view.findViewById(R.id.fragment_flags_layout)
-                                    .setVisibility(View.VISIBLE);
-                        }
-                    });
-                }
-            }
-        }, null, null, null);
+                dataLoaded -> {
+                    if (dataLoaded) {
+                        getActivity().runOnUiThread(() ->
+                                view.findViewById(R.id.fragment_flags_layout)
+                                .setVisibility(View.VISIBLE));
+                    }
+                }, null, null, null);
     }
 
     @Override
     public void displayCountries(final List<AllLocationsQuery.AllLocation> mData) {
 
-        int countrySize = mData.size();
+        if (mData == null) {
+            dismissDialog();
+            displayError();
+        } else {
+            int countrySize = mData.size();
 
-        RecyclerView mRecyclerView;
-        RecyclerView.LayoutManager mLayoutManager;
+            RecyclerView.LayoutManager mLayoutManager;
 
-        mRecyclerView = view.findViewById(R.id.country_grid_view);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new GridLayoutManager(getContext(), countrySize);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        RecyclerView.Adapter adapter = new CountryAdapter(getContext(), mData);
-        mRecyclerView.setAdapter(adapter);
-        dismissDialog();
+            mRecyclerView = view.findViewById(R.id.country_grid_view);
+            mRecyclerView.setHasFixedSize(true);
+            mLayoutManager = new GridLayoutManager(getContext(), countrySize);
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            RecyclerView.Adapter adapter = new CountryAdapter(getContext(), mData);
+            mRecyclerView.setAdapter(adapter);
+            dismissDialog();
+        }
     }
 
 
@@ -115,11 +120,23 @@ public class CountryFragment extends Fragment implements RoomSetupContract.Count
         }
 
         Snackbar.make(getView(), notificationText, Snackbar.LENGTH_INDEFINITE)
-                .setAction("RETRY", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        queryApi();
-                    }
-                }).show();
+                .setAction("RETRY", v -> queryApi()).show();
+    }
+
+    /**
+     * Display error.
+     */
+    public void displayError() {
+        getActivity().runOnUiThread(() -> {
+            TextView errorTextView;
+            view.findViewById(R.id.text_country_selection_header)
+                    .setVisibility(View.GONE);
+            if (mRecyclerView != null) {
+                mRecyclerView.setVisibility(View.GONE);
+            }
+            errorTextView = view.findViewById(R.id.text_error);
+            errorTextView.setVisibility(View.VISIBLE);
+        });
+
     }
 }

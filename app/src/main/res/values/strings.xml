@@ -67,4 +67,5 @@
     <string name="snackbar_retry_text">RETRY</string>
     <string name="error_internet_connection">No Internet Connection</string>
     <string name="error_data_fetch_message">Error retrieving data</string>
+    <string name="error_text">Oh Snap! It\'s not you, it\'s us. Please try again much later.</string>
 </resources>
