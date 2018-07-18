@@ -488,6 +488,10 @@ jobs:
           name: Authenticate with Google Cloud
           command: gcloud auth activate-service-account mrm-android-editor@andela-learning.iam.gserviceaccount.com --key-file client-secret.json && gcloud firebase test android models list
       - run:
+          name: Install Java JDK8
+          command: |
+            bash ~/repo/.circleci/setup_java.sh
+      - run:
           name: Notifying slack channel on fail
           when: on_fail
           command: |
@@ -500,9 +504,12 @@ jobs:
           command: |
             echo 'export INSTRUMENT_TEST_ARTIFACT=required' >> $BASH_ENV
       - run:
-          name: Run instrumented test on Firebase Test Lab
+          name: Run test on Firebase Test Lab with Flank
           when: on_success
-          command: gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/mock/debug/app-mock-debug.apk --test app/build/outputs/apk/androidTest/mock/debug/app-mock-debug-androidTest.apk --device model=Nexus7,version=22,locale=en,orientation=landscape --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec --directories-to-pull=/sdcard --timeout 20m
+          command: |
+            cat ~/repo/.circleci/config.properties >> /root/repo/config.properties
+            curl -O https://jitpack.io/com/github/TestArmada/flank/v2.0.3/flank-v2.0.3.jar
+            java -jar /root/repo/flank-v2.0.3.jar -a app/build/outputs/apk/mock/debug/app-mock-debug.apk -t app/build/outputs/apk/androidTest/mock/debug/app-mock-debug-androidTest.apk
       - run:
           name: Create directory to store test results
           command: mkdir firebase
