@@ -122,8 +122,8 @@ declare_env_variables() {
 /g' |  grep 'prod-debug[a-z0-9.-]*[a-z0-9.-]*.apk$' | tr -d '[:blank:]')"
 
     CIRCLE_ARTIFACTS_BUTTON="$(echo \
-        "{\"type\": \"button\", \"text\": \"Mock debug APK\", \"url\": \"${CIRCLE_MOCK_DEBUG_ARTIFACT}\"}", \
-        "{\"type\": \"button\", \"text\": \"Prod debug APK\", \"url\": \"${CIRCLE_PROD_DEBUG_ARTIFACT}\"}" \
+        "{\"type\": \"button\", \"text\": \"Download Mock debug APK\", \"url\": \"${CIRCLE_MOCK_DEBUG_ARTIFACT}\"}", \
+        "{\"type\": \"button\", \"text\": \"Download Prod debug APK\", \"url\": \"${CIRCLE_PROD_DEBUG_ARTIFACT}\"}" \
     )"
 
     MESSAGE_TEXT="Deploy Debug Build Succeeded :rocket:"
