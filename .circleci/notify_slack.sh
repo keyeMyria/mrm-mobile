@@ -111,17 +111,30 @@ declare_env_variables() {
 
     MESSAGE_TEXT="Deploy Staging Build Succeeded :rocket:"
 
+  elif [ "$CIRCLE_JOB" == 'deploy_debug_build' ]; then
+    CIRCLE_APK_ARTIFACTS="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
+    /g' |  grep '\.apk')"
+
+    CIRCLE_MOCK_DEBUG_ARTIFACT="$(echo -e $CIRCLE_APK_ARTIFACTS | sed -E -e 's/[[:blank:]]+/\
+/g' |  grep 'mock-debug[a-z0-9.-]*[a-z0-9.-]*.apk$' | tr -d '[:blank:]')"
+
+    CIRCLE_PROD_DEBUG_ARTIFACT="$(echo -e $CIRCLE_APK_ARTIFACTS | sed -E -e 's/[[:blank:]]+/\
+/g' |  grep 'prod-debug[a-z0-9.-]*[a-z0-9.-]*.apk$' | tr -d '[:blank:]')"
+
+    CIRCLE_ARTIFACTS_BUTTON="$(echo \
+        "{\"type\": \"button\", \"text\": \"Download Mock debug APK\", \"url\": \"${CIRCLE_MOCK_DEBUG_ARTIFACT}\"}", \
+        "{\"type\": \"button\", \"text\": \"Download Prod debug APK\", \"url\": \"${CIRCLE_PROD_DEBUG_ARTIFACT}\"}" \
+    )"
+
+    MESSAGE_TEXT="Deploy Debug Build Succeeded :rocket:"
 
   elif [ "$CIRCLE_JOB" == 'deploy_production_build' ]; then
     CIRCLE_APK_ARTIFACTS="$(echo $CIRCLE_ARTIFACTS_URL | sed -E -e 's/[[:blank:]]+/\
 /g' |  grep '\.apk')"
 
-    CIRCLE_DEBUG_ARTIFACT="$(echo $CIRCLE_APK_ARTIFACTS | sed -E -e 's/[[:blank:]]+/\
-/g' |  grep 'debug[a-z0-9.-]*[a-z0-9.-]*.apk$')"
     CIRCLE_RELEASE_ARTIFACT="$(echo $CIRCLE_APK_ARTIFACTS | sed -E -e 's/[[:blank:]]+/\
 /g' |  grep 'release[a-z0-9.-]*[a-z0-9.-]*.apk$')"
     CIRCLE_ARTIFACTS_BUTTON="$(echo \
-        "{\"type\": \"button\", \"text\": \"Debug APK\", \"url\": \"${CIRCLE_DEBUG_ARTIFACT}\"}", \
         "{\"type\": \"button\", \"text\": \"Release APK\", \"url\": \"${CIRCLE_RELEASE_ARTIFACT}\"}" \
     )"
 
