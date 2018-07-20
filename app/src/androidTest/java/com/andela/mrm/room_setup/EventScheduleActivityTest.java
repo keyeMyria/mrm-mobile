@@ -1,17 +1,27 @@
 package com.andela.mrm.room_setup;
 
+import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.view.View;
 
 import com.andela.mrm.R;
+import com.andela.mrm.room_availability.MakeGoogleCalendarCallPresenter;
+import com.andela.mrm.room_availability.RoomAvailabilityActivity;
 import com.andela.mrm.room_events.CalendarEvent;
 import com.andela.mrm.room_events.EventScheduleActivity;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.calendar.model.Event;
+import com.google.gson.Gson;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -37,7 +47,28 @@ public class EventScheduleActivityTest {
      */
     @Rule
     public ActivityTestRule<EventScheduleActivity> activityTestRule =
-            new ActivityTestRule<>(EventScheduleActivity.class);
+            new ActivityTestRule<>(EventScheduleActivity.class, true, false);
+
+    @Before
+    public void setUp() throws IOException {
+
+        InputStream inputStream = getClass().getClassLoader()
+                .getResourceAsStream("dummy_calendar_events.json");
+        Collection<Event> eventCollection = JacksonFactory
+                .getDefaultInstance()
+                .createJsonParser(inputStream)
+                .parseArray(Event[].class, Event.class);
+        ArrayList<Event> eventArrayList = new ArrayList<>(eventCollection);
+
+        List<CalendarEvent> calendarEvents = MakeGoogleCalendarCallPresenter
+                .populateCalendar(eventArrayList);
+
+        String eventsToJson = new Gson().toJson(calendarEvents);
+
+        Intent intent = new Intent();
+        intent.putExtra(RoomAvailabilityActivity.EVENTS_IN_STRING, eventsToJson);
+        activityTestRule.launchActivity(intent);
+    }
 
     /**
      * Close button displayed.
