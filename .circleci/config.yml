@@ -545,7 +545,10 @@ jobs:
           command: mkdir firebase
       - run:
           name: Download instrumented test results from Firebase Test Lab on success
-          command: gsutil -m cp -r -U "`gsutil ls gs://test-lab-42q965dw0t03q-w3crkis8m06h6 | tail -1`*" /root/repo/firebase/ || true
+          command: |
+            python .circleci/get_artifact_path.py
+            artifact_path="$(cat artifact_path)"
+            gsutil -m cp -n -r gs://${artifact_path}* /root/repo/firebase/ || true
       - run:
         name: Print firebase error results
         when: on_fail
@@ -569,12 +572,14 @@ jobs:
           command: |
             bash ~/repo/.circleci/notify_slack.sh
       - run:
-          name: Download instrumented test results from Firebase Test Lab on fail fail
+          name: Download instrumented test results from Firebase Test Lab on fail
           when: on_fail
           command: |
             if [ "$INSTRUMENT_TEST_ARTIFACT" == required ]; then
               mkdir firebase
-              gsutil -m cp -r -U "`gsutil ls gs://test-lab-42q965dw0t03q-w3crkis8m06h6 | tail -1`*" /root/repo/firebase/ || true
+              python get_artifact_path.py
+              artifact_path="$(cat artifact_path)"
+              gsutil -m cp -n -r gs://${artifact_path}* /root/repo/firebase/ || true
             fi
       - store_artifacts:
           when: on_fail
