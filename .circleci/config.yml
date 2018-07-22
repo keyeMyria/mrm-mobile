@@ -536,7 +536,7 @@ jobs:
           name: Run instrumented test on Firebase Test Lab
           when: on_success
           command: |
-            bash .circleci/spinner.sh gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/mock/debug/app-mock-debug.apk --test app/build/outputs/apk/androidTest/mock/debug/app-mock-debug-androidTest.apk --device model=Nexus7,version=22,locale=en,orientation=landscape --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec --directories-to-pull=/sdcard --timeout 20m > results 2>error
+            gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/mock/debug/app-mock-debug.apk --test app/build/outputs/apk/androidTest/mock/debug/app-mock-debug-androidTest.apk --device model=Nexus7,version=22,locale=en,orientation=landscape --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec --directories-to-pull=/sdcard --timeout 20m > results 2>error
             cat error
             cat results
             cat error | grep -o 'https://[^"]*' | grep 'https://console.developers.google.com/storage/browser/test-lab-[a-z0-9.-]*' | tr -d '\]' > artifact_url
