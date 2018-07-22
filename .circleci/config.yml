@@ -554,11 +554,11 @@ jobs:
           when: on_fail
           command: |
             file="$(ls error)"
-          	if [ $file == "error" ]; then
-            	cat error
-          	else
-            	echo "Firebase did not create any output"
-          	fi
+            if [ $file == "error" ]; then
+              cat error
+            else
+              echo "Firebase did not create any output"
+            fi
       - *persist_firebase_workspace
       - store_artifacts:
           when: on_success
