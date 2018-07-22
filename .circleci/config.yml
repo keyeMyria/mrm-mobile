@@ -550,15 +550,15 @@ jobs:
             artifact_path="$(cat artifact_path)"
             gsutil -m cp -n -r gs://${artifact_path}* /root/repo/firebase/ || true
       - run:
-        name: Print firebase error results
-        when: on_fail
-        command: |
-          file="$(ls error)"
-          if [ $file == "error" ]; then
-            cat error
-          else
-            echo "Firebase did not create any output"
-          fi
+        	name: Print firebase error results
+        	when: on_fail
+        	command: |
+          	file="$(ls error)"
+          	if [ $file == "error" ]; then
+            	cat error
+          	else
+            	echo "Firebase did not create any output"
+          	fi
       - *persist_firebase_workspace
       - store_artifacts:
           when: on_success
