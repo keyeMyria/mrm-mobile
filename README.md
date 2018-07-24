@@ -32,6 +32,8 @@ the option to use the gradle wrapper
 * You may also be prompted to change to the appropriate SDK folder for your local machine
 * Once the project has compiled -> run the project!
 
+## Frameworks and Tech used
+
 ## Running the application on an emulator or actual device
 
 There can be many ways of running your application in Android Studio.
