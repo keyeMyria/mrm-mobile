@@ -71,7 +71,7 @@ Run ``` java --version ``` in your terminal to see which version of java you are
 
 
 ## SHA1 Fingerprint
-You may require a SHA-1 fingerprint for Google Calendar API access.
+You will require a SHA-1 fingerprint for Google Calendar API access.
 
 ### Getting your device fingerprint
 #### Using terminal
