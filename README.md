@@ -97,4 +97,4 @@ To run the tests locally the Dev/user has two options which are;
 1. Within Android studio, click on the `Gradle` tab to the right end of android studio, select `app`, `Tasks`, `Verification` then `createMockDebugCoverageReport` to run the tests and generate the coverage report.
 2. Within Android studio, in the terminal window enter the command `./gradlew createMockDebugCoverageReport` to generate the coverage report for the project.
 
-At this point, the user can check inside the directory `app/build/reports/coverage/mock/debug/index.html` to view the current coverage rport
+At this point, the user can check inside the directory `app/build/reports/coverage/mock/debug/index.html` to view the current coverage report.
