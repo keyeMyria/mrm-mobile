@@ -33,6 +33,7 @@ the option to use the gradle wrapper
 * Once the project has compiled -> run the project!
 
 ## Frameworks and Tech used
+- [Java 8 SE(Java 1.8)](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html). This is the current stable version.
 
 ## Running the application on an emulator or actual device
 
