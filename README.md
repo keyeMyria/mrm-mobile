@@ -76,7 +76,7 @@ You may require a SHA-1 fingerprint for Google Calendar API access.
 ### Getting your device fingerprint
 #### Using terminal
 Run the following command:
-``` keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android ``` for linux and macos.
+``` keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android ```.
 
 #### Using android studio
 1. Open the project in android studio.
