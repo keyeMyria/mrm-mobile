@@ -73,7 +73,7 @@ Run ``` java --version ``` in your terminal to see which version of java you are
 ## SHA1 Fingerprint
 You may require a SHA-1 fingerprint for Google Calendar API access.
 
-### Setting up the fingerprint
+### Getting your device fingerprint
 #### Using terminal
 Run the following command:
 ``` keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android ``` for linux and macos.
@@ -83,6 +83,8 @@ Run the following command:
 2. Click on Gradle Menu on the right side and expand it.
 3. Click on android and then run signing report.
 [More info](https://medium.com/pen-bold-kiln-press/sha-1-android-studio-ec02fb893e72).
+
+**Note:**  Once you generate your SHA-1 fingerprint, copy it and add it to ``` SHA-1 Key Request Sheet ``` pinned in the ``` #converge-android ``` channel.
 
 ## Running the tests to show coverage
 
