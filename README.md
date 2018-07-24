@@ -82,7 +82,7 @@ Run the following command:
 1. Open the project in android studio.
 2. Click on Gradle Menu on the right side and expand it.
 3. Click on android and then run signing report.
-[More info](https://medium.com/pen-bold-kiln-press/sha-1-android-studio-ec02fb893e72)
+[More info](https://medium.com/pen-bold-kiln-press/sha-1-android-studio-ec02fb893e72).
 
 ## Running the tests to show coverage
 
