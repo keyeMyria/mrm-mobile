@@ -32,9 +32,6 @@ the option to use the gradle wrapper
 * You may also be prompted to change to the appropriate SDK folder for your local machine
 * Once the project has compiled -> run the project!
 
-## Java 8 SE
-Java 8 SE(Java 1.8) is the current stable version used in the app. Download and install from [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
-
 ## Running the application on an emulator or actual device
 
 There can be many ways of running your application in Android Studio.
@@ -67,6 +64,27 @@ There can be many ways of running your application in Android Studio.
      * While updating the google play services one can follow this link
      https://developers.google.com/android/guides/setup
      http://www.androiddocs.com/google/play-services/setup.html#
+     
+## Java 8 SE
+Java 8 SE(Java 1.8) is the current stable version used in the app. Download and install from [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html).
+Run ``` java --version ``` in your terminal to see which version of java you are using. In case you have multiple java versions installed, run ``` /usr/libexec/java_home -V ``` to see installed versions.(Check [this](https://stackoverflow.com/questions/46513639/how-to-downgrade-java-from-9-to-8-on-a-macos-eclipse-is-not-running-with-java-9) thread in case you run into trouble while switching versions.)
+
+
+## SHA1 Fingerprint
+You may require a SHA-1 fingerprint for Google Calendar API access.
+
+### Setting up the fingerprint
+#### Using terminal
+Run the following command:
+``` keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android ``` for linux and macos.
+
+#### Using android studio
+1. Open the project in android studio.
+2. Click on Gradle Menu on the right side and expand it.
+3. Click on android and then run signing report.
+
+
+
 
 ## Running the tests to show coverage
 
