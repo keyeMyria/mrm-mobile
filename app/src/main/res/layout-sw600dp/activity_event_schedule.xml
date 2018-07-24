@@ -22,8 +22,8 @@
         android:id="@+id/layout_close_event_schedule"
         android:layout_width="82dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="60dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -32,8 +32,8 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginTop="2dp"
-            android:src="@drawable/ic_cancel_24dp"
-            android:contentDescription="@string/cancel_icon" />
+            android:contentDescription="@string/cancel_icon"
+            android:src="@drawable/close_shape" />
 
     </LinearLayout>
 
