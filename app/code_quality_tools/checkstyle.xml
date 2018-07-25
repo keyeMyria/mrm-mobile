@@ -115,6 +115,11 @@
             <property name="max" value="10"/>
         </module>
 
+        <!--cognitive complexity-->
+        <module name="BooleanExpressionComplexity">
+            <property name="max" value="10"/>
+        </module>
+
         <!-- Miscellaneous other checks.                   -->
         <module name="UpperEll"/>
     </module>
