@@ -2,7 +2,9 @@ package com.andela.mrm.room_setup;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -11,19 +13,27 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.andela.mrm.R;
+import com.andela.mrm.room_availability.MakeGoogleCalendarCallPresenter;
+import com.andela.mrm.room_availability.RoomAvailabilityActivity;
 import com.andela.mrm.room_events.CalendarEvent;
 import com.andela.mrm.room_events.EventScheduleActivity;
 import com.andela.mrm.room_events.EventScheduleAdapter;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.calendar.model.Event;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -57,7 +67,28 @@ public class EventScheduleActivityTest {
      */
     @Rule
     public ActivityTestRule<EventScheduleActivity> activityTestRule =
-            new ActivityTestRule<>(EventScheduleActivity.class);
+            new ActivityTestRule<>(EventScheduleActivity.class,
+                    true, false);
+
+    @Before
+    public void setup() throws IOException {
+        InputStream inputStream = getClass().getClassLoader()
+                .getResourceAsStream("dummy_calendar_events.json");
+        Collection<Event> eventCollection = JacksonFactory
+                .getDefaultInstance()
+                .createJsonParser(inputStream)
+                .parseArray(Event[].class, Event.class);
+        ArrayList<Event> eventArrayList = new ArrayList<>(eventCollection);
+
+        List<CalendarEvent> calendarEvents = MakeGoogleCalendarCallPresenter
+                .populateCalendar(eventArrayList);
+
+        String eventsToJson = new Gson().toJson(calendarEvents);
+
+        Intent intent = new Intent();
+        intent.putExtra(RoomAvailabilityActivity.EVENTS_IN_STRING, eventsToJson);
+        activityTestRule.launchActivity(intent);
+    }
 
     /**
      * Close button displayed.
@@ -167,8 +198,12 @@ public class EventScheduleActivityTest {
      */
     @Test
     public void eventScheduleAdapterWorksWell() {
+
+        onView(ViewMatchers.withId(R.id.layout_event_recycler_view))
+                .check(matches(isDisplayed()));
+
         onView(withId(R.id.layout_event_recycler_view))
-                .check(matches(not(withContentDescription("events"))));
+                .check(matches(allOf(isDisplayed(), hasChildCount(4))));
 
     }
 }

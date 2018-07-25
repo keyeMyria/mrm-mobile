@@ -1,0 +1,416 @@
+[
+  {
+    "kind": "calendar#event",
+    "etag": "\"3063996052116000\"",
+    "id": "2m9ibjjs0ktj4lprulhiopdmdl",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=Mm05aWJqanMwa3RqNGxwcnVsaGlvcGRtZGxfMjAxODAzMDhUMTEwMDAwWiBpZHJpcy5hZGV0dW5tYmlAYW5kZWxhLmNvbQ",
+    "created": "2018-03-07T13:37:01+01:00",
+    "updated": "2018-07-19T11:00:26.058Z",
+    "summary": "Converge Daily Check-ins",
+    "description": "Zoom Meeting Link:<br><br><a href=\"https://andela.zoom.us/j/427633401\" target=\"_blank\">https://andela.zoom.us/j/583320568</a>",
+    "creator": {
+      "email": "roger.taracha@andela.com"
+    },
+    "organizer": {
+      "email": "roger.taracha@andela.com"
+    },
+    "start": {
+      "dateTime": "2018-03-08T12:00:00+01:00",
+      "timeZone": "Africa/Nairobi"
+    },
+    "end": {
+      "dateTime": "2018-03-08T12:45:00+01:00",
+      "timeZone": "Africa/Nairobi"
+    },
+    "recurrence": [
+      "RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR"
+    ],
+    "iCalUID": "2m9ibjjs0ktj4lprulhiopdmdl@google.com",
+    "sequence": 3,
+    "attendees": [
+      {
+        "email": "jakana.kiwanuka@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "philip.kwesiga@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "chinwoke.hyginus@andela.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "david.mwebaza@andela.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "dennis.jjagwe@andela.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "deo.kamara@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "samuel.kubai@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "michael.mukalo@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "joyce.namuli@andela.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "bukola.makinwa@andela.com",
+        "displayName": "Bukola Makinwa",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "idris.adetunmbi@andela.com",
+        "self": true,
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "oluwatobi.otokiti@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "emmanuel.okonji@andela.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "anthony.waithaka@andela.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "samuel.longshak@andela.com",
+        "displayName": "Samuel Longshak",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "roger.taracha@andela.com",
+        "organizer": true,
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "jolomi.otumara@andela.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "isioye.mohammed@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "ivan.aturinda@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "fredrick.adewole@andela.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "jean.abayo@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "marlone.akidiva@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "owen.byomuhangi@andela.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "patrick.walukagga@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "kehinde.sanni@andela.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "shem.ogumbe@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "antony.munene@andela.com",
+        "displayName": "Antony Munene",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "taiwo.sanni@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "samuel.abudu@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "philip.kalela@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "kolawole.taiwo@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "fidelis.ojeah@andela.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "felix.ogwora@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "angela.lehru@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "chukwukadibia.durugo@andela.com",
+        "displayName": "Chukwukadibia Durugo",
+        "responseStatus": "declined"
+      }
+    ],
+    "hangoutLink": "https://plus.google.com/hangouts/_/andela.com/mrm-mobile?hceid=cm9nZXIudGFyYWNoYUBhbmRlbGEuY29t.2m9ibjjs0ktj4lprulhiopdmdl",
+    "conferenceData": {
+      "entryPoints": [
+        {
+          "entryPointType": "video",
+          "uri": "https://plus.google.com/hangouts/_/andela.com/mrm-mobile?hceid=cm9nZXIudGFyYWNoYUBhbmRlbGEuY29t.2m9ibjjs0ktj4lprulhiopdmdl",
+          "label": "mrm-mobile"
+        }
+      ],
+      "conferenceSolution": {
+        "key": {
+          "type": "eventNamedHangout"
+        },
+        "name": "Hangouts",
+        "iconUri": "https://lh5.googleusercontent.com/proxy/9vT2XwMHPzrIcW56Ic3FX6_OSYvrjHEwOUYOmA0eMoR-_sY59k4mQMd0JnqCp8GCOmqimFKP3vSeFaIe4k5MewpEcCuK6PXlB2Z4AKTMV78OB_CJqXHrrkAO-yf5FYJsiaTBwjUP9cU0lRlP-HPC2w"
+      },
+      "conferenceId": "mrm-mobile",
+      "signature": "AGyl5B+acAJdVV2hNryWyGQzB0nm"
+    },
+    "reminders": {
+      "useDefault": true
+    }
+  },
+  {
+
+
+    "kind": "calendar#event",
+    "etag": "\"3063996052116000\"",
+    "id": "2m9ibjjs0ktj4lprulhiopdmdl_20180719T110000Z",
+    "status": "confirmed",
+    "htmlLink": "https://www.google.com/calendar/event?eid=Mm05aWJqanMwa3RqNGxwcnVsaGlvcGRtZGxfMjAxODA3MTlUMTEwMDAwWiBpZHJpcy5hZGV0dW5tYmlAYW5kZWxhLmNvbQ",
+    "created": "2018-03-07T13:37:01.000Z",
+    "updated": "2018-07-19T11:00:26.058Z",
+    "summary": "Converge Daily Check-ins",
+    "description": "Zoom Meeting Link:<br><br><a href=\"https://andela.zoom.us/j/427633401\" target=\"_blank\">https://andela.zoom.us/j/583320568</a>",
+    "location": "Nairobi - Container Rabat(1), Nairobi - Container Mombasa (1)",
+    "creator": {
+      "email": "roger.taracha@andela.com"
+    },
+    "organizer": {
+      "email": "roger.taracha@andela.com"
+    },
+    "start": {
+      "dateTime": "2018-07-19T12:00:00+01:00"
+    },
+    "end": {
+      "dateTime": "2018-07-19T12:45:00+01:00"
+    },
+    "recurringEventId": "2m9ibjjs0ktj4lprulhiopdmdl",
+    "originalStartTime": {
+      "dateTime": "2018-07-19T12:00:00+01:00"
+    },
+    "iCalUID": "2m9ibjjs0ktj4lprulhiopdmdl@google.com",
+    "sequence": 3,
+    "attendees": [
+      {
+        "email": "jolomi.otumara@andela.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "chinwoke.hyginus@andela.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "samuel.abudu@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "felix.ogwora@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "shem.ogumbe@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "chukwukadibia.durugo@andela.com",
+        "displayName": "Chukwukadibia Durugo",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "michael.mukalo@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "antony.munene@andela.com",
+        "displayName": "Antony Munene",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "samuel.kubai@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "bukola.makinwa@andela.com",
+        "displayName": "Bukola Makinwa",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "idris.adetunmbi@andela.com",
+        "self": true,
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "dennis.jjagwe@andela.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "oluwatobi.otokiti@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "philip.kwesiga@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "ivan.aturinda@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "taiwo.sanni@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "deo.kamara@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "anthony.waithaka@andela.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "isioye.mohammed@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "jakana.kiwanuka@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "patrick.walukagga@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "kolawole.taiwo@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "jean.abayo@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "david.mwebaza@andela.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "samuel.longshak@andela.com",
+        "displayName": "Samuel Longshak",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "joyce.namuli@andela.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "marlone.akidiva@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "andela.com_36383431323534323637@resource.calendar.google.com",
+        "displayName": "Nairobi - Container Mombasa (1)",
+        "resource": true,
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "kehinde.sanni@andela.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "angela.lehru@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "emmanuel.okonji@andela.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "owen.byomuhangi@andela.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "roger.taracha@andela.com",
+        "organizer": true,
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "fredrick.adewole@andela.com",
+        "responseStatus": "needsAction"
+      },
+      {
+        "email": "fidelis.ojeah@andela.com",
+        "responseStatus": "declined"
+      },
+      {
+        "email": "philip.kalela@andela.com",
+        "responseStatus": "accepted"
+      },
+      {
+        "email": "andela.com_3732383636353930363435@resource.calendar.google.com",
+        "displayName": "Nairobi - Container Rabat(1)",
+        "resource": true,
+        "responseStatus": "accepted"
+      }
+    ],
+    "hangoutLink": "https://plus.google.com/hangouts/_/andela.com/mrm-mobile?hceid=cm9nZXIudGFyYWNoYUBhbmRlbGEuY29t.2m9ibjjs0ktj4lprulhiopdmdl",
+    "conferenceData": {
+      "entryPoints": [
+        {
+          "entryPointType": "video",
+          "uri": "https://plus.google.com/hangouts/_/andela.com/mrm-mobile?hceid=cm9nZXIudGFyYWNoYUBhbmRlbGEuY29t.2m9ibjjs0ktj4lprulhiopdmdl",
+          "label": "mrm-mobile"
+        }
+      ],
+      "conferenceSolution": {
+        "key": {
+          "type": "eventNamedHangout"
+        },
+        "name": "Hangouts",
+        "iconUri": "https://lh5.googleusercontent.com/proxy/9vT2XwMHPzrIcW56Ic3FX6_OSYvrjHEwOUYOmA0eMoR-_sY59k4mQMd0JnqCp8GCOmqimFKP3vSeFaIe4k5MewpEcCuK6PXlB2Z4AKTMV78OB_CJqXHrrkAO-yf5FYJsiaTBwjUP9cU0lRlP-HPC2w"
+      },
+      "conferenceId": "mrm-mobile",
+      "signature": "AGyl5B+acAJdVV2hNryWyGQzB0nm"
+    },
+    "reminders": {
+      "useDefault": true
+    }
+  }
+]
