@@ -64,6 +64,27 @@ There can be many ways of running your application in Android Studio.
      * While updating the google play services one can follow this link
      https://developers.google.com/android/guides/setup
      http://www.androiddocs.com/google/play-services/setup.html#
+     
+## Java 8 SE
+Java 8 SE(Java 1.8) is the current stable version used in the app. Download and install from [here](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html).
+Run ``` java --version ``` in your terminal to see which version of java you are using. In case you have multiple java versions installed, run ``` /usr/libexec/java_home -V ``` to see installed versions.(Check [this](https://stackoverflow.com/questions/46513639/how-to-downgrade-java-from-9-to-8-on-a-macos-eclipse-is-not-running-with-java-9) thread in case you run into trouble while switching versions.)
+
+
+## SHA1 Fingerprint
+You will require a SHA-1 fingerprint for Google Calendar API access.
+
+### Getting your device fingerprint
+#### Using terminal
+Run the following command:
+``` keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android ```.
+
+#### Using android studio
+1. Open the project in android studio.
+2. Click on Gradle Menu on the right side and expand it.
+3. Click on android and then run signing report.
+[More info](https://medium.com/pen-bold-kiln-press/sha-1-android-studio-ec02fb893e72).
+
+**Note:**  Once you generate your SHA-1 fingerprint, copy it and add it to ``` SHA-1 Key Request Sheet ``` pinned in the ``` #converge-android ``` channel.
 
 ## Running the tests to show coverage
 
@@ -76,4 +97,4 @@ To run the tests locally the Dev/user has two options which are;
 1. Within Android studio, click on the `Gradle` tab to the right end of android studio, select `app`, `Tasks`, `Verification` then `createMockDebugCoverageReport` to run the tests and generate the coverage report.
 2. Within Android studio, in the terminal window enter the command `./gradlew createMockDebugCoverageReport` to generate the coverage report for the project.
 
-At this point, the user can check inside the directory `app/build/reports/coverage/mock/debug/index.html` to view the current coverage rport
+At this point, the user can check inside the directory `app/build/reports/coverage/mock/debug/index.html` to view the current coverage report.
