@@ -4,7 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
+        android:id="@+id/linear_layout_capacity_group_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="44dp"
@@ -20,35 +28,38 @@
             android:layout_marginBottom="4dp"
             android:layout_marginEnd="4dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:src="@drawable/icon_attend"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/capacity_text_activity_room_info"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/text_capacity_number_activity_room_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:paddingBottom="1dp"
-            android:textColor="@color/colorWhite"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/capacity_text_activity_room_info" />
-
-        <TextView
             android:id="@+id/capacity_text_activity_room_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
             android:paddingBottom="2dp"
             android:text="@string/capacity"
             android:textColor="@color/colorWhite"
             app:layout_constraintStart_toEndOf="@+id/image_capacity_icon_activity_room_info"
             app:layout_constraintTop_toTopOf="parent" />
-    </android.support.constraint.ConstraintLayout>
+
+    </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_capacity_number_activity_room_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/ic_capacity_count_background"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:textColor="#444"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/text_room_name_activity_room_info"
@@ -90,11 +101,12 @@
 
     <ImageButton
         android:id="@+id/button_close_room_info"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="60dp"
         android:layout_marginTop="16dp"
-        android:src="@drawable/close_shape"
+        android:backgroundTint="@color/transparent"
+        android:src="@drawable/ic_close_find_room"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
