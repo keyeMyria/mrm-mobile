@@ -1,6 +1,7 @@
 package com.andela.mrm.room_setup;
 
 import android.content.Intent;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.view.View;
 
@@ -13,6 +14,9 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.calendar.model.Event;
 import com.google.gson.Gson;
 
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,6 +37,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.allOf;
@@ -48,6 +53,28 @@ public class EventScheduleActivityTest {
     @Rule
     public ActivityTestRule<EventScheduleActivity> activityTestRule =
             new ActivityTestRule<>(EventScheduleActivity.class, true, false);
+    private List<CalendarEvent> mCalendarEvents;
+
+    private static <T> Matcher<T> first(final Matcher<T> matcher) {
+        return new BaseMatcher<T>() {
+            boolean isFirst = true;
+
+            @Override
+            public boolean matches(final Object item) {
+                if (isFirst && matcher.matches(item)) {
+                    isFirst = false;
+                    return true;
+                }
+
+                return false;
+            }
+
+            @Override
+            public void describeTo(final Description description) {
+                description.appendText("should return first matching item");
+            }
+        };
+    }
 
     @Before
     public void setUp() throws IOException {
@@ -60,10 +87,10 @@ public class EventScheduleActivityTest {
                 .parseArray(Event[].class, Event.class);
         ArrayList<Event> eventArrayList = new ArrayList<>(eventCollection);
 
-        List<CalendarEvent> calendarEvents = MakeGoogleCalendarCallPresenter
+        mCalendarEvents = MakeGoogleCalendarCallPresenter
                 .populateCalendar(eventArrayList);
 
-        String eventsToJson = new Gson().toJson(calendarEvents);
+        String eventsToJson = new Gson().toJson(mCalendarEvents);
 
         Intent intent = new Intent();
         intent.putExtra(RoomAvailabilityActivity.EVENTS_IN_STRING, eventsToJson);
@@ -140,6 +167,18 @@ public class EventScheduleActivityTest {
         availableEvent.add(calendarEventTwo);
         assertTrue(activityTestRule.getActivity()
                 .addAvailableTimeSlots(availableEvent).size() == 4);
+    }
+
+    @Test
+    public void assert_RecyclerView_Items() {
+        onView(first(withText(mCalendarEvents.get(0).getSummary()))).check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void assert_SubList_Items() {
+        onView(first(withId(R.id.text_attendees))).perform(click());
+        onView(withText(mCalendarEvents.get(0).getAttendees().get(0).getEmail()))
+                .check(matches(isDisplayed()));
     }
 
 
