@@ -73,14 +73,13 @@ public class MakeGoogleCalendarCallPresenter extends AsyncTask<Void, Void, List<
     private List<Event> getDataFromApi() throws IOException {
         // List the next 10 events from the primary calendar.
         List<Event> items;
-        List<CalendarEvent> calendarEvents = new ArrayList<>();
         DateTime now = new DateTime(System.currentTimeMillis());
         /**
          * This part is to get the midnight of current day.
          */
         Date midnight = getMidnight(); //Gets midnight of the current day
         items = getEvents(now, midnight);
-        populateCalendar(items, calendarEvents);
+        List<CalendarEvent> calendarEvents = populateCalendar(items);
 
         String listItemInGson = new Gson().toJson(calendarEvents);
         if (googleCalenderCallListener != null) {
@@ -92,10 +91,11 @@ public class MakeGoogleCalendarCallPresenter extends AsyncTask<Void, Void, List<
     /**
      * Method to populate the calendar entries for the day.
      *
-     * @param items          list to store all the days events
-     * @param calendarEvents list to store all calendar events for the day
+     * @param items list to store all the days events
+     * @return the list
      */
-    public void populateCalendar(List<Event> items, List<CalendarEvent> calendarEvents) {
+    public static List<CalendarEvent> populateCalendar(List<Event> items) {
+        List<CalendarEvent> calendarEvents = new ArrayList<>();
         List<EventAttendee> attendees;
         for (Event e : items) {
             DateTime start = e.getStart().getDateTime();
@@ -114,6 +114,7 @@ public class MakeGoogleCalendarCallPresenter extends AsyncTask<Void, Void, List<
                     start.getValue(),
                     end.getValue(), attendees, creator));
         }
+        return calendarEvents;
     }
 
     /**
