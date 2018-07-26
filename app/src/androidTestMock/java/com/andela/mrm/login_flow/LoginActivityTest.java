@@ -1,5 +1,7 @@
 package com.andela.mrm.login_flow;
 
+import android.app.Activity;
+import android.app.Instrumentation.ActivityResult;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.test.espresso.ViewInteraction;
@@ -8,28 +10,25 @@ import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.view.ViewPager;
-import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import com.andela.mrm.R;
-import com.andela.mrm.room_setup.country.CountryActivity;
+import com.google.android.gms.auth.api.signin.internal.SignInHubActivity;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.hasChildCount;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
@@ -44,16 +43,63 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.not;
 
 /**
- * LoginActivity Instrumentation(UI) Test.
+ * LoginActivityTest.
  */
-@LargeTest
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(AndroidJUnit4.class)
-public class LoginActivityInstrumentationTest {
+public class LoginActivityTest {
 
     @Rule
     public ActivityTestRule<LoginActivity> mActivityTestRule =
-            new ActivityTestRule<>(LoginActivity.class);
+            new ActivityTestRule<>(LoginActivity.class, true, false);
+
+    /**
+     * Returns a matcher that matches {@link ViewGroup}s based on targeted view hierarchy(position).
+     *
+     * @param parentMatcher - the current parent view target
+     * @param position      - position of the view in hierarchy
+     * @return boolean
+     */
+    private static Matcher<View> childAtPosition(
+            final Matcher<View> parentMatcher, final int position) {
+
+        return new TypeSafeMatcher<View>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("Child at position " + position + " in parent ");
+                parentMatcher.describeTo(description);
+            }
+
+            @Override
+            public boolean matchesSafely(View view) {
+                ViewParent parent = view.getParent();
+                return parent instanceof ViewGroup && parentMatcher.matches(parent)
+                        && view.equals(((ViewGroup) parent).getChildAt(position));
+            }
+        };
+    }
+
+    /**
+     * Returns a matcher that matches {@link ViewPager}s based on currentItem property value.
+     *
+     * @param page {@link Matcher} of ViewPager's currentItem
+     * @return boolean
+     */
+    @NonNull
+    public static Matcher<View> inPage(final int page) {
+
+        return new BoundedMatcher<View, ViewPager>(ViewPager.class) {
+
+            @Override
+            public void describeTo(final Description description) {
+                description.appendText("in page: " + page);
+            }
+
+            @Override
+            public boolean matchesSafely(final ViewPager viewPager) {
+                return viewPager.getCurrentItem() == page;
+            }
+        };
+    }
 
     /**
      * Test case that describes/tests for the visibility(properly loaded) of the LoginActivity.
@@ -63,6 +109,7 @@ public class LoginActivityInstrumentationTest {
      */
     @Test
     public void test1_ActivityFragmentsAreLoadedCorrectly() throws Exception {
+        mActivityTestRule.launchActivity(new Intent());
         onView(withId(R.id.frame_first))
                 .check(matches(allOf(
                         isCompletelyDisplayed(),
@@ -80,8 +127,10 @@ public class LoginActivityInstrumentationTest {
      *
      * @throws Exception - throws an exception error when test fails
      */
+    @SuppressWarnings("checkstyle:methodlength")
     @Test
     public void test2_ViewPagerDisplaysAndFunctionsCorrectly() throws Exception {
+        mActivityTestRule.launchActivity(new Intent());
         onView(withId(R.id.view_pager_layout))
                 .check(matches(isCompletelyDisplayed()));
 
@@ -157,6 +206,7 @@ public class LoginActivityInstrumentationTest {
      */
     @Test
     public void test3_LoginButtonDisplaysAndFunctionsCorrectly() throws Exception {
+        mActivityTestRule.launchActivity(new Intent());
         Intents.init();
 
         ViewInteraction loginButton = onView(
@@ -165,64 +215,14 @@ public class LoginActivityInstrumentationTest {
                         childAtPosition(childAtPosition(
                                 withId(R.id.frame_first), 0), 0)));
 
+        intending(hasComponent(SignInHubActivity.class.getName()))
+                .respondWith(new ActivityResult(Activity.RESULT_OK, null));
+
         loginButton
-                .check(matches(isDisplayed())) //checks that the button is displayed
-                .perform(click()); // checks that the button is clickable
+                .check(matches(isDisplayed()))
+                .perform(click());
 
-        mActivityTestRule.launchActivity(new Intent());
-
-        intended(hasComponent(CountryActivity.class.getName())); // checks that the CountryActivity
-                                                                 // is launched
 
         Intents.release();
-    }
-
-    /**
-     * Returns a matcher that matches {@link ViewGroup}s based on targeted view hierarchy(position).
-     *
-     * @param parentMatcher - the current parent view target
-     * @param position      - position of the view in hierarchy
-     * @return boolean
-     */
-    private static Matcher<View> childAtPosition(
-            final Matcher<View> parentMatcher, final int position) {
-
-        return new TypeSafeMatcher<View>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("Child at position " + position + " in parent ");
-                parentMatcher.describeTo(description);
-            }
-
-            @Override
-            public boolean matchesSafely(View view) {
-                ViewParent parent = view.getParent();
-                return parent instanceof ViewGroup && parentMatcher.matches(parent)
-                        && view.equals(((ViewGroup) parent).getChildAt(position));
-            }
-        };
-    }
-
-    /**
-     * Returns a matcher that matches {@link ViewPager}s based on currentItem property value.
-     *
-     * @param page {@link Matcher} of ViewPager's currentItem
-     * @return boolean
-     */
-    @NonNull
-    public static Matcher<View> inPage(final int page) {
-
-        return new BoundedMatcher<View, ViewPager>(ViewPager.class) {
-
-            @Override
-            public void describeTo(final Description description) {
-                description.appendText("in page: " + page);
-            }
-
-            @Override
-            public boolean matchesSafely(final ViewPager viewPager) {
-                return viewPager.getCurrentItem() == page;
-            }
-        };
     }
 }

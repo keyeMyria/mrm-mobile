@@ -32,7 +32,9 @@
         <property name="message" value="Space needed around ':' character."/>
     </module>
 
+    <module name="SuppressWarningsFilter" />
     <module name="TreeWalker">
+        <module name="SuppressWarningsHolder" />
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
         <module name="JavadocMethod"/>
@@ -112,6 +114,11 @@
 
         <!--cyclomatic complexity-->
         <module name="CyclomaticComplexity">
+            <property name="max" value="10"/>
+        </module>
+
+        <!--cognitive complexity-->
+        <module name="BooleanExpressionComplexity">
             <property name="max" value="10"/>
         </module>
 

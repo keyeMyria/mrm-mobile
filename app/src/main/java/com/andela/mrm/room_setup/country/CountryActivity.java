@@ -1,5 +1,7 @@
 package com.andela.mrm.room_setup.country;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -33,5 +35,15 @@ public class CountryActivity extends AppCompatActivity {
 
         transaction.add(R.id.frame_layout, countryFragment, "countryFragment");
         transaction.commit();
+    }
+
+    /**
+     * New intent for creating this activity.
+     *
+     * @param context the context
+     * @return the intent
+     */
+    public static Intent newIntent(Context context) {
+        return new Intent(context, CountryActivity.class);
     }
 }

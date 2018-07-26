@@ -36,7 +36,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn : 'test') {
                     '**/*Query.*',
                     '**/com/andela/mrm/fragment',
                     '**/com/andela/mrm/type',
-                    '**/*_ViewBinding.*'
+                    '**/*_ViewBinding*'
             ]
     )
 
