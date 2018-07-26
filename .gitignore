@@ -5,6 +5,7 @@
 /build
 /captures
 .externalNativeBuild
+.ropeproject/
 
 .idea/
 instapk.log*
