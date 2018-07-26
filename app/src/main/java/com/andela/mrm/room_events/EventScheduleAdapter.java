@@ -1,8 +1,5 @@
 package com.andela.mrm.room_events;
 
-import java.text.DateFormat;
-import java.util.TimeZone;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -18,8 +15,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.andela.mrm.R;
-import com.andela.mrm.util.DateTimeUtils;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -184,21 +181,20 @@ public class EventScheduleAdapter extends RecyclerView.Adapter<EventScheduleAdap
          * @param position the position
          */
         public void setValue(final int position) {
-            String timeZone = DateTimeUtils.getTimeZone();
             String extension;
             if (calendarEvents.get(position).getEndTime() == null) {
                 duration.setText("All day");
                 eventTitle.setText("Free Till End Of Day");
                 startTime.setText(formatTime(calendarEvents.get(position).getStartTime(),
-                        "GMT" + timeZone, false));
+                        false));
             } else {
                 Long end = calendarEvents.get(position).getEndTime();
                 Long start = calendarEvents.get(position).getStartTime();
                 getEventAttendees(position);
                 Long diff = end - start;
                 eventTitle.setText(calendarEvents.get(position).getSummary());
-                startTime.setText(formatTime(start, "GMT" + timeZone, false));
-                String format = formatTime(diff, "GMT", true);
+                startTime.setText(formatTime(start, false));
+                String format = formatTime(diff, true);
                 if (isMinute) {
                     extension = "min";
                 } else {
@@ -243,11 +239,10 @@ public class EventScheduleAdapter extends RecyclerView.Adapter<EventScheduleAdap
          * Format time string.
          *
          * @param timeValue  the time value
-         * @param timeZone   the time zone
          * @param isTimeDiff the is time diff
          * @return the string
          */
-        public String formatTime(Long timeValue, String timeZone, Boolean isTimeDiff) {
+        public String formatTime(Long timeValue, Boolean isTimeDiff) {
             DateFormat format;
             Long hour = 3600000L;
             Date date = new Date(timeValue);
@@ -262,7 +257,6 @@ public class EventScheduleAdapter extends RecyclerView.Adapter<EventScheduleAdap
             } else {
                 format = new SimpleDateFormat("h:mm a", Locale.getDefault());
             }
-            format.setTimeZone(TimeZone.getTimeZone(timeZone));
             return format.format(date);
         }
 
