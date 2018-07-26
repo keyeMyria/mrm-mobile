@@ -109,7 +109,7 @@ public class GsuitePresenter extends AsyncTask<Void, Void, List<String>> {
         freeBusyCalendarMap = freeBusyResponse.getCalendars();
         final int upcomingEventPosition = 0;
         populateResourceCalendarIdsList(listOfIdsOfCurrentlyAvailableRooms, now,
-                                        freeBusyCalendarMap, upcomingEventPosition);
+                freeBusyCalendarMap, upcomingEventPosition);
         assert iOnGsuitePresenterResponse != null;
         iOnGsuitePresenterResponse.onGsuitePresenterSuccess(
                 getAvailableRooms(listOfIdsOfCurrentlyAvailableRooms, listOfRooms));
@@ -150,17 +150,33 @@ public class GsuitePresenter extends AsyncTask<Void, Void, List<String>> {
                                                 Map<String, FreeBusyCalendar> freeBusyCalendarMap,
                                                 int upcomingEventPosition) {
         for (String id : this.listOfResourceCalendarIds) {
-            Long nextEventStartTime;
             if (freeBusyCalendarMap.get(id).getErrors() == null) {
-                if (freeBusyCalendarMap.get(id).getBusy().isEmpty()) {
-                    listOfIdsOfCurrentlyAvailableRooms.add(id);
-                } else {
-                    nextEventStartTime = freeBusyCalendarMap.get(id).getBusy()
-                            .get(upcomingEventPosition).getStart().getValue();
-                    if (now.getValue() < nextEventStartTime) {
-                        listOfIdsOfCurrentlyAvailableRooms.add(id);
-                    }
-                }
+                freeBusyCalendarMapChecker(listOfIdsOfCurrentlyAvailableRooms, now,
+                        freeBusyCalendarMap, upcomingEventPosition, id);
+            }
+        }
+    }
+
+    /**
+     * Extracted Method to deal with the freeBusyCalendarMap status.
+     * @param listOfIdsOfCurrentlyAvailableRooms List containing Ids of all available rooms
+     * @param now Current DateTimeValue
+     * @param freeBusyCalendarMap Map of FreeBusy Data
+     * @param upcomingEventPosition integer of upcoming events
+     * @param id String containing id data
+     */
+    public void freeBusyCalendarMapChecker(List<String> listOfIdsOfCurrentlyAvailableRooms,
+                                           DateTime now,
+                                           Map<String, FreeBusyCalendar> freeBusyCalendarMap,
+                                           int upcomingEventPosition, String id) {
+        Long nextEventStartTime;
+        if (freeBusyCalendarMap.get(id).getBusy().isEmpty()) {
+            listOfIdsOfCurrentlyAvailableRooms.add(id);
+        } else {
+            nextEventStartTime = freeBusyCalendarMap.get(id).getBusy()
+                    .get(upcomingEventPosition).getStart().getValue();
+            if (now.getValue() < nextEventStartTime) {
+                listOfIdsOfCurrentlyAvailableRooms.add(id);
             }
         }
     }

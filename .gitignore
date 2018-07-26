@@ -5,6 +5,7 @@
 /build
 /captures
 .externalNativeBuild
+.ropeproject/
 
 .idea/
 instapk.log*
@@ -13,8 +14,8 @@ instapk.properties
 .idea/instapk.xml
 keystores/
 app/google-services.json
-app/src/mock/debug/google-services.json
-app/src/mock/release/google-services.json
-app/src/prod/debug/google-services.json
-app/src/prod/release/google-services.json
+app/src/mock/debug/
+app/src/mock/release/
+app/src/prod/debug/
+app/src/prod/release/
 app/src/debug/

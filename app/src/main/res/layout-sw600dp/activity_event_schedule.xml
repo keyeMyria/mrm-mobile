@@ -22,8 +22,8 @@
         android:id="@+id/layout_close_event_schedule"
         android:layout_width="82dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="60dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -32,34 +32,35 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginTop="2dp"
-            android:src="@drawable/ic_cancel_24dp"
-            android:contentDescription="@string/cancel_icon" />
-
+            android:contentDescription="@string/cancel_icon"
+            android:src="@drawable/close_shape" />
     </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/layout_event_recycler_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="96dp"
-        android:layout_marginTop="8dp"
-        android:paddingStart="-14dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_upcoming_events"
-        app:layout_constraintVertical_bias="0.043" />
 
     <TextView
         android:id="@+id/text_upcoming_events"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/dinpro"
         android:layout_marginStart="96dp"
         android:layout_marginTop="4dp"
+        android:fontFamily="@font/dinpro"
         android:textColor="@android:color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_current_date"
         tools:text="TextView" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/layout_event_recycler_view"
+        android:layout_width="841dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="90dp"
+        android:layout_marginTop="8dp"
+        android:paddingStart="-14dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_upcoming_events"
+        app:layout_constraintVertical_bias="0.137" />
 
 </android.support.constraint.ConstraintLayout>
