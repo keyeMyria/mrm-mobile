@@ -7,7 +7,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import com.andela.mrm.AllLocationsQuery;
 import com.andela.mrm.R;
 import com.andela.mrm.room_setup.RoomSetupContract;
 import com.andela.mrm.room_setup.RoomSetupPresenter;
-import com.andela.mrm.util.DateTimeUtils;
+
 import java.util.List;
 
 
@@ -52,7 +51,6 @@ public class CountryFragment extends Fragment implements RoomSetupContract.Count
         view = inflater.inflate(R.layout.fragment_country, container, false);
 
         queryApi();
-        Log.e("time zone", DateTimeUtils.getTimeZone() + "");
         return view;
     }
 

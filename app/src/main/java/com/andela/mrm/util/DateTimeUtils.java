@@ -2,13 +2,8 @@ package com.andela.mrm.util;
 
 import com.google.api.client.util.DateTime;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * Util functions for working with {@link DateTime}.
