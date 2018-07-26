@@ -2,8 +2,13 @@ package com.andela.mrm.util;
 
 import com.google.api.client.util.DateTime;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Util functions for working with {@link DateTime}.
@@ -65,5 +70,19 @@ public final class DateTimeUtils {
      */
     public static DateTime getCurrentTime() {
         return new DateTime(System.currentTimeMillis());
+    }
+
+    /**
+     * Gets time zone.
+     *
+     * @return the time zone
+     */
+    public static String getTimeZone() {
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"),
+                Locale.getDefault());
+        Date currentLocalTime = calendar.getTime();
+        DateFormat date = new SimpleDateFormat("ZZZZZ", Locale.getDefault());
+        String localTime = date.format(currentLocalTime);
+        return localTime.split(":")[0];
     }
 }

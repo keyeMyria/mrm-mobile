@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.andela.mrm.R;
+import com.andela.mrm.util.DateTimeUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -75,7 +76,7 @@ public class EventScheduleAdapter extends RecyclerView.Adapter<EventScheduleAdap
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ConstraintLayout constraintLayout = (ConstraintLayout)
                 LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.partial_event_schedule_view, parent, false);
+                        .inflate(R.layout.partial_event_schedule_view, parent, false);
         return new ViewHolder(constraintLayout);
     }
 
@@ -102,7 +103,6 @@ public class EventScheduleAdapter extends RecyclerView.Adapter<EventScheduleAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.e("Position", position + "");
-
         holder.setValue(position);
     }
 
@@ -184,19 +184,20 @@ public class EventScheduleAdapter extends RecyclerView.Adapter<EventScheduleAdap
          * @param position the position
          */
         public void setValue(final int position) {
+            String timeZone = DateTimeUtils.getTimeZone();
             String extension;
             if (calendarEvents.get(position).getEndTime() == null) {
                 duration.setText("All day");
                 eventTitle.setText("Free Till End Of Day");
                 startTime.setText(formatTime(calendarEvents.get(position).getStartTime(),
-                        "GMT+1", false));
+                        "GMT" + timeZone, false));
             } else {
                 Long end = calendarEvents.get(position).getEndTime();
-                Long start  = calendarEvents.get(position).getStartTime();
+                Long start = calendarEvents.get(position).getStartTime();
                 getEventAttendees(position);
                 Long diff = end - start;
                 eventTitle.setText(calendarEvents.get(position).getSummary());
-                startTime.setText(formatTime(start, "GMT+1", false));
+                startTime.setText(formatTime(start, "GMT" + timeZone, false));
                 String format = formatTime(diff, "GMT", true);
                 if (isMinute) {
                     extension = "min";
@@ -215,6 +216,7 @@ public class EventScheduleAdapter extends RecyclerView.Adapter<EventScheduleAdap
 
         /**
          * Extracted Method to deal with obtaining event Attendees.
+         *
          * @param position integer value of attendees
          */
         public void getEventAttendees(final int position) {
