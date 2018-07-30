@@ -19,6 +19,7 @@ import com.andela.mrm.room_setup.RoomSetupPresenter;
 
 import java.util.List;
 
+
 /**
  * Created by andeladeveloper on 06/04/2018.
  */
@@ -50,7 +51,6 @@ public class CountryFragment extends Fragment implements RoomSetupContract.Count
         view = inflater.inflate(R.layout.fragment_country, container, false);
 
         queryApi();
-
         return view;
     }
 
@@ -122,6 +122,7 @@ public class CountryFragment extends Fragment implements RoomSetupContract.Count
         Snackbar.make(getView(), notificationText, Snackbar.LENGTH_INDEFINITE)
                 .setAction("RETRY", v -> queryApi()).show();
     }
+
 
     /**
      * Display error.

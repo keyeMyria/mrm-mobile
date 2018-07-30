@@ -99,7 +99,6 @@ public class GsuitePresenter extends AsyncTask<Void, Void, List<String>> {
         Date midnight = getMidnight();
         request.setTimeMin(now)
                 .setTimeMax(new DateTime(midnight.getTime()))
-                .setTimeZone("Africa/Lagos")
                 .setItems(requestItems);
         Calendar.Freebusy.Query query = mservice.freebusy().query(request);
         query.setFields("calendars");
