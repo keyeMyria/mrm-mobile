@@ -259,8 +259,7 @@ public class TimeLineScheduleView extends View {
         final float top = shapeStartYPoint + mRectHeight;
         final float bottom = shapeStartYPoint - mRectHeight;
         final float right = startX + length;
-
-        canvas.drawRect(startX, top, right, bottom, mRectPaint);
+        canvas.drawRect(startX, bottom, right, top, mRectPaint);
     }
 
     /**
