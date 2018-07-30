@@ -521,6 +521,10 @@ jobs:
           name: Authenticate with Google Cloud
           command: gcloud auth activate-service-account mrm-android-editor@andela-learning.iam.gserviceaccount.com --key-file client-secret.json && gcloud firebase test android models list
       - run:
+          name: Install Java JDK8
+          command: |
+            bash ~/repo/.circleci/setup_java.sh
+      - run:
           name: Notifying slack channel on fail
           when: on_fail
           command: |
@@ -533,29 +537,30 @@ jobs:
           command: |
             echo 'export INSTRUMENT_TEST_ARTIFACT=required' >> $BASH_ENV
       - run:
-          name: Run instrumented test on Firebase Test Lab
+          name: Run test on Firebase Test Lab with Flank
           when: on_success
           command: |
-            gcloud firebase test android run --type instrumentation --app app/build/outputs/apk/mock/debug/app-mock-debug.apk --test app/build/outputs/apk/androidTest/mock/debug/app-mock-debug-androidTest.apk --device model=Nexus7,version=22,locale=en,orientation=landscape --environment-variables coverage=true,coverageFile=/sdcard/coverage.ec --directories-to-pull=/sdcard --timeout 20m > results 2>error
-            cat error
-            cat results
-            cat error | grep -o 'https://[^"]*' | grep 'https://console.developers.google.com/storage/browser/test-lab-[a-z0-9.-]*' | tr -d '\]' > artifact_url
+            cat ~/repo/.circleci/config.properties >> /root/repo/config.properties
+            curl -O https://jitpack.io/com/github/TestArmada/flank/v2.0.3/flank-v2.0.3.jar
+            java -jar /root/repo/flank-v2.0.3.jar -a app/build/outputs/apk/mock/debug/app-mock-debug.apk -t app/build/outputs/apk/androidTest/mock/debug/app-mock-debug-androidTest.apk > result
+            cat result
+            cat result | grep -o 'gs://[^"]*' | grep 'gs://andela-learning-[a-z0-9.-]*' | head -1 > artifact_url
       - run:
           name: Create directory to store test results
           command: mkdir firebase
       - run:
           name: Download instrumented test results from Firebase Test Lab on success
           command: |
-            python .circleci/get_artifact_path.py
+            python ~/repo/.circleci/get_artifact_path.py
             artifact_path="$(cat artifact_path)"
             gsutil -m cp -n -r gs://${artifact_path}* /root/repo/firebase/ || true
       - run:
           name: Print firebase error results
           when: on_fail
           command: |
-            file="$(ls error)"
-            if [ $file == "error" ]; then
-              cat error
+            file="$(ls result)"
+            if [ $file == "result" ]; then
+              cat result
             else
               echo "Firebase did not create any output"
             fi
@@ -577,7 +582,7 @@ jobs:
           command: |
             if [ "$INSTRUMENT_TEST_ARTIFACT" == required ]; then
               mkdir firebase
-              python get_artifact_path.py
+              python ~/repo/.circleci/get_artifact_path.py
               artifact_path="$(cat artifact_path)"
               gsutil -m cp -n -r gs://${artifact_path}* /root/repo/firebase/ || true
             fi
@@ -613,7 +618,11 @@ jobs:
           name: Move Firebase Coverage Report
           command: |
             mkdir -p app/build/outputs/code-coverage/connected/flavors/MOCK
-            cp firebase/Nexus7-22-en-landscape/artifacts/coverage.ec app/build/outputs/code-coverage/connected/flavors/MOCK/coverage.ec
+            cp firebase/0/Nexus7-22-en-landscape/artifacts/coverage.ec app/build/outputs/code-coverage/connected/flavors/MOCK/coverage0.ec
+            cp firebase/1/Nexus7-22-en-landscape/artifacts/coverage.ec app/build/outputs/code-coverage/connected/flavors/MOCK/coverage1.ec
+            cp firebase/2/Nexus7-22-en-landscape/artifacts/coverage.ec app/build/outputs/code-coverage/connected/flavors/MOCK/coverage2.ec
+            cp firebase/3/Nexus7-22-en-landscape/artifacts/coverage.ec app/build/outputs/code-coverage/connected/flavors/MOCK/coverage3.ec
+            cp firebase/4/Nexus7-22-en-landscape/artifacts/coverage.ec app/build/outputs/code-coverage/connected/flavors/MOCK/coverage4.ec
       - *export_gservices_key
       - *decode_gservices_key
       - run:

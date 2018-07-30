@@ -12,7 +12,7 @@ def read_url_file():
 def create_path_file():
     url = read_url_file()
     print "============= url: ", url, "=================="
-    file_path = re.sub(r"(?<=)(.*)(?=test)", "", url)
+    file_path = re.sub(r"(?<=)(.*)(?=andela-)", "", url)
     print "============= path: ", file_path, "=============="
     path_file = open("artifact_path", "w+")
     if path_file.mode == "w+":
