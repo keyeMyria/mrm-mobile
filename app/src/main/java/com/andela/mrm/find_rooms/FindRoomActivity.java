@@ -5,7 +5,9 @@ package com.andela.mrm.find_rooms;
  */
 
 import android.Manifest;
+import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -18,7 +20,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.andela.mrm.GetAllRoomsInALocationQuery;
+import com.andela.mrm.Injection;
 import com.andela.mrm.R;
+import com.andela.mrm.service.ApiService;
 import com.apollographql.apollo.exception.ApolloException;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -28,7 +32,10 @@ import com.google.api.services.calendar.CalendarScopes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import pub.devrel.easypermissions.EasyPermissions;
 
 import static com.andela.mrm.room_availability.RoomAvailabilityActivity.REQUEST_PERMISSION_GET_ACCOUNTS;
@@ -40,114 +47,72 @@ import static com.andela.mrm.room_availability.RoomAvailabilityActivity.REQUEST_
 public class FindRoomActivity extends AppCompatActivity implements
         GetAllRoomsInALocationFromApolloPresenter.IOnGetAllRoomsFromApolloCallback,
         GsuitePresenter.IOnGsuitePresenterResponse, EasyPermissions.PermissionCallbacks {
-    public static final String PREF_ACCOUNT_NAME = "accountName";
-    static final int LAGOS_LOCATION_ID = 2; //Lagos location id
-    static final int REQUEST_ACCOUNT_PICKER = 1000; //Request account Picker
-    static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002; // Request google play services
-    static final int REQUEST_AUTHORIZATION = 1001; //Request Authorization
-    private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
-    /**
-     * The Availabilty options.
-     */
-    final List<String> availabiltyOptions = new ArrayList<>();
-    /**
-     * The Location options.
-     */
-    final List<String> locationOptions = new ArrayList<>();
-    /**
-     * The Capacity options.
-     */
-    final List<String> capacityOptions = new ArrayList<>();
-    /**
-     * The Amenities option.
-     */
-    final List<String> amenitiesOption = new ArrayList<>();
-    /**
-     * The Filters.
-     */
-    final List<String> filters = new ArrayList<>();
-    /**
-     * The Filter availability.
-     */
-    public ImageView filterAvailability, /**
-     * The Filter location.
-     */
-    filterLocation, /**
-     * The Filter capacity.
-     */
-    filterCapacity, /**
-     * The Filter amenities.
-     */
-    filterAmenities;
-    /**
-     * The Availability filter dropdown.
-     */
-    public RecyclerView availabilityFilterDropdown, /**
-     * The Location filter dropdown.
-     */
-    locationFilterDropdown, /**
-     * The Capacity filter dropdown.
-     */
-    capacityFilterDropdown,
-    /**
-     * The Amenities filter dropdown.
-     */
-    amenitiesFilterDropdown, /**
-     * The Selected filters display.
-     */
-    selectedFiltersDisplay;
+
+    static int LAGOS_LOCATION_ID = 2;
+
+    final List<String> availabilityOptions = Arrays.asList("Available", "Unavailable");
+    final List<String> locationOptions = Arrays.asList("Block A, First Floor", "Gold Coast, First Floor",
+            "Big Apple, Fourth Floor", "Naija, Third Floor");
+    final List<String> capacityOptions = Arrays.asList("5 participants", "10 participants", "15 participants",
+            "20 participants");
+    final List<String> amenitiesOption = Arrays.asList("Apple TV", "Jabra speaker", "Headphones", "Projector");
+    final List<String> filters = Arrays.asList("Available", "Block A, First Floor", "10 participants", "Headphones");
+
+    public ImageView filterAvailability;
+    public ImageView filterLocation;
+    public ImageView filterCapacity;
+    public ImageView filterAmenities;
+
+    @BindView(R.id.filter_dropdown_availability)
+    public RecyclerView availabilityFilterDropdown;
+
+    @BindView(R.id.filter_dropdown_location)
+    public RecyclerView locationFilterDropdown;
+
+    @BindView(R.id.filter_dropdown_capacity)
+    public RecyclerView capacityFilterDropdown;
+
+    @BindView(R.id.filter_dropdown_amenities)
+    public RecyclerView amenitiesFilterDropdown;
+
+    public RecyclerView selectedFiltersDisplay;
+
+    @BindView(R.id.layout_shimmer)
     ShimmerFrameLayout shimmerFrameLayout;
+    @BindView(R.id.text_result_count)
     TextView numberOfAvailableRooms;
-    /**
-     * The Find room recycler view.
-     */
+    @BindView(R.id.recycler_view_filter_result)
     RecyclerView findRoomRecyclerView;
+    @BindView(R.id.close_find_room)
+    ImageView closeActivity;
+
     /**
-     * The Credential.
+     * Prepares the intent required to launch this activity.
+     *
+     * @param packageContext the package context
+     * @return the intent
      */
-    GoogleAccountCredential credential;
-    private ImageView closeActivity;
+    public static Intent newIntent(Context packageContext) {
+        return new Intent(packageContext, FindRoomActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_room);
-        shimmerFrameLayout = findViewById(R.id.layout_shimmer);
-        numberOfAvailableRooms = findViewById(R.id.text_result_count);
+
+        ButterKnife.bind(this);
+
         shimmerFrameLayout.startShimmerAnimation();
         numberOfAvailableRooms.setVisibility(View.GONE);
-        credential = GoogleAccountCredential.usingOAuth2(
-                getApplicationContext(), Arrays.asList(SCOPES))
-                .setBackOff(new ExponentialBackOff());
+
         getAllData();
-        String[] available = {"Available", "Unavailable"};
-        availabiltyOptions.addAll(Arrays.asList(available));
-        String[] locations = {"Block A, First Floor", "Gold Coast, First Floor",
-                                "Big Apple, Fourth Floor", "Naija, Third Floor"};
-        locationOptions.addAll(Arrays.asList(locations));
-        String[] capacities = {"5 participants", "10 participants", "15 participants",
-                                 "20 participants"};
-        capacityOptions.addAll(Arrays.asList(capacities));
-        String[] amenities = {"Apple TV", "Jabra speaker", "Headphones", "Projector"};
-        amenitiesOption.addAll(Arrays.asList(amenities));
-        String[] filter = {"Available", "Block A, First Floor", "10 participants", "Headphones"};
-        filters.addAll(Arrays.asList(filter));
-        closeActivity = findViewById(R.id.close_find_room);
-        findRoomRecyclerView = findViewById(R.id.recycler_view_filter_result);
-        dropDownHolder();
+
         onClickListenerGenerator();
         updateFilters(filters);
         closeActivity.setOnClickListener(v -> finish());
     }
-    /**
-     * Extracted method to hold all drop downs.
-     */
-    public void dropDownHolder() {
-        availabilityFilterDropdown = findViewById(R.id.filter_dropdown_availability);
-        locationFilterDropdown = findViewById(R.id.filter_dropdown_location);
-        capacityFilterDropdown = findViewById(R.id.filter_dropdown_capacity);
-        amenitiesFilterDropdown = findViewById(R.id.filter_dropdown_amenities);
-    }
+
     /**
      * Extracted method to deal with the onclick listeners.
      */
@@ -183,7 +148,7 @@ public class FindRoomActivity extends AppCompatActivity implements
         RecyclerView.LayoutManager availabilityFilterLayoutManager =
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         availabilityFilterDropdown.setLayoutManager(availabilityFilterLayoutManager);
-        availabilityFilterDropdown.setAdapter(new DropdownFilterAdapter(availabiltyOptions));
+        availabilityFilterDropdown.setAdapter(new DropdownFilterAdapter(availabilityOptions));
         filterAvailability.setOnClickListener(v -> {
             if (availabilityFilterDropdown.getVisibility() == View.GONE) {
                 availabilityFilterDropdown.setVisibility(View.VISIBLE);
@@ -284,9 +249,10 @@ public class FindRoomActivity extends AppCompatActivity implements
             shimmerFrameLayout.stopShimmerAnimation();
             shimmerFrameLayout.setVisibility(View.GONE);
             numberOfAvailableRooms.setVisibility(View.VISIBLE);
-            numberOfAvailableRooms.setText("Available Rooms ("
-                    + listOfAvailableRooms.size()
-                    + ")");
+            String text = String.format(
+                    Locale.getDefault(),
+                    "Available Rooms (%d)", listOfAvailableRooms.size());
+            numberOfAvailableRooms.setText(text);
             setRoomsAdapter(listOfAvailableRooms);
         });
         Log.e("All Available", listOfAvailableRooms.toString());

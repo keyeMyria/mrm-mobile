@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MRM</string>
+    <string name="app_name">Converge Mobile</string>
     <string name="meeting_rooms_text">Select your meeting room</string>
     <string name="meeting_room_name">Room Name</string>
     <string name="room_name">Cognitio</string>

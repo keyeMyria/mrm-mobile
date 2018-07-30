@@ -26,7 +26,7 @@ public class Injection {
      */
     public static ResourcesInfoContract.Data provideResourcesInfoData(Context context, int roomId) {
         ApolloQueryCall<RoomQuery.Data> query = ApiService.getApolloClient(context)
-                .query(RoomQuery.builder().roomId(Long.valueOf(roomId)).build())
+                .query(RoomQuery.builder().roomId((long) roomId).build())
                 .responseFetcher(ApolloResponseFetchers.NETWORK_ONLY);
         return new ResourcesInfoRepository(context, query);
     }

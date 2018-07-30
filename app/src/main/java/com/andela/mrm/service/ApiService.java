@@ -1,8 +1,10 @@
 package com.andela.mrm.service;
 
+import android.accounts.Account;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.andela.mrm.Injection;
 import com.andela.mrm.R;
 import com.apollographql.apollo.ApolloClient;
 import com.apollographql.apollo.api.Operation;
@@ -16,8 +18,11 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.calendar.Calendar;
+import com.google.api.services.calendar.CalendarScopes;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -120,16 +125,32 @@ public final class ApiService {
     }
 
     /**
-     * Gets calendar service.
+     * Provides a {@link GoogleAccountCredential}
      *
-     * @param accountCredential the account credential
+     * @param account currently signed in user account
      * @param context           the context
      * @return the calendar service
      */
-    public static Calendar getCalendarService(GoogleAccountCredential accountCredential,
-                                              Context context) {
+    private static GoogleAccountCredential getGoogleAccountCredential(Context context,
+                                                                      Account account) {
+        final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
+
+        return GoogleAccountCredential.usingOAuth2(context, Arrays.asList(SCOPES))
+                .setBackOff(new ExponentialBackOff())
+                .setSelectedAccount(account);
+    }
+
+    /**
+     * Gets calendar service.
+     *
+     * @param account currently signed in user account
+     * @param context           the context
+     * @return the calendar service
+     */
+    public static Calendar getCalendarService(Account account, Context context) {
         HttpTransport transport = AndroidHttp.newCompatibleTransport();
         JacksonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+        GoogleAccountCredential accountCredential = getGoogleAccountCredential(context, account);
 
         return new Calendar.Builder(transport, jsonFactory, accountCredential)
                 .setApplicationName(context.getString(R.string.app_name))

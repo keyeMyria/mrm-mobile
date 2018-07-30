@@ -3,8 +3,12 @@ package com.andela.mrm.data;
 import android.support.annotation.NonNull;
 
 import com.andela.mrm.room_availability.FreeBusy;
+import com.andela.mrm.room_events.CalendarEvent;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.Calendar;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventAttendee;
+import com.google.api.services.calendar.model.Events;
 import com.google.api.services.calendar.model.FreeBusyCalendar;
 import com.google.api.services.calendar.model.FreeBusyRequest;
 import com.google.api.services.calendar.model.FreeBusyRequestItem;
@@ -13,6 +17,7 @@ import com.google.api.services.calendar.model.TimePeriod;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +32,7 @@ import static com.andela.mrm.util.DateTimeUtils.getDuration;
 /**
  * Calendar Data Repository class.
  */
-public class CalendarDataRepository {
+public class CalendarDataRepository implements ICalendarDataRepository {
     private static final String CALENDAR_QUERY_FIELD_ONLY = "calendars";
     private final Calendar mCalendar;
 
@@ -50,8 +55,8 @@ public class CalendarDataRepository {
      */
 // TODO: move this to the presenter
     @NonNull
-    public static FreeBusyRequest buildFreeBusyRequest(String calendarId,
-                                                       DateTime startTime, DateTime endTime) {
+    public static FreeBusyRequest buildRoomFreeBusyRequest(String calendarId,
+                                                           DateTime startTime, DateTime endTime) {
         FreeBusyRequest request = new FreeBusyRequest();
 
         List<FreeBusyRequestItem> requestItems = new ArrayList<>();
@@ -74,7 +79,7 @@ public class CalendarDataRepository {
      * @return the list
      */
     @NonNull
-    public static List<FreeBusy> createFreeBusyList(List<TimePeriod> timePeriods,
+    private static List<FreeBusy> createFreeBusyList(List<TimePeriod> timePeriods,
                                                      DateTime startTime, DateTime endTime) {
         List<FreeBusy> freeBusyList = new ArrayList<>();
         DateTime startNextFreePeriod = startTime;
@@ -104,13 +109,42 @@ public class CalendarDataRepository {
     }
 
     /**
+     * Method to populate the calendar entries for the day.
+     *
+     * @param items list to store all the days events
+     * @return the list
+     */
+    public static List<CalendarEvent> createCalendarEvents(List<Event> items) {
+        List<CalendarEvent> calendarEvents = new ArrayList<>();
+        List<EventAttendee> attendees;
+        for (Event event : items) {
+            DateTime start = event.getStart().getDateTime();
+            DateTime end = event.getEnd().getDateTime();
+            attendees = event.getAttendees();
+            String creator = event.getCreator().getEmail();
+
+            if (start == null) {
+                start = event.getStart().getDate();
+            }
+
+            if (end == null) {
+                end = event.getEnd().getDate();
+            }
+            calendarEvents.add(new CalendarEvent(event.getSummary(),
+                    start.getValue(),
+                    end.getValue(), attendees, creator));
+        }
+        return calendarEvents;
+    }
+
+    /**
      * Gets the schedule for a {@link FreeBusyRequest}.
      *
      * @param request FreeBusyRequest object
      * @return List of {@link TimePeriod}
      * @throws IOException - Exception
      */
-    private List<TimePeriod> getSchedule(FreeBusyRequest request)
+    private List<FreeBusy> getSchedule(FreeBusyRequest request)
             throws IOException {
         String calendarId = request.getItems().get(0).getId();
         FreeBusyResponse response = mCalendar.freebusy()
@@ -118,18 +152,42 @@ public class CalendarDataRepository {
                 .setFields(CALENDAR_QUERY_FIELD_ONLY)
                 .execute();
         Map<String, FreeBusyCalendar> calendars = response.getCalendars();
-        return calendars
+        List<TimePeriod> timePeriods = calendars
                 .get(calendarId)
                 .getBusy();
+        return createFreeBusyList(timePeriods, request.getTimeMin(), request.getTimeMax());
     }
 
     /**
-     * Gets calendar free busy schedule.
+     * Method to list all the events for the current day.
      *
-     * @param request the request
-     * @return the calendar free busy schedule
+     * @param startTime      DateTime value for the current point in time
+     * @param endTime DateTime value for endTime of the current day
+     * @return event Items of the day's events
+     * @throws IOException Exception Handler
      */
-    public Flowable<List<TimePeriod>> getCalendarFreeBusySchedule(FreeBusyRequest request) {
+    private List<CalendarEvent> getEvents(String calendarId, DateTime startTime, DateTime endTime)
+            throws IOException {
+        List<Event> items;
+        Events events = mCalendar.events().list(calendarId)
+                .setTimeMin(startTime)
+                .setTimeMax(endTime)
+                .setOrderBy("startTime")
+                .setSingleEvents(true)
+                .execute();
+        items = events.getItems();
+        return createCalendarEvents(items);
+    }
+
+
+    @Override
+    public Flowable<List<FreeBusy>> getRoomFreeBusySchedule(FreeBusyRequest request) {
         return Flowable.fromCallable(() -> getSchedule(request));
+    }
+
+    @Override
+    public Flowable<List<CalendarEvent>> getRoomCalendarEvents(String roomCalendarId,
+                                                               DateTime startTime, DateTime endTime) {
+        return Flowable.fromCallable(() -> getEvents(roomCalendarId, startTime, endTime));
     }
 }

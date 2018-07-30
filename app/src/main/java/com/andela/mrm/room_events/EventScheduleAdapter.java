@@ -9,12 +9,10 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.andela.mrm.R;
@@ -29,47 +27,18 @@ import java.util.Locale;
  * Created by Fred Adewole on 27/04/2018.
  */
 public class EventScheduleAdapter extends RecyclerView.Adapter<EventScheduleAdapter.ViewHolder> {
-    /**
-     * The Calendar events.
-     */
-    public final List<CalendarEvent> calendarEvents;
-    /**
-     * The Context.
-     */
-    public final Context context;
+    private List<CalendarEvent> mCalendarEvents;
 
 
     /**
      * Instantiates a new Event schedule adapter.
      *
      * @param events  the events
-     * @param context the context
      */
-    public EventScheduleAdapter(List<CalendarEvent> events, Context context) {
-        this.calendarEvents = events;
-        this.context = context;
+    EventScheduleAdapter(List<CalendarEvent> events) {
+        this.mCalendarEvents = events;
     }
 
-    /**
-     * Called when RecyclerView needs a new {@link ViewHolder} of the given type to represent
-     * an item.
-     * <p>
-     * This new ViewHolder should be constructed with a new View that can represent the items
-     * of the given type. You can either create a new View manually or inflate it from an XML
-     * layout file.
-     * <p>
-     * The new ViewHolder will be used to display items of the adapter using
-     * {@link #onBindViewHolder(ViewHolder, int, List)}. Since it will be re-used to display
-     * different items in the data set, it is a good idea to cache references to sub views of
-     * the View to avoid unnecessary {@link View#findViewById(int)} calls.
-     *
-     * @param parent   The ViewGroup into which the new View will be added after it is bound to
-     *                 an adapter position.
-     * @param viewType The view type of the new View.
-     * @return A new ViewHolder that holds a View of the given view type.
-     * @see #getItemViewType(int)
-     * @see #onBindViewHolder(ViewHolder, int)
-     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -79,86 +48,38 @@ public class EventScheduleAdapter extends RecyclerView.Adapter<EventScheduleAdap
         return new ViewHolder(constraintLayout);
     }
 
-    /**
-     * Called by RecyclerView to display the data at the specified position. This method should
-     * update the contents of the {@link ViewHolder#itemView} to reflect the item at the given
-     * position.
-     * <p>
-     * Note that unlike {@link ListView}, RecyclerView will not call this method
-     * again if the position of the item changes in the data set unless the item itself is
-     * invalidated or the new position cannot be determined. For this reason, you should only
-     * use the <code>position</code> parameter while acquiring the related data item inside
-     * this method and should not keep a copy of it. If you need the position of an item later
-     * on (e.g. in a click listener), use {@link ViewHolder#getAdapterPosition()} which will
-     * have the updated adapter position.
-     * <p>
-     * Override {@link #onBindViewHolder(ViewHolder, int, List)} instead if Adapter can
-     * handle efficient partial bind.
-     *
-     * @param holder   The ViewHolder which should be updated to represent the contents of the
-     *                 item at the given position in the data set.
-     * @param position The position of the item within the adapter's data set.
-     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Log.e("Position", position + "");
-
         holder.setValue(position);
     }
 
-    /**
-     * Returns the total number of items in the data set held by the adapter.
-     *
-     * @return The total number of items in this adapter.
-     */
     @Override
     public int getItemCount() {
-        return calendarEvents.size();
+        return mCalendarEvents.size();
     }
 
-    /**
-     * The type View holder.
-     */
+    public void setCalendarEvents(List<CalendarEvent> calendarEvents) {
+        mCalendarEvents = calendarEvents;
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        /**
-         * The Event title.
-         */
-        public TextView eventTitle, /**
-         * The Start time.
-         */
-        startTime, /**
-         * The Duration.
-         */
-        duration, /**
-         * The No of attendees view.
-         */
-        noOfAttendeesView;
-        /**
-         * The Attendees recycler view.
-         */
-        RecyclerView attendeesRecyclerView;
+        private TextView mEventTitle;
+        private TextView mStartTime;
+        private TextView mDuration;
+        private TextView mNoOfAttendeesView;
 
-        /**
-         * The Static image participants.
-         */
-        public ImageView staticImageParticipants, /**
-         * The Close recycler view.
-         */
-        closeRecyclerView;
+        private RecyclerView mAttendeeRV;
 
-        /**
-         * The Availability indicator.
-         */
-        public View availabilityIndicator;
-        /**
-         * The Is minute.
-         */
-        public Boolean isMinute = false;
-        /**
-         * The Constraint layout.
-         */
-        public ConstraintLayout constraintLayout;
+        private ImageView staticImageParticipants;
+        private ImageView mCloseAttendeesList;
+
+        private View mAvailabilityIndicator;
+
+        private Boolean mIsMinute = false;
+
+        private ConstraintLayout mConstraintLayout;
 
         /**
          * Instantiates a new View holder.
@@ -167,15 +88,15 @@ public class EventScheduleAdapter extends RecyclerView.Adapter<EventScheduleAdap
          */
         public ViewHolder(View itemView) {
             super(itemView);
-            eventTitle = itemView.findViewById(R.id.text_event_title);
-            startTime = itemView.findViewById(R.id.text_meeting_time);
-            duration = itemView.findViewById(R.id.text_event_duration);
-            availabilityIndicator = itemView.findViewById(R.id.view_indicator);
-            noOfAttendeesView = itemView.findViewById(R.id.text_attendees);
+            mEventTitle = itemView.findViewById(R.id.text_event_title);
+            mStartTime = itemView.findViewById(R.id.text_meeting_time);
+            mDuration = itemView.findViewById(R.id.text_event_duration);
+            mAvailabilityIndicator = itemView.findViewById(R.id.view_indicator);
+            mNoOfAttendeesView = itemView.findViewById(R.id.text_attendees);
             staticImageParticipants = itemView.findViewById(R.id.staticImage);
-            attendeesRecyclerView = itemView.findViewById(R.id.list_attendees_recyclerview);
-            closeRecyclerView = itemView.findViewById(R.id.close_recycler_view);
-            constraintLayout = itemView.findViewById(R.id.constraintLayout3);
+            mAttendeeRV = itemView.findViewById(R.id.list_attendees_recyclerview);
+            mCloseAttendeesList = itemView.findViewById(R.id.close_recycler_view);
+            mConstraintLayout = itemView.findViewById(R.id.constraintLayout3);
         }
 
         /**
@@ -185,30 +106,31 @@ public class EventScheduleAdapter extends RecyclerView.Adapter<EventScheduleAdap
          */
         public void setValue(final int position) {
             String extension;
-            if (calendarEvents.get(position).getEndTime() == null) {
-                duration.setText("All day");
-                eventTitle.setText("Free Till End Of Day");
-                startTime.setText(formatTime(calendarEvents.get(position).getStartTime(),
+            if (mCalendarEvents.get(position).getEndTime() == null) {
+                mDuration.setText("All day");
+                mEventTitle.setText("Free Till End Of Day");
+                mStartTime.setText(formatTime(mCalendarEvents.get(position).getStartTime(),
                         "GMT+1", false));
             } else {
-                Long end = calendarEvents.get(position).getEndTime();
-                Long start  = calendarEvents.get(position).getStartTime();
+                Long end = mCalendarEvents.get(position).getEndTime();
+                Long start  = mCalendarEvents.get(position).getStartTime();
                 getEventAttendees(position);
                 Long diff = end - start;
-                eventTitle.setText(calendarEvents.get(position).getSummary());
-                startTime.setText(formatTime(start, "GMT+1", false));
+                mEventTitle.setText(mCalendarEvents.get(position).getSummary());
+                mStartTime.setText(formatTime(start, "GMT+1", false));
                 String format = formatTime(diff, "GMT", true);
-                if (isMinute) {
+                if (mIsMinute) {
                     extension = "min";
                 } else {
                     extension = "hr";
                 }
-                duration.setText(format + extension);
+                String text = format + extension;
+                mDuration.setText(text);
             }
-            if ("Available".equals(calendarEvents.get(position).getSummary())) {
-                availabilityIndicator.setBackgroundColor(Color.GREEN);
+            if ("Available".equals(mCalendarEvents.get(position).getSummary())) {
+                mAvailabilityIndicator.setBackgroundColor(Color.GREEN);
             } else {
-                availabilityIndicator.setBackgroundColor(Color.RED);
+                mAvailabilityIndicator.setBackgroundColor(Color.RED);
             }
 
         }
@@ -218,22 +140,21 @@ public class EventScheduleAdapter extends RecyclerView.Adapter<EventScheduleAdap
          * @param position integer value of attendees
          */
         public void getEventAttendees(final int position) {
-            if (calendarEvents.get(position).getAttendees() != null) {
-                final int noOfAttendees = calendarEvents.get(position).getAttendees().size();
-                noOfAttendeesView.setOnClickListener(v -> showAttendees(position));
+            if (mCalendarEvents.get(position).getAttendees() != null) {
+                final int noOfAttendees = mCalendarEvents.get(position).getAttendees().size();
+                mNoOfAttendeesView.setOnClickListener(v -> showAttendees(position));
 
-                closeRecyclerView.setOnClickListener(v -> hideAttendees(noOfAttendees));
+                mCloseAttendeesList.setOnClickListener(v -> hideAttendees(noOfAttendees));
 
-                noOfAttendeesView.setText(new StringBuilder().append(noOfAttendees)
-                        .append(" Participants").toString());
+                mNoOfAttendeesView.setText(String.format("%s Participants", String.valueOf(noOfAttendees)));
                 staticImageParticipants.setVisibility(View.VISIBLE);
 
                 AttendeesAdapter attendeesAdapter =
-                        new AttendeesAdapter(calendarEvents.get(position).getAttendees());
-                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context,
+                        new AttendeesAdapter(mCalendarEvents.get(position).getAttendees());
+                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.itemView.getContext(),
                         LinearLayoutManager.VERTICAL, false);
-                attendeesRecyclerView.setLayoutManager(layoutManager);
-                attendeesRecyclerView.setAdapter(attendeesAdapter);
+                mAttendeeRV.setLayoutManager(layoutManager);
+                mAttendeeRV.setAdapter(attendeesAdapter);
             }
         }
 
@@ -245,17 +166,17 @@ public class EventScheduleAdapter extends RecyclerView.Adapter<EventScheduleAdap
          * @param isTimeDiff the is time diff
          * @return the string
          */
-        public String formatTime(Long timeValue, String timeZone, Boolean isTimeDiff) {
+        private String formatTime(Long timeValue, String timeZone, Boolean isTimeDiff) {
             DateFormat format;
             Long hour = 3600000L;
             Date date = new Date(timeValue);
             if (isTimeDiff) {
                 if (timeValue < hour) {
                     format = new SimpleDateFormat("mm ", Locale.getDefault());
-                    isMinute = true;
+                    mIsMinute = true;
                 } else {
                     format = new SimpleDateFormat("h:mm ", Locale.getDefault());
-                    isMinute = false;
+                    mIsMinute = false;
                 }
             } else {
                 format = new SimpleDateFormat("h:mm a", Locale.getDefault());
@@ -269,16 +190,16 @@ public class EventScheduleAdapter extends RecyclerView.Adapter<EventScheduleAdap
          *
          * @param position the position.
          */
-        public void showAttendees(int position) {
-            availabilityIndicator.setVisibility(View.GONE);
-            eventTitle.setTextColor(Color.WHITE);
-            duration.setTextColor(Color.WHITE);
-            noOfAttendeesView.setTextColor(Color.WHITE);
-            attendeesRecyclerView.setVisibility(View.VISIBLE);
-            closeRecyclerView.setVisibility(View.VISIBLE);
+        private void showAttendees(int position) {
+            mAvailabilityIndicator.setVisibility(View.GONE);
+            mEventTitle.setTextColor(Color.WHITE);
+            mDuration.setTextColor(Color.WHITE);
+            mNoOfAttendeesView.setTextColor(Color.WHITE);
+            mAttendeeRV.setVisibility(View.VISIBLE);
+            mCloseAttendeesList.setVisibility(View.VISIBLE);
             staticImageParticipants.setVisibility(View.GONE);
-            noOfAttendeesView.setText(calendarEvents.get(position).getCreator());
-            constraintLayout.
+            mNoOfAttendeesView.setText(mCalendarEvents.get(position).getCreator());
+            mConstraintLayout.
                     setBackgroundColor(Color.parseColor("#FFFF5359"));
         }
 
@@ -287,17 +208,16 @@ public class EventScheduleAdapter extends RecyclerView.Adapter<EventScheduleAdap
          *
          * @param noOfAttendees the number of attendees.
          */
-        public void hideAttendees(int noOfAttendees) {
-            availabilityIndicator.setVisibility(View.VISIBLE);
-            eventTitle.setTextColor(Color.BLACK);
-            duration.setTextColor(Color.BLACK);
-            noOfAttendeesView.setTextColor(Color.BLUE);
-            attendeesRecyclerView.setVisibility(View.GONE);
-            closeRecyclerView.setVisibility(View.GONE);
+        private void hideAttendees(int noOfAttendees) {
+            mAvailabilityIndicator.setVisibility(View.VISIBLE);
+            mEventTitle.setTextColor(Color.BLACK);
+            mDuration.setTextColor(Color.BLACK);
+            mNoOfAttendeesView.setTextColor(Color.BLUE);
+            mAttendeeRV.setVisibility(View.GONE);
+            mCloseAttendeesList.setVisibility(View.GONE);
             staticImageParticipants.setVisibility(View.VISIBLE);
-            noOfAttendeesView.setText(new StringBuilder().append(noOfAttendees)
-                    .append(" Participants").toString());
-            constraintLayout.setBackgroundColor(Color.WHITE);
+            mNoOfAttendeesView.setText(String.format("%s Participants", String.valueOf(noOfAttendees)));
+            mConstraintLayout.setBackgroundColor(Color.WHITE);
         }
     }
 }

@@ -1,12 +1,11 @@
 package com.andela.mrm.room_setup;
 
 import android.content.Intent;
-import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.view.View;
 
 import com.andela.mrm.R;
-import com.andela.mrm.room_availability.MakeGoogleCalendarCallPresenter;
+import com.andela.mrm.data.CalendarDataRepository;
 import com.andela.mrm.room_availability.RoomAvailabilityActivity;
 import com.andela.mrm.room_events.CalendarEvent;
 import com.andela.mrm.room_events.EventScheduleActivity;
@@ -87,13 +86,9 @@ public class EventScheduleActivityTest {
                 .parseArray(Event[].class, Event.class);
         ArrayList<Event> eventArrayList = new ArrayList<>(eventCollection);
 
-        mCalendarEvents = MakeGoogleCalendarCallPresenter
-                .populateCalendar(eventArrayList);
-
-        String eventsToJson = new Gson().toJson(mCalendarEvents);
+        mCalendarEvents = CalendarDataRepository.createCalendarEvents(eventArrayList);
 
         Intent intent = new Intent();
-        intent.putExtra(RoomAvailabilityActivity.EVENTS_IN_STRING, eventsToJson);
         activityTestRule.launchActivity(intent);
     }
 
