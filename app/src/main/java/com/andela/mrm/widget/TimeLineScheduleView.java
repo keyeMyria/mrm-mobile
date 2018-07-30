@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.andela.mrm.R;
@@ -119,6 +120,7 @@ public class TimeLineScheduleView extends View {
      * Extracted Method to create Text View Paint.
      */
     public final void createTextViewPaint() {
+        Log.d("Create text view", "createTextViewPaint: ");
         mTextPaint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
         mTextPaint.setColor(Color.WHITE);
         mTextPaint.setTextAlign(Paint.Align.LEFT);
@@ -129,6 +131,7 @@ public class TimeLineScheduleView extends View {
      * Extracted Method to create the rectangular time bar.
      */
     public final void createRectangularTimeBarPaint() {
+        Log.d("Create Rect Time paint", "Tickle tickle");
         mRectPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mRectPaint.setStyle(Paint.Style.FILL);
     }
@@ -137,6 +140,7 @@ public class TimeLineScheduleView extends View {
      * Extracted Method to create the thinLine paint.
      */
     public final void createThinLinePaint() {
+        Log.d("Create thin line", "Create thin line");
         mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mLinePaint.setStyle(Paint.Style.STROKE);
         mLinePaint.setStrokeWidth(strokeWidth);
@@ -150,6 +154,7 @@ public class TimeLineScheduleView extends View {
      */
     private void populateArrayList(List<TimeLine> mTimeLineArray) {
         // dummy meeting duration in minutes for both booked and available time slots, alternatively
+        Log.d("Populate timeline array", "Populate Timeline array");
         int[] timeDuration = {60, 90, 60, 45, 45, 15, 60, 75, 60, 150, 60, 40, 80};
 
         for (int i = 0; i < timeDuration.length; i++) {
@@ -171,6 +176,7 @@ public class TimeLineScheduleView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        Log.d("On draw", "On draw");
         super.onDraw(canvas);
         float startXPoint = 0F;
         final float startEndYPoint = 85F;
@@ -206,6 +212,7 @@ public class TimeLineScheduleView extends View {
      * @param startXPoint floating point integer to represent the start point
      */
     public void canvasDrawer(Canvas canvas, float startXPoint) {
+        Log.d("Canvas drawer", "Canvas drawer");
         float textStartXPoint;
         for (int i = 0; i < numberOfSingleTimeBar; i++) {
             String timePeriod = " am";
@@ -228,6 +235,7 @@ public class TimeLineScheduleView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        Log.d("On Measure", "On measure");
         // Compute the width and height required to render the custom view
 
         int width = MeasureSpec.getSize((int) (lengthOfSingleTimeBar * numberOfSingleTimeBar));
