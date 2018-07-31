@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             app:canvasHeight="200"
-            app:lengthOfSingleBar="345"
+            app:lengthOfSingleBar="225"
             app:rectHeightAboveLine="7"
             app:sizeOfText="50"
             app:strokeWidth="3"

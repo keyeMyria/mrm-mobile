@@ -45,7 +45,8 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="-48dp"
             app:canvasHeight="200"
-            app:lengthOfSingleBar="170"
+            app:lengthOfSingleBar="110"
+            app:rectHeightAboveLine="3.5"
             app:sizeOfText="25"
             app:strokeWidth="2" />
 
