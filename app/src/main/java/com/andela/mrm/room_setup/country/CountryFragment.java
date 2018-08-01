@@ -78,7 +78,7 @@ public class CountryFragment extends Fragment implements RoomSetupContract.Count
     public void displayCountries(final List<AllLocationsQuery.AllLocation> mData) {
 
         if (mData == null) {
-            dismissDialog();
+//            dismissDialog();
             displayError();
         } else {
             int countrySize = mData.size();
@@ -91,7 +91,7 @@ public class CountryFragment extends Fragment implements RoomSetupContract.Count
             mRecyclerView.setLayoutManager(mLayoutManager);
             RecyclerView.Adapter adapter = new CountryAdapter(getContext(), mData);
             mRecyclerView.setAdapter(adapter);
-            dismissDialog();
+//            dismissDialog();
         }
     }
 
