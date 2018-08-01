@@ -1,4 +1,4 @@
-// TODO: 01/08/2018 Fix these tests after all tests pass. 
+// TODO: 01/08/2018 Fix these tests after refactor is complete. 
 //package com.andela.mrm.room_setup.building;
 //
 //import android.content.Context;
