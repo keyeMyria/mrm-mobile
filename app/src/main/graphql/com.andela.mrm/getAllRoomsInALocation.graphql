@@ -1,15 +1,16 @@
 query getAllRoomsInALocation($locationId: Int) {
   getRoomsInALocation(locationId: $locationId) {
-    blocks {
-      floors {
-        rooms {
-          floor{
-            name
-            block{
+    offices {
+      blocks {
+        floors {
+          rooms {
+            floor {
               name
+              block {
+                name
+              }
             }
-          }
-          	id
+            id
             name
             capacity
             calendarId
@@ -17,6 +18,7 @@ query getAllRoomsInALocation($locationId: Int) {
               id
               name
             }
+          }
         }
       }
     }
