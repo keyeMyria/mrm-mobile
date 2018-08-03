@@ -113,7 +113,7 @@ public class MeetingRoomActivityInstrumentationTest {
         assertThat(mDevice, notNullValue());*/
 
         Intent intent = new Intent();
-        intent.putExtra("countryID", "1");
+        intent.putExtra("countryID", "2");
         intent.putExtra("buildingID", "0");
         intent.putExtra("floorID", "2");
 
@@ -158,7 +158,7 @@ public class MeetingRoomActivityInstrumentationTest {
     public void testForCorrectDisplayedRecyclerViewItemsAndOnClickOfAny() throws Exception {
         int itemCount = getCount(R.id.meeting_rooms_grid_view);
 
-        String[] rooms = {"Ojuelegba", "Empire State"};
+        String[] rooms = {"Empire State", "Cognito", "Aso", "Wall Street"};
 
         onView(withId(R.id.meeting_rooms_grid_view)).check(matches(hasChildCount(itemCount)));
 

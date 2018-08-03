@@ -52,13 +52,15 @@ public class GetAllRoomsInALocationFromApolloPresenter {
                     public void onResponse(@Nonnull Response<GetAllRoomsInALocationQuery.Data>
                                                    response) {
                         assert response.data() != null;
-                        floorsFromApollo = response.data().getRoomsInALocation().get(0).blocks()
-                                .get(0).floors();
+                        floorsFromApollo = response.data().getRoomsInALocation().get(0).offices()
+                                .get(0).blocks().get(0).floors();
                         assert floorsFromApollo != null;
                         for (GetAllRoomsInALocationQuery.Floor floor : floorsFromApollo) {
-                            for (GetAllRoomsInALocationQuery.Room rooms : floor.rooms()) {
-                                allRoomsInBlockFromApollo.add(rooms);
-                                meetingRoomCalendarIds.add(rooms.calendarId());
+                            for (GetAllRoomsInALocationQuery.Room room : floor.rooms()) {
+                                if (room.calendarId() != null) {
+                                    allRoomsInBlockFromApollo.add(room);
+                                    meetingRoomCalendarIds.add(room.calendarId());
+                                }
                             }
                         }
                         iOnGetAllRoomsFromApolloCallback.onGetAllRoomsFromApolloSuccess(

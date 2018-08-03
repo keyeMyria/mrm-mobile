@@ -14,6 +14,7 @@ import com.andela.mrm.util.EspressoIdlingResource;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,7 +48,7 @@ public class FloorSelectionActivityTest {
         IdlingRegistry.getInstance().register(EspressoIdlingResource.getIdlingResource());
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        bundle.putString("countryID", "1");
+        bundle.putString("countryID", "0");
         bundle.putString("buildingID", "0");
         intent.putExtras(bundle);
 
@@ -76,12 +77,12 @@ public class FloorSelectionActivityTest {
         // TODO: Stated above
 //        onView(withText("1st Floor")).check(matches(isDisplayed()));
 //        onView(withText("2nd Floor")).check(matches(isDisplayed()));
-//        onView(withText("3rd Floor")).check(matches(isDisplayed()));
+        onView(withText("3rd Floor")).check(matches(isDisplayed()));
 //        onView(withText("4th Floor")).check(matches(isDisplayed()));
 //        onView(withText("5th Floor")).check(matches(isDisplayed()));
-        onView(withText("GoldCoast")).check(matches(isDisplayed()));
-        onView(withText("Naija")).check(matches(isDisplayed()));
-        onView(withText("Big Apple")).check(matches(isDisplayed()));
+//        onView(withText("GoldCoast")).check(matches(isDisplayed()));
+//        onView(withText("Naija")).check(matches(isDisplayed()));
+//        onView(withText("Big Apple")).check(matches(isDisplayed()));
 
 
     }
@@ -91,7 +92,7 @@ public class FloorSelectionActivityTest {
      */
     @Test
     public void clickingRecyclerViewLaunchesMeetingRoomActivity() {
-        final int position = 2;
+        final int position = 0;
         Intents.init();
         onView(withId(R.id.floor_grid_view)).perform(RecyclerViewActions.actionOnItemAtPosition(
                 position, click()));

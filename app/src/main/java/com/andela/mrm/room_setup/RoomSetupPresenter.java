@@ -122,7 +122,8 @@ public class RoomSetupPresenter {
                                @Nullable String floorID) {
         if (mrfView != null) {
             mrfView.displayMeetingRooms(response.data().allLocations()
-                    .get(Integer.parseInt(countryID)).blocks()
+                    .get(Integer.parseInt(countryID)).offices()
+                    .get(0).blocks() // TODO: this should come through an OfficeActivity
                     .get(Integer.parseInt(buildingID)).floors()
                     .get(Integer.parseInt(floorID)).rooms());
         }
@@ -138,7 +139,8 @@ public class RoomSetupPresenter {
                                  @Nullable String countryID, @Nullable String buildingID) {
         if (floorView != null) {
             floorView.displayFloors(response.data().allLocations()
-                    .get(Integer.parseInt(countryID)).blocks()
+                    .get(Integer.parseInt(countryID))
+                    .offices().get(0).blocks() // TODO: this should come through an OfficeActivity
                     .get(Integer.parseInt(buildingID)).floors());
         }
     }
@@ -151,7 +153,9 @@ public class RoomSetupPresenter {
                              @Nullable String countryID) {
         if (mView != null) {
             mView.displayBuildings(response.data().allLocations()
-                    .get(Integer.parseInt(countryID)).blocks());
+                    .get(Integer.parseInt(countryID))
+                    .offices().get(0).blocks() // TODO: this should come through an OfficeActivity
+                    );
         }
     }
 
