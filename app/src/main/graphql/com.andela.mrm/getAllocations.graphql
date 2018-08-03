@@ -1,20 +1,26 @@
-query allLocationsQuery{
-    allLocations {
+query allLocationsQuery {
+  allLocations {
+    id
+    name
+    abbreviation
+    country
+    imageUrl
+    offices {
+      id
+      name
+      locationId
+      blocks {
         id
         name
-        abbreviation
-        imageUrl
-        blocks {
+        floors {
+          id
+          name
+          rooms {
             id
             name
-            floors {
-                id
-                name
-                rooms {
-                    id
-                    name
-                }
-            }
+          }
         }
+      }
     }
+  }
 }
